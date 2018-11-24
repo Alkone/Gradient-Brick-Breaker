@@ -22,6 +22,9 @@ public class GameController : MonoBehaviour
     private LineRenderer lineRenderer;
 
     private bool mouseDownIsDetected = false;
+    private Vector2 m_MouseDownPosition;
+
+
     private static bool firstBallIsStoped = false;
 
     float angle;
@@ -126,14 +129,17 @@ public class GameController : MonoBehaviour
         Vector2 startVector;
         if (Input.GetMouseButtonDown(0) == true && !mouseDownIsDetected)
         {
+            m_MouseDownPosition = GetCurrentGMousePos();
             mouseDownIsDetected = true;
         }
         if (mouseDownIsDetected)
         {
-            angle = GetFixetAngle(Vector2.left, GetCurrentGMousePos() - startPosition);
+            angle = GetFixetAngle(Vector2.left, GetCurrentGMousePos() - m_MouseDownPosition);
             Debug.Log("Angle - " + angle);
-            startVector = RotateVector(Vector2.left, angle) + startPosition;
+            startVector = RotateVector(Vector2.left, 180-angle) + startPosition;
             Debug.Log("Start vector - " + startVector);
+            lineRenderer.SetPosition(0, startPosition);
+            lineRenderer.SetPosition(1, startVector);
             if (Input.GetMouseButtonUp(0) == true)
             {
                 //Запускает шарик
@@ -145,8 +151,8 @@ public class GameController : MonoBehaviour
 
     }
 
-    //Возвразает угол между 15 и 165
-    private float GetFixetAngle(Vector2 vector1, Vector2 vector2)
+        //Возвращает угол между 15 и 165
+        private float GetFixetAngle(Vector2 vector1, Vector2 vector2)
     {
         float angle = Vector2.Angle(vector1, vector2);
         if (angle < 15) angle = 15;
