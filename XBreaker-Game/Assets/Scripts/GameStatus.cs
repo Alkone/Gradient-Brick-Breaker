@@ -1,0 +1,1 @@
+﻿ public enum GameStatus {PREPARING, READY, LAUNCHED, ENDED}
