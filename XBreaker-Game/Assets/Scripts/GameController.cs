@@ -5,36 +5,44 @@ using UnityEngine;
 
 public class GameController : MonoBehaviour
 {
+    //Инициализирует состояние игры
     public static GameStatus gameStatus = GameStatus.PREPARING;
+
+    //Позиция создания первого шарика
     public static Vector2 startPosition;
 
     [SerializeField] LevelsController mainLevelsController;
-    [SerializeField] private GameObject firstAddblePrefub;
+    [SerializeField] private GameObject ballPrefub1;
     [SerializeField] private float ballTouchPower;
     [SerializeField] private float ballLaunchInterval;
-    
+
 
     //список существующих шариков
     private static List<GameObject> ballObjectsList;
-    private Camera cam;
-    private RaycastHit2D raycastHit2D;
     private LineRenderer lineRenderer;
 
     private bool mouseDownIsDetected = false;
     private static bool firstBallIsStoped = false;
 
+    float angle;
+
     void Start()
     {
-        cam = Camera.main;
         startPosition = new Vector2(0, -4);
         lineRenderer = gameObject.GetComponent<LineRenderer>();
+        ballObjectsList = new List<GameObject>();
         //Запускаем корутин на отслеживание состояния игры
         StartCoroutine(GameStateObserver());
-
         NewGame();
     }
 
     private void Update()
+    {
+
+    }
+
+    //
+    void FixedUpdate()
     {
         if (gameStatus == GameStatus.READY)
         {
@@ -63,37 +71,33 @@ public class GameController : MonoBehaviour
 
             }
         }
-            if (gameStatus == GameStatus.ENDED)
-            {
+        if (gameStatus == GameStatus.ENDED)
+        {
             Time.timeScale = 1;
         }
-        }
-
-    //
-    void FixedUpdate()
-    {
         if (gameStatus == GameStatus.PREPARING)
         {
             //Перебераем лист шариков и двигаем их в начальную позицию
-            foreach(var go in ballObjectsList)
+            foreach (var go in ballObjectsList)
             {
                 Rigidbody2D rb2d = go.GetComponent<Rigidbody2D>();
                 rb2d.MovePosition(startPosition);
                 Debug.Log(rb2d.GetRelativeVector(startPosition));
             }
         }
-      
+
 
     }
+
 
     public void NewGame()
     {
         mainLevelsController.CleanLevel();
-        ballObjectsList = new List<GameObject>();
-        CreateBall(startPosition, firstAddblePrefub);
+        ballObjectsList.Clear();
+        CreateBall(startPosition, ballPrefub1);
     }
 
-    //Создает шарик в заданной позиции и роняет
+    //Создает шарик в заданной позиции с гравитацией
     public static bool CreateBall(Vector2 position, GameObject ballPrefub)
     {
         GameObject go = Instantiate<GameObject>(ballPrefub, position, Quaternion.identity);
@@ -119,7 +123,6 @@ public class GameController : MonoBehaviour
     //Ждет пока игрок прикоснется к экрану и начнет игру
     public void WaitTouchToLunch()
     {
-        float angle = 90f;
         Vector2 startVector;
         if (Input.GetMouseButtonDown(0) == true && !mouseDownIsDetected)
         {
@@ -131,7 +134,6 @@ public class GameController : MonoBehaviour
             Debug.Log("Angle - " + angle);
             startVector = RotateVector(Vector2.left, angle) + startPosition;
             Debug.Log("Start vector - " + startVector);
-            DrawSightLine(startPosition, startVector);
             if (Input.GetMouseButtonUp(0) == true)
             {
                 //Запускает шарик
@@ -172,17 +174,10 @@ public class GameController : MonoBehaviour
         return deltaVector;
     }
 
-    //Рисует линию между точками
-    private void DrawSightLine(Vector2 startPos, Vector2 endPos)
-    {
-        lineRenderer.SetPosition(0, startPos);
-        lineRenderer.SetPosition(1, endPos);
-    }
-
     //Возвращает текущую позиция указателя в глобальных координатах
     private Vector2 GetCurrentGMousePos()
     {
-        return cam.ScreenToWorldPoint(Input.mousePosition);
+        return Camera.main.ScreenToWorldPoint(Input.mousePosition);
     }
 
     //Возвращает позицию шарика
@@ -208,36 +203,26 @@ public class GameController : MonoBehaviour
 
     }
 
-    ////Корутин на зпуск шариков с интервалом 
-    //public IEnumerator StartBall(List<GameObject> ballObjectsList, Vector2 startingVector, float delay)
-    //{
-    //    List<GameObject> currentStateObjectsList = new List<GameObject>(ballObjectsList);
-    //    currentStateObjectsList[0].GetComponent<IThrowable>().Launch(GetVectorByPoints(GetBallGCoord(currentStateObjectsList[0]), startingVector).normalized * ballTouchPower);
-
-    //    for (int i = 1; i < ballObjectsList.Count; i++)
-    //    {
-    //        yield return new WaitForSecondsRealtime(delay);
-    //        currentStateObjectsList[i].GetComponent<IThrowable>().Launch(GetVectorByPoints(GetBallGCoord(currentStateObjectsList[i]), startingVector).normalized * ballTouchPower);
-    //    }
-
-    //}
-
+    //Корутин состояния игры
     private IEnumerator GameStateObserver()
     {
         for (; ; )
         {
-            if(gameStatus == GameStatus.PREPARING){
-               //if (AllBallsInSomePos(startPosition))
-                    gameStatus = GameStatus.READY;
+            if (gameStatus == GameStatus.PREPARING)
+            {
+                //if (AllBallsInSomePos(startPosition))
+                gameStatus = GameStatus.READY;
             }
-            else if(gameStatus == GameStatus.READY){
+            else if (gameStatus == GameStatus.READY)
+            {
                 if (!AllBallsIsStoped()) gameStatus = GameStatus.LAUNCHED;
             }
             else if (gameStatus == GameStatus.LAUNCHED)
             {
-                if(AllBallsIsStoped()) gameStatus = GameStatus.ENDED;
+                if (AllBallsIsStoped()) gameStatus = GameStatus.ENDED;
             }
-            else if(gameStatus == GameStatus.ENDED){
+            else if (gameStatus == GameStatus.ENDED)
+            {
                 if (AllBallsInSomePos(startPosition)) gameStatus = GameStatus.READY;
                 else gameStatus = GameStatus.PREPARING;
             }
@@ -260,6 +245,7 @@ public class GameController : MonoBehaviour
         return status;
     }
 
+    //Проверяет все ли шарики в стартовой позиции
     public bool AllBallsInSomePos(Vector2 pos)
     {
         bool status = true;
