@@ -11,6 +11,9 @@ public class GameController : MonoBehaviour
     //Позиция создания первого шарика
     public static Vector2 startPosition;
 
+    //Кол-во предсказанных скачков
+    public int segmentCount = 3;
+
     [SerializeField] LevelsController mainLevelsController;
     [SerializeField] private GameObject ballPrefub1;
     [SerializeField] private float ballTouchPower;
@@ -99,7 +102,7 @@ public class GameController : MonoBehaviour
         mainLevelsController.CleanLevel();
         ballObjectsList.Clear();
         CreateBall(startPosition, ballPrefub1);
-        trajectorySimulator = new TrajectorySimulation(lineRenderer, 5, ballObjectsList[0]);
+        trajectorySimulator = new TrajectorySimulation(lineRenderer, segmentCount, ballObjectsList[0]);
     }
 
     //Создает шарик в заданной позиции с гравитацией

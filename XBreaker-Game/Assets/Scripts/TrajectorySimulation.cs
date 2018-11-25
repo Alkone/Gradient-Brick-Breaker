@@ -25,7 +25,7 @@ public class TrajectorySimulation
         this.sightLine = sightLine;
         this.segmentCount = segmentCount;
         this.gameObject = gameObject;
-        layerMask = LayerMask.GetMask("Bound", "Block");
+        layerMask = LayerMask.GetMask("Bound", "Block", "BotBound");
 
     }
 
@@ -36,6 +36,8 @@ public class TrajectorySimulation
     /// </summary>
     public void SimulatePath(Vector2 launchVector)
     {
+        int tempSegmentCount = segmentCount;
+
         Vector2[] segments = new Vector2[segmentCount];
 
         float circleRadius = gameObject.GetComponent<CircleCollider2D>().radius * gameObject.transform.localScale.x;
@@ -51,9 +53,15 @@ public class TrajectorySimulation
         for (int i = 1; i < segmentCount; i++)
         {
             // Check to see if we're going to hit a physics object
-            hit = Physics2D.CircleCast(segments[i - 1] + segVelocity.normalized, circleRadius, segVelocity, segmentScale, layerMask);
+            hit = Physics2D.CircleCast(segments[i - 1] + segVelocity.normalized*0.005f, circleRadius, segVelocity, segmentScale, layerMask);
             if (hit)
             {
+
+                // Если след. точка == нижней границе (BotBound), то сворачиваемся
+                if(hit.collider.gameObject.layer == 13){
+                    tempSegmentCount = i;
+                    break;
+                }
                 segments[i] = hit.centroid;
                 // flip the velocity to simulate a bounce
                 segVelocity = Vector2.Reflect(segVelocity, hit.normal);
@@ -66,8 +74,8 @@ public class TrajectorySimulation
             }
         }
 
-        sightLine.positionCount = segmentCount;
-        for (int i = 0; i < segmentCount; i++)
+        sightLine.positionCount = tempSegmentCount;
+        for (int i = 0; i < tempSegmentCount; i++)
         {
             Debug.Log("Segment " + segments[i]);
             sightLine.SetPosition(i, segments[i]);
