@@ -22,7 +22,7 @@ GameObject:
   - component: {fileID: 212602955495601420}
   - component: {fileID: 114606651308228222}
   - component: {fileID: 58213552065842472}
-  m_Layer: 0
+  m_Layer: 12
   m_Name: AddBallPoint
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -68,8 +68,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: eeb89b8111aa2244a9448440f3924970, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  gameController: {fileID: 114369899425536314, guid: 2d47c2b85c2384b3e9775fa3b75e27ef,
-    type: 2}
   addablePrefab: {fileID: 1110083101469618, guid: 2ed73163596883148bb2ca843db3072c,
     type: 2}
 --- !u!212 &212602955495601420

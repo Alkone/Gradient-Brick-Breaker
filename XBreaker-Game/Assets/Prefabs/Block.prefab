@@ -22,7 +22,7 @@ GameObject:
   - component: {fileID: 212137550961507350}
   - component: {fileID: 114986873715213668}
   - component: {fileID: 61074929723460320}
-  m_Layer: 11
+  m_Layer: 10
   m_Name: Block
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -38,7 +38,7 @@ GameObject:
   m_Component:
   - component: {fileID: 4732924986031682}
   - component: {fileID: 212259957634988908}
-  m_Layer: 0
+  m_Layer: 10
   m_Name: New Sprite
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -55,7 +55,7 @@ GameObject:
   - component: {fileID: 4185497512265564}
   - component: {fileID: 23455662122367402}
   - component: {fileID: 102170947618959740}
-  m_Layer: 11
+  m_Layer: 10
   m_Name: HP
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -228,8 +228,8 @@ SpriteRenderer:
   m_AutoUVMaxDistance: 0.5
   m_AutoUVMaxAngle: 89
   m_LightmapParameters: {fileID: 0}
-  m_SortingLayerID: 257870817
-  m_SortingLayer: -3
+  m_SortingLayerID: -1223316751
+  m_SortingLayer: -2
   m_SortingOrder: 0
   m_Sprite: {fileID: 21300000, guid: 8f12ea960166ef94fbc186db165182aa, type: 3}
   m_Color: {r: 0.509434, g: 0.48300108, b: 0.48300108, a: 1}
@@ -274,8 +274,8 @@ SpriteRenderer:
   m_AutoUVMaxDistance: 0.5
   m_AutoUVMaxAngle: 89
   m_LightmapParameters: {fileID: 0}
-  m_SortingLayerID: 0
-  m_SortingLayer: 0
+  m_SortingLayerID: -1223316751
+  m_SortingLayer: -2
   m_SortingOrder: 0
   m_Sprite: {fileID: 21300000, guid: e17214edbfed9459f8129bcab807a815, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}

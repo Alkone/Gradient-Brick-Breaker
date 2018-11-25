@@ -16,6 +16,8 @@ public class GameController : MonoBehaviour
     [SerializeField] private float ballTouchPower;
     [SerializeField] private float ballLaunchInterval;
 
+    private TrajectorySimulation trajectorySimulator;
+
 
     //список существующих шариков
     private static List<GameObject> ballObjectsList;
@@ -49,7 +51,6 @@ public class GameController : MonoBehaviour
     {
         if (gameStatus == GameStatus.READY)
         {
-            lineRenderer.positionCount = 2;
             WaitTouchToLunch();
         }
         if (gameStatus == GameStatus.LAUNCHED)
@@ -61,7 +62,7 @@ public class GameController : MonoBehaviour
             if (Input.GetMouseButtonDown(0) == true && !mouseDownIsDetected)
             {
                 mouseDownIsDetected = true;
-                Time.timeScale = 2;
+                Time.timeScale = 4;
             }
             if (mouseDownIsDetected)
             {
@@ -98,6 +99,7 @@ public class GameController : MonoBehaviour
         mainLevelsController.CleanLevel();
         ballObjectsList.Clear();
         CreateBall(startPosition, ballPrefub1);
+        trajectorySimulator = new TrajectorySimulation(lineRenderer, 5, ballObjectsList[0]);
     }
 
     //Создает шарик в заданной позиции с гравитацией
@@ -136,10 +138,9 @@ public class GameController : MonoBehaviour
         {
             angle = GetFixetAngle(Vector2.left, GetCurrentGMousePos() - m_MouseDownPosition);
             Debug.Log("Angle - " + angle);
-            startVector = RotateVector(Vector2.left, 180-angle) + startPosition;
+            startVector = RotateVector(Vector2.left, 180 - angle) + startPosition;
             Debug.Log("Start vector - " + startVector);
-            lineRenderer.SetPosition(0, startPosition);
-            lineRenderer.SetPosition(1, startVector);
+            trajectorySimulator.SimulatePath(GetVectorByPoints(startPosition, startVector));
             if (Input.GetMouseButtonUp(0) == true)
             {
                 //Запускает шарик
@@ -151,8 +152,8 @@ public class GameController : MonoBehaviour
 
     }
 
-        //Возвращает угол между 15 и 165
-        private float GetFixetAngle(Vector2 vector1, Vector2 vector2)
+    //Возвращает угол между 15 и 165
+    private float GetFixetAngle(Vector2 vector1, Vector2 vector2)
     {
         float angle = Vector2.Angle(vector1, vector2);
         if (angle < 15) angle = 15;

@@ -3,7 +3,8 @@
 --- !u!78 &1
 TagManager:
   serializedVersion: 2
-  tags: []
+  tags:
+  - Ball
   layers:
   - Default
   - TransparentFX
@@ -13,11 +14,11 @@ TagManager:
   - UI
   - 
   - 
-  - 
-  - 
-  - 
-  - 
-  - 
+  - Ball
+  - Falling Ball
+  - Block
+  - Bound
+  - AddPoint
   - 
   - 
   - 
@@ -38,6 +39,12 @@ TagManager:
   - 
   - 
   m_SortingLayers:
+  - name: Sprite
+    uniqueID: 3071650545
+    locked: 0
+  - name: HP
+    uniqueID: 1176279971
+    locked: 0
   - name: Default
     uniqueID: 0
     locked: 0
