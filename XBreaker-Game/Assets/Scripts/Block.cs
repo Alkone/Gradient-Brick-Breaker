@@ -10,14 +10,14 @@ public class Block : MonoBehaviour {
     private LevelsController levelsController;
     private SpriteRenderer spriteRenderer;
     private TextMesh hpText;
-    private Color myColor;
+    private Color[] colors;
 
 	// Use this for initialization
 	void Start () {
         hpText = GetComponentInChildren<TextMesh>();
         spriteRenderer = GetComponent<SpriteRenderer>();
         levelsController = GetComponentInParent<LevelsController>();
-        myColor = new Color(100 + lifeCount, 100 +lifeCount, 100+lifeCount);
+        colors = GameObject.Find("GameController").GetComponent<ColorManager>().GetColors();
         SetColor();
     }
 	
@@ -32,10 +32,7 @@ public class Block : MonoBehaviour {
     }
 
     private void SetColor(){
-        myColor.r = 100 + lifeCount;
-        myColor.g = 100 + lifeCount;
-        myColor.b = 100 + lifeCount;
-        spriteRenderer.material.SetColor(0,myColor);
+        spriteRenderer.material.color = colors[lifeCount];
     }
 
     private void OnCollisionEnter2D(Collision2D collision)
