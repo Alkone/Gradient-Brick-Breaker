@@ -5,11 +5,16 @@ using UnityEngine.UI;
 
 public class Block : MonoBehaviour {
 
-    [SerializeField] private int lifeCount;
-
-    private LevelsController levelsController;
-    private SpriteRenderer spriteRenderer;
+    //HP блока
+    [SerializeField] 
+    private int lifeCount;
     private TextMesh hpText;
+
+    //Ссылка на контролер
+    private LevelsController levelsController;
+    //Ссылка на спрайтрендер
+    private SpriteRenderer spriteRenderer;
+    //Массив возможных цветов
     private Color[] colors;
 
 	// Use this for initialization
