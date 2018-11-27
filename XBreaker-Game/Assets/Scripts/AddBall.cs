@@ -13,7 +13,7 @@ public class AddBall : MonoBehaviour {
         if (collision.gameObject.tag == "Ball" && !ballAdded)
         {
             Destroy();
-            GameController.CreateBall(gameObject.transform.position, addablePrefab);
+            GameManager.instance.CreateBall(gameObject.transform.position, addablePrefab);
             ballAdded = true;
         }
     }

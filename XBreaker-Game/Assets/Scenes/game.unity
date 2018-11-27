@@ -629,11 +629,12 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 1455871647}
-  - component: {fileID: 1455871646}
   - component: {fileID: 1455871645}
   - component: {fileID: 1455871648}
+  - component: {fileID: 1455871649}
+  - component: {fileID: 1455871646}
   m_Layer: 0
-  m_Name: GameController
+  m_Name: GameManager
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -744,12 +745,13 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 8494cc8c404755c4793fc7f96bf1be22, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  segmentCount: 6
-  mainLevelsController: {fileID: 1794167955}
   ballPrefub1: {fileID: 1110083101469618, guid: 2ed73163596883148bb2ca843db3072c,
     type: 2}
   ballTouchPower: 12
   ballLaunchInterval: 0.02
+  startPosition: {x: 0, y: 0}
+  segmentCount: 6
+  level: 1
 --- !u!4 &1455871647
 Transform:
   m_ObjectHideFlags: 0
@@ -782,6 +784,23 @@ MonoBehaviour:
   - {r: 1, g: 0.18823531, b: 0.03137255, a: 0}
   - {r: 0.5411765, g: 0.03529412, b: 0.18431373, a: 0}
   stepCount: 200
+--- !u!114 &1455871649
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 1455871644}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: fecf39584a6fc7a4cbadf25ec4032f4a, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_BlocksInLine: 7
+  currentLevel: 1
+  m_BlockPrefub1: {fileID: 1042451700578056, guid: 5353684e2a36d41d5a6683bcc4a2f7c2,
+    type: 2}
+  m_AddBallPoint1: {fileID: 1347444772971126, guid: 92935eea348aa6a4393c796db6b5d63f,
+    type: 2}
 --- !u!1 &1553562124
 GameObject:
   m_ObjectHideFlags: 0
@@ -852,7 +871,6 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 1794167954}
-  - component: {fileID: 1794167955}
   m_Layer: 0
   m_Name: Level
   m_TagString: Untagged
@@ -873,20 +891,3 @@ Transform:
   m_Father: {fileID: 0}
   m_RootOrder: 6
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &1794167955
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 0}
-  m_GameObject: {fileID: 1794167953}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: fecf39584a6fc7a4cbadf25ec4032f4a, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  blocksInLine: 8
-  level: 1
-  blockPrefub_1: {fileID: 1042451700578056, guid: 5353684e2a36d41d5a6683bcc4a2f7c2,
-    type: 2}
-  addBallPoint_1: {fileID: 1347444772971126, guid: 92935eea348aa6a4393c796db6b5d63f,
-    type: 2}

@@ -15,16 +15,11 @@ public class TrajectorySimulation
     // Максимальная длина сегмента
     private float segmentScale = Mathf.Infinity;
 
-    //Ссылка на игровой объект
-    private GameObject gameObject;
-
     private LayerMask layerMask;
 
-    public TrajectorySimulation(LineRenderer sightLine, int segmentCount, GameObject gameObject)
+    public TrajectorySimulation(LineRenderer sightLine)
     {
         this.sightLine = sightLine;
-        this.segmentCount = segmentCount;
-        this.gameObject = gameObject;
         layerMask = LayerMask.GetMask("Bound", "Block", "BotBound");
 
     }
@@ -34,13 +29,13 @@ public class TrajectorySimulation
     /// Simulate the path of a launched ball.
     /// Slight errors are inherent in the numerical method used.
     /// </summary>
-    public void SimulatePath(Vector2 launchVector)
+    public void SimulatePath(GameObject go,  Vector2 launchVector, int segmentCount)
     {
         int tempSegmentCount = segmentCount;
 
         Vector2[] segments = new Vector2[segmentCount];
 
-        float circleRadius = gameObject.GetComponent<CircleCollider2D>().radius * gameObject.transform.localScale.x;
+        float circleRadius = go.GetComponent<CircleCollider2D>().radius * go.transform.localScale.x;
 
         // Инициализация скорости
         Vector2 segVelocity = launchVector.normalized * 500 * Time.deltaTime;
@@ -48,7 +43,7 @@ public class TrajectorySimulation
         RaycastHit2D hit;
 
         // Первая точка, равная начальной позиции объекта
-        segments[0] = gameObject.transform.position;
+        segments[0] = go.transform.position;
 
         for (int i = 1; i < segmentCount; i++)
         {

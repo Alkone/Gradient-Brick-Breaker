@@ -9,7 +9,7 @@ public class BotBound : MonoBehaviour
     {
         if (collision.gameObject.layer == 8 || collision.gameObject.layer == 9)
         {
-            GameController.StopBall(collision.gameObject);
+            GameManager.instance.StopBall(collision.gameObject);
         }
     }
 

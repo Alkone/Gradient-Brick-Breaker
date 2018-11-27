@@ -3,53 +3,84 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class GameController : MonoBehaviour
+//Singleton
+public class GameManager : MonoBehaviour
 {
-    //Инициализирует состояние игры
-    public static GameStatus gameStatus = GameStatus.PREPARING;
+    
+    //Singleton
+    public static GameManager instance = null; //Static instance of GameManager which allows it to be accessed by any other script.
+    //
+    private GameStatus gameStatus; //Store a reference to our GameStatus which control level.
+    private LevelManager levelManager; //Store a reference to our LevelManager which control level.
+    private TrajectorySimulation trajectorySimulator; // Store a reference to our LevelManager which simulate gameObeject path.
+    private LineRenderer lineRenderer; // Store a reference to our LineRenderer.
 
-    //Позиция создания первого шарика
-    public static Vector2 startPosition;
+    //Lists
+    private List<GameObject> ballObjectsList;
 
-    //Кол-во предсказанных скачков
-    public int segmentCount = 3;
+    ////Inspector fields
+    [SerializeField] private GameObject ballPrefub1; 
+    [SerializeField] private float ballTouchPower; 
+    [SerializeField] private float ballLaunchInterval; 
+    [SerializeField] private Vector2 startPosition; // Start ball pos
+    [SerializeField] private int segmentCount = 3; //Кол-во предсказанных скачков
+    [SerializeField] private int level = 1;  //Current level number
 
-    [SerializeField] LevelsController mainLevelsController;
-    [SerializeField] private GameObject ballPrefub1;
-    [SerializeField] private float ballTouchPower;
-    [SerializeField] private float ballLaunchInterval;
-
-    private TrajectorySimulation trajectorySimulator;
-
-
-    //список существующих шариков
-    private static List<GameObject> ballObjectsList;
-    private LineRenderer lineRenderer;
-
+    //для  WaitTouchToLunch()
     private bool mouseDownIsDetected = false;
     private Vector2 m_MouseDownPosition;
-
-
-    private static bool firstBallIsStoped = false;
-
+    private bool firstBallIsStoped = false;
     float angle;
 
-    void Start()
+
+    //Awake is always called before any Start functions
+    void Awake()
+    {
+
+        //Check if instance already exists
+        if (instance == null)
+
+            //if not, set instance to this
+            instance = this;
+
+        //If instance already exists and it's not this:
+        else if (instance != this)
+
+            //Then destroy this. This enforces our singleton pattern, meaning there can only ever be one instance of a GameManager.
+            Destroy(gameObject);
+
+        //Sets this to not be destroyed when reloading scene
+        DontDestroyOnLoad(gameObject);
+
+        //Get components
+        levelManager = GetComponent<LevelManager>();
+        lineRenderer = gameObject.GetComponent<LineRenderer>();
+
+        //Init objects
+        trajectorySimulator = new TrajectorySimulation(lineRenderer);
+        ballObjectsList = new List<GameObject>();
+
+        gameStatus = GameStatus.PREPARING; //Instance of GameStatus.
+
+        //Call the InitGame function to initialize the first level 
+        InitGame();
+    }
+    //
+    //
+    //
+
+    void InitGame()
     {
         startPosition = new Vector2(0, -4);
-        lineRenderer = gameObject.GetComponent<LineRenderer>();
-        ballObjectsList = new List<GameObject>();
-        //Запускаем корутин на отслеживание состояния игры
         StartCoroutine(GameStateObserver());
         NewGame();
     }
 
-    private void Update()
+    void Start()
     {
-
+        
     }
-
-    //
+ 
     void FixedUpdate()
     {
         if (gameStatus == GameStatus.READY)
@@ -81,6 +112,8 @@ public class GameController : MonoBehaviour
         if (gameStatus == GameStatus.ENDED)
         {
             Time.timeScale = 1;
+            levelManager.GenerateNextBlockLine();
+            gameStatus = GameStatus.PREPARING;
         }
         if (gameStatus == GameStatus.PREPARING)
         {
@@ -92,21 +125,17 @@ public class GameController : MonoBehaviour
                 Debug.Log(rb2d.GetRelativeVector(startPosition));
             }
         }
-
-
     }
-
 
     public void NewGame()
     {
-        mainLevelsController.CleanLevel();
+        levelManager.SetupScene(level);
         ballObjectsList.Clear();
         CreateBall(startPosition, ballPrefub1);
-        trajectorySimulator = new TrajectorySimulation(lineRenderer, segmentCount, ballObjectsList[0]);
     }
 
     //Создает шарик в заданной позиции с гравитацией
-    public static bool CreateBall(Vector2 position, GameObject ballPrefub)
+    public bool CreateBall(Vector2 position, GameObject ballPrefub)
     {
         GameObject go = Instantiate<GameObject>(ballPrefub, position, Quaternion.identity);
         go.layer = 9;
@@ -117,7 +146,7 @@ public class GameController : MonoBehaviour
     }
 
     //Останавливает шарик
-    public static void StopBall(GameObject ballObject)
+    public void StopBall(GameObject ballObject)
     {
         ballObject.GetComponent<IThrowable>().Stop();
         if (!firstBallIsStoped)
@@ -143,7 +172,7 @@ public class GameController : MonoBehaviour
             Debug.Log("Angle - " + angle);
             startVector = RotateVector(Vector2.left, 180 - angle) + startPosition;
             Debug.Log("Start vector - " + startVector);
-            trajectorySimulator.SimulatePath(GetVectorByPoints(startPosition, startVector));
+            trajectorySimulator.SimulatePath(ballObjectsList[0], GetVectorByPoints(startPosition, startVector), segmentCount);
             if (Input.GetMouseButtonUp(0) == true)
             {
                 //Запускает шарик

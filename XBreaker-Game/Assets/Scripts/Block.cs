@@ -11,7 +11,7 @@ public class Block : MonoBehaviour {
     private TextMesh hpText;
 
     //Ссылка на контролер
-    private LevelsController levelsController;
+    private LevelManager levelsController;
     //Ссылка на спрайтрендер
     private SpriteRenderer spriteRenderer;
     //Массив возможных цветов
@@ -21,7 +21,7 @@ public class Block : MonoBehaviour {
 	void Start () {
         hpText = GetComponentInChildren<TextMesh>();
         spriteRenderer = GetComponent<SpriteRenderer>();
-        levelsController = GetComponentInParent<LevelsController>();
+        levelsController = GetComponentInParent<LevelManager>();
         colors = GameObject.Find("GameController").GetComponent<ColorManager>().GetColors();
         SetColor();
     }
