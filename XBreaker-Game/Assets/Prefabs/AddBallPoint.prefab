@@ -22,6 +22,7 @@ GameObject:
   - component: {fileID: 212602955495601420}
   - component: {fileID: 114606651308228222}
   - component: {fileID: 58213552065842472}
+  - component: {fileID: 111784129614018732}
   m_Layer: 12
   m_Name: AddBallPoint
   m_TagString: Untagged
@@ -36,8 +37,8 @@ Transform:
   m_PrefabInternal: {fileID: 100100000}
   m_GameObject: {fileID: 1347444772971126}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 1.98, y: 3.74, z: 9}
-  m_LocalScale: {x: 0.2567204, y: 0.2567204, z: 0.2567204}
+  m_LocalPosition: {x: -0.89183736, y: -3.808321, z: 9}
+  m_LocalScale: {x: 0.3, y: 0.3, z: 0}
   m_Children: []
   m_Father: {fileID: 0}
   m_RootOrder: 0
@@ -57,6 +58,21 @@ CircleCollider2D:
   m_Offset: {x: 0, y: 0}
   serializedVersion: 2
   m_Radius: 0.64000005
+--- !u!111 &111784129614018732
+Animation:
+  m_ObjectHideFlags: 1
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 1347444772971126}
+  m_Enabled: 1
+  serializedVersion: 3
+  m_Animation: {fileID: 7400000, guid: c4514d409532a2e47b2d2ed130b980f8, type: 2}
+  m_Animations:
+  - {fileID: 7400000, guid: c4514d409532a2e47b2d2ed130b980f8, type: 2}
+  m_WrapMode: 0
+  m_PlayAutomatically: 1
+  m_AnimatePhysics: 0
+  m_CullingType: 0
 --- !u!114 &114606651308228222
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -106,7 +122,7 @@ SpriteRenderer:
   m_SortingLayer: 0
   m_SortingOrder: 0
   m_Sprite: {fileID: 21300000, guid: 465bdce98f0ff4744a3d9ce3609447f0, type: 3}
-  m_Color: {r: 0.34901962, g: 0.7294118, b: 0.78823537, a: 1}
+  m_Color: {r: 0.20784315, g: 0.7176471, b: 0.47450984, a: 1}
   m_FlipX: 0
   m_FlipY: 0
   m_DrawMode: 0

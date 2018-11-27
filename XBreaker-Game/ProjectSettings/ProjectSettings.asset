@@ -712,9 +712,9 @@ PlayerSettings:
     UNet: 1
   facebookSdkVersion: 7.9.4
   apiCompatibilityLevel: 3
-  cloudProjectId: 208bc571-82f1-452c-8d0d-c3dfa287fdc7
+  cloudProjectId: 5b41c40b-5a55-4c51-8889-d5c7b035d3e9
   projectName: XBreaker-Game
-  organizationId: devalkone
+  organizationId: alkone
   cloudEnabled: 0
   enableNativePlatformBackendsForNewInputSystem: 0
   disableOldInputManagerSupport: 0

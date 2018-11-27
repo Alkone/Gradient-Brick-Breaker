@@ -7,7 +7,7 @@ public class ColorManager : MonoBehaviour {
 
     public Color[] mainBlockColors;  //массив промежуточных цветов
     private Color[] generatedBlockColors;  //массив готовых цветов
-    public int stepCount = 200;    //шаг = размер массива
+    public int stepCount = 200;    //шаг
 
     //генерирует цвета с шагом 1/stepCount и возвращает массив цветов
     public  Color[] GetBlockColors()

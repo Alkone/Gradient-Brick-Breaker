@@ -39,7 +39,7 @@ public class Ball : BaseThrowable, IThrowable
     {
         if (isLaunched)
         {
-            if(gameObject.GetComponent<Rigidbody2D>().velocity.y<0.1 && gameObject.GetComponent<Rigidbody2D>().velocity.y > -0.1) FixYVelocity();
+            if(gameObject.GetComponent<Rigidbody2D>().velocity.y<0.2 && gameObject.GetComponent<Rigidbody2D>().velocity.y > -0.2) FixYVelocity();
         }
     }
 }

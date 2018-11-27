@@ -15,6 +15,7 @@ public class Block : MonoBehaviour {
     private SpriteRenderer spriteRenderer;
     //Массив возможных цветов
     private Color[] colors;
+    private Animation blockAnimation;
 
 	// Use this for initialization
 	void Start () {
@@ -39,6 +40,13 @@ public class Block : MonoBehaviour {
         spriteRenderer.material.color = colors[lifeCount];
     }
 
+    //DON'T WORKING
+    private void SetupAnimation()
+    {
+        AnimationCurve curve = AnimationCurve.Linear(0.0F, 1.0F, 2.0F, 0.0F);
+
+    }
+
     private void OnCollisionEnter2D(Collision2D collision)
     {
         if (lifeCount < 2)
@@ -46,6 +54,7 @@ public class Block : MonoBehaviour {
             Destroy();
         }
         else{
+            GetComponent<Animation>().Play();
             lifeCount--;
             SetColor();
         }

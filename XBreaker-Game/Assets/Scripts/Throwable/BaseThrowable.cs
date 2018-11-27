@@ -22,14 +22,14 @@ public abstract class BaseThrowable : MonoBehaviour
     {
          Vector2 fixedVelocity = new Vector2(); ;
         velocity = gameObject.GetComponent<Rigidbody2D>().velocity;
-        if (velocity.y > 0 && velocity.y < 0.1)
+        if (velocity.y > 0 && velocity.y < 0.2)
         {
             fixedVelocity.x = velocity.x;
             fixedVelocity.y = velocity.y + (float)0.01;
             gameObject.GetComponent<Rigidbody2D>().velocity = fixedVelocity;
             Debug.Log(gameObject.GetInstanceID().ToString() + " y_velocity=" + velocity.y + " fixed to " + fixedVelocity.y);
         }
-        else if (velocity.y > -0.1 && velocity.y <= 0)
+        else if (velocity.y > -0.2 && velocity.y <= 0)
         {
             fixedVelocity.x = velocity.x;
             fixedVelocity.y = velocity.y - (float)0.01;

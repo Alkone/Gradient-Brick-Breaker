@@ -244,15 +244,13 @@ public class GameManager : MonoBehaviour
     //Корутин на зпуск шариков с интервалом
     public IEnumerator StartBall(List<GameObject> ballObjectsList, Vector2 startingVector, float delay)
     {
+        IThrowable throwable;
         List<GameObject> currentStateObjectsList = new List<GameObject>(ballObjectsList);
-        IThrowable throwable = currentStateObjectsList[0].GetComponent<IThrowable>();
-
-        throwable.Launch(startingVector * ballTouchPower);
-
-        for (int i = 1; i < ballObjectsList.Count; i++)
+ 
+        for (int i = 0; i < ballObjectsList.Count; i++)
         {
             throwable = currentStateObjectsList[i].GetComponent<IThrowable>();
-            yield return new WaitForSeconds(delay);
+            yield return new WaitForSecondsRealtime(delay*Time.deltaTime);
             throwable.Launch(startingVector * ballTouchPower);
         }
 
