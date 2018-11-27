@@ -42,12 +42,26 @@ public class TrajectorySimulation
         // Первая точка, равная начальной позиции объекта
         segments[0] = go.transform.position;
 
+
+        GameObject tempGo = null;
+        int oldLayer = 0;
+
         for (int i = 1; i < segmentCount; i++)
         {
+            
+
             // Check to see if we're going to hit a physics object
-            hit = Physics2D.CircleCast(segments[i - 1] + segVelocity.normalized*0.004f, circleRadius, segVelocity, segmentScale, layerMask);
+            hit = Physics2D.CircleCast(segments[i - 1], circleRadius, segVelocity, segmentScale, layerMask);
             if (hit)
             {
+                //Вовзращаем исходные значения
+                if (tempGo != null)
+                {
+                    if (tempGo.layer == 14)
+                    {
+                        tempGo.layer = oldLayer;
+                    }
+                }
                 // Если след. точка == нижней границе (BotBound), то сворачиваемся
                 if(hit.collider.gameObject.layer == 13){
                     tempSegmentCount = i;
@@ -56,6 +70,11 @@ public class TrajectorySimulation
                 segments[i] = hit.centroid;
                 // flip the velocity to simulate a bounce
                 segVelocity = Vector2.Reflect(segVelocity, hit.normal);
+
+                //Меняем layer последнего коснувшегося объекта
+                tempGo = hit.collider.gameObject;
+                oldLayer = tempGo.layer;
+                tempGo.layer = 14;
                 /*
                  * Here you could check if the object hit by the Raycast had some property - was 
                  * sticky, would cause the ball to explode, or was another ball in the air for 
@@ -65,10 +84,20 @@ public class TrajectorySimulation
             }
         }
 
+        //Вовзращаем исходные значения
+        if (tempGo != null)
+        {
+            if (tempGo.layer == 14)
+            {
+                tempGo.layer = oldLayer;
+            }
+        }
+
+
         sightLine.positionCount = tempSegmentCount;
         for (int i = 0; i < tempSegmentCount; i++)
         {
-            Debug.Log("Segment " + segments[i]);
+            //Debug.Log("Segment " + segments[i]);
             sightLine.SetPosition(i, segments[i]);
         }
     }
