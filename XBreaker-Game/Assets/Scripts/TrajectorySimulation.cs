@@ -45,12 +45,12 @@ public class TrajectorySimulation
         for (int i = 1; i < segmentCount; i++)
         {
             // Check to see if we're going to hit a physics object
-            hit = Physics2D.CircleCast(segments[i - 1] + segVelocity.normalized*0.005f, circleRadius, segVelocity, segmentScale, layerMask);
+            hit = Physics2D.CircleCast(segments[i - 1] + segVelocity.normalized*0.004f, circleRadius, segVelocity, segmentScale, layerMask);
             if (hit)
             {
                 // Если след. точка == нижней границе (BotBound), то сворачиваемся
                 if(hit.collider.gameObject.layer == 13){
-                    tempSegmentCount = i+1;
+                    tempSegmentCount = i;
                     break;
                 }
                 segments[i] = hit.centroid;
