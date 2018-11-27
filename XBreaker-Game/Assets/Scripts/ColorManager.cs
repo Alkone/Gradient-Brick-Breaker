@@ -5,34 +5,33 @@ using UnityEngine;
 // Генерирует массив цветов с n-шагом
 public class ColorManager : MonoBehaviour {
 
-    //массив цветов
-    public Color[] mainColors;
-
-    //шаг = размер массива
-    public int stepCount = 200;
-    //массив цветов
-    private Color[] generatedColors;
+    public Color[] mainBlockColors;  //массив промежуточных цветов
+    private Color[] generatedBlockColors;  //массив готовых цветов
+    public int stepCount = 200;    //шаг = размер массива
 
     //генерирует цвета с шагом 1/stepCount и возвращает массив цветов
-    public  Color[] GetColors()
+    public  Color[] GetBlockColors()
     {
-        if (generatedColors == null)
+        if (generatedBlockColors == null)
         {
-            generatedColors = new Color[stepCount];
+            generatedBlockColors = new Color[stepCount* mainBlockColors.Length];
+            int index = 0;
             float step = 1f / stepCount;
-            for (int colorNumber = 1; colorNumber < mainColors.Length; colorNumber++)
+            for (int colorNumber = 1; colorNumber < mainBlockColors.Length; colorNumber++)
             {
                 float tempStep = step;
                 for (int i = 0; i < stepCount; i++)
                 {
-                    generatedColors[i] = Color.Lerp(mainColors[colorNumber-1], mainColors[colorNumber], tempStep);
+                    generatedBlockColors[index] = Color.Lerp(mainBlockColors[colorNumber-1], mainBlockColors[colorNumber], tempStep);
+                    generatedBlockColors[index].a = 1;
+                    index++;
                     tempStep += step;
-                    Debug.Log(tempStep.ToString());
-                    Debug.Log(generatedColors[i].ToString());
+                    //Debug.Log(tempStep.ToString());
+                    //Debug.Log(generatedBlockColors[i].ToString());
                 }
             }
         }
-        return generatedColors;
+        return generatedBlockColors;
     }
 
 }

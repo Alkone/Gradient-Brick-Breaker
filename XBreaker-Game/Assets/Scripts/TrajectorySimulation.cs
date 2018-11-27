@@ -9,9 +9,6 @@ public class TrajectorySimulation
     // Ссылка на LineRender
     private LineRenderer sightLine;
 
-    // Колоичество сегментов
-    private int segmentCount = 5;
-
     // Максимальная длина сегмента
     private float segmentScale = Mathf.Infinity;
 
@@ -51,10 +48,9 @@ public class TrajectorySimulation
             hit = Physics2D.CircleCast(segments[i - 1] + segVelocity.normalized*0.005f, circleRadius, segVelocity, segmentScale, layerMask);
             if (hit)
             {
-
                 // Если след. точка == нижней границе (BotBound), то сворачиваемся
                 if(hit.collider.gameObject.layer == 13){
-                    tempSegmentCount = i;
+                    tempSegmentCount = i+1;
                     break;
                 }
                 segments[i] = hit.centroid;

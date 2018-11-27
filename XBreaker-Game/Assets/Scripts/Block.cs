@@ -6,12 +6,11 @@ using UnityEngine.UI;
 public class Block : MonoBehaviour {
 
     //HP блока
-    [SerializeField] 
-    private int lifeCount;
+    [SerializeField] private int lifeCount;
     private TextMesh hpText;
 
     //Ссылка на контролер
-    private LevelManager levelsController;
+    private LevelManager levelManager;
     //Ссылка на спрайтрендер
     private SpriteRenderer spriteRenderer;
     //Массив возможных цветов
@@ -21,8 +20,8 @@ public class Block : MonoBehaviour {
 	void Start () {
         hpText = GetComponentInChildren<TextMesh>();
         spriteRenderer = GetComponent<SpriteRenderer>();
-        levelsController = GetComponentInParent<LevelManager>();
-        colors = GameObject.Find("GameController").GetComponent<ColorManager>().GetColors();
+        levelManager = GameManager.instance.GetLevelManager();
+        colors = GameManager.instance.GetColorManager().GetBlockColors();
         SetColor();
     }
 	
@@ -60,7 +59,7 @@ public class Block : MonoBehaviour {
     private IEnumerator DestroyThisObject()
     {
         yield return new WaitForSeconds((float)0.02);
-        levelsController.RemoveGameObject(gameObject);
+        levelManager.RemoveGameObject(gameObject);
         Destroy(gameObject);
     }
 }

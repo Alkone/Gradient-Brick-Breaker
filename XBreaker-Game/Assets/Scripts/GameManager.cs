@@ -13,6 +13,7 @@ public class GameManager : MonoBehaviour
     private GameStatus gameStatus; //Store a reference to our GameStatus which control level.
     private LevelManager levelManager; //Store a reference to our LevelManager which control level.
     private TrajectorySimulation trajectorySimulator; // Store a reference to our LevelManager which simulate gameObeject path.
+    private ColorManager colorManager; //
     private LineRenderer lineRenderer; // Store a reference to our LineRenderer.
 
     //Lists
@@ -24,7 +25,7 @@ public class GameManager : MonoBehaviour
     [SerializeField] private float ballLaunchInterval; 
     [SerializeField] private Vector2 startPosition; // Start ball pos
     [SerializeField] private int segmentCount = 3; //Кол-во предсказанных скачков
-    [SerializeField] private int level = 1;  //Current level number
+    [SerializeField] private int startLevel = 1;  //Current level number
 
     //для  WaitTouchToLunch()
     private bool mouseDownIsDetected = false;
@@ -54,7 +55,8 @@ public class GameManager : MonoBehaviour
 
         //Get components
         levelManager = GetComponent<LevelManager>();
-        lineRenderer = gameObject.GetComponent<LineRenderer>();
+        lineRenderer = GetComponent<LineRenderer>();
+        colorManager = GetComponent<ColorManager>();
 
         //Init objects
         trajectorySimulator = new TrajectorySimulation(lineRenderer);
@@ -129,10 +131,22 @@ public class GameManager : MonoBehaviour
 
     public void NewGame()
     {
-        levelManager.SetupScene(level);
+        levelManager.SetupScene(startLevel);
         ballObjectsList.Clear();
         CreateBall(startPosition, ballPrefub1);
     }
+
+    //Getters private field link
+    public ColorManager GetColorManager()
+    {
+        return colorManager;
+    }
+    public LevelManager GetLevelManager()
+    {
+        return levelManager;
+    }
+
+    //end getters
 
     //Создает шарик в заданной позиции с гравитацией
     public bool CreateBall(Vector2 position, GameObject ballPrefub)
@@ -158,7 +172,7 @@ public class GameManager : MonoBehaviour
     }
 
     //Ждет пока игрок прикоснется к экрану и начнет игру
-    public void WaitTouchToLunch()
+    private void WaitTouchToLunch()
     {
         Vector2 startVector;
         if (Input.GetMouseButtonDown(0) == true && !mouseDownIsDetected)
@@ -184,12 +198,14 @@ public class GameManager : MonoBehaviour
 
     }
 
-    //Возвращает угол между 15 и 165
+ 
+
+    //Возвращает угол между 10 и 170
     private float GetFixetAngle(Vector2 vector1, Vector2 vector2)
     {
         float angle = Vector2.Angle(vector1, vector2);
-        if (angle < 15) angle = 15;
-        else if (angle > 165) angle = 165;
+        if (angle < 10) angle = 10;
+        else if (angle > 170) angle = 170;
         return angle;
     }
 
