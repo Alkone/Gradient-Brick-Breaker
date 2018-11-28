@@ -40,7 +40,7 @@ public class GameManager : MonoBehaviour
     //Awake is always called before any Start functions
     void Awake()
     {
-        Application.targetFrameRate = 100;
+        Application.targetFrameRate = 300;
         //Check if instance already exists
         if (instance == null)
 
