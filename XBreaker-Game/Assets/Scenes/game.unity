@@ -372,6 +372,11 @@ Prefab:
       propertyPath: camera
       value: 
       objectReference: {fileID: 519420031}
+    - target: {fileID: 61879737893020844, guid: 6daa7227cac79d74f92c1c78dd71734d,
+        type: 2}
+      propertyPath: m_EdgeRadius
+      value: 0
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 6daa7227cac79d74f92c1c78dd71734d, type: 2}
   m_IsPrefabAsset: 0
@@ -532,7 +537,7 @@ Prefab:
     - target: {fileID: 114369899425536314, guid: 2d47c2b85c2384b3e9775fa3b75e27ef,
         type: 2}
       propertyPath: ballLaunchInterval
-      value: 1
+      value: 0.03
       objectReference: {fileID: 0}
     - target: {fileID: 114005096843525392, guid: 2d47c2b85c2384b3e9775fa3b75e27ef,
         type: 2}
@@ -702,6 +707,11 @@ Prefab:
     - target: {fileID: 120413812691033494, guid: 2d47c2b85c2384b3e9775fa3b75e27ef,
         type: 2}
       propertyPath: m_Positions.Array.data[1].z
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 114369899425536314, guid: 2d47c2b85c2384b3e9775fa3b75e27ef,
+        type: 2}
+      propertyPath: ballTouchPower
       value: 1
       objectReference: {fileID: 0}
     m_RemovedComponents: []
