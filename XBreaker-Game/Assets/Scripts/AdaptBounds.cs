@@ -15,7 +15,7 @@ public class AdaptBounds : MonoBehaviour {
     
 
 	// Use this for initialization
-	void Start () {
+	void Start() {
         float width = camera.pixelWidth;
         float height = camera.pixelHeight;
         Vector2 worldCameraSize = camera.ScreenToWorldPoint(new Vector2(width, height));

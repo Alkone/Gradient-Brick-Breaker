@@ -10,6 +10,7 @@ public class LevelManager : MonoBehaviour {
     [SerializeField] private int linesCount = 0;
     [SerializeField] private GameObject m_BlockPrefub1;
     [SerializeField] private GameObject m_AddBallPoint1;
+    [SerializeField] GameObject parentObject; //папка куда будем складывать все объекты
 
     private float cellSize;
     private Vector2 screenSize;
@@ -115,7 +116,7 @@ public class LevelManager : MonoBehaviour {
     private void CreateGameObject(GameObject prefub, Vector2 pos, int blockLife)
     {
         GameObject go;
-        go = Instantiate(prefub, pos, Quaternion.identity, gameObject.transform);
+        go = Instantiate(prefub, pos, Quaternion.identity, parentObject.transform);
 
         //if Block
         if (prefub.GetComponent<Block>())
@@ -170,9 +171,9 @@ public class LevelManager : MonoBehaviour {
 
 
     //Move level down on one cell size.
-    private void MoveLevelDownOnOneCell()
+    private void MoveLevelDownOnOneCell(GameObject parent)
     {
-        gameObject.transform.position = new Vector2(gameObject.transform.position.x, gameObject.transform.position.y - cellSize);
+        parent.transform.position = new Vector2(parent.transform.position.x, parent.transform.position.y - cellSize);
     }
 
     private void FixedUpdate()
@@ -182,7 +183,7 @@ public class LevelManager : MonoBehaviour {
             CreateLevel(currentLevel);
             linesCount++;
             currentLevel++;
-            MoveLevelDownOnOneCell();
+            MoveLevelDownOnOneCell(parentObject);
             permissionToGenBlockLine = false;
         }
         

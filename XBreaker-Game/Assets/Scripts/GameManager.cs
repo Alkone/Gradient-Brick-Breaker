@@ -5,27 +5,30 @@ using UnityEngine;
 
 //Singleton
 public class GameManager : MonoBehaviour
-{
-    
+{    
     //Singleton
     public static GameManager instance = null; //Static instance of GameManager which allows it to be accessed by any other script.
     //
+    private AdaptBounds adaptBounds;
     private GameStatus gameStatus; //Store a reference to our GameStatus which control level.
     private LevelManager levelManager; //Store a reference to our LevelManager which control level.
     private TrajectorySimulation trajectorySimulator; // Store a reference to our LevelManager which simulate gameObeject path.
     private ColorManager colorManager; //
     private LineRenderer lineRenderer; // Store a reference to our LineRenderer.
+    
 
     //Lists
     private List<GameObject> ballObjectsList;
 
     ////Inspector fields
+    [SerializeField] private GameObject bounds;
     [SerializeField] private GameObject ballPrefub1; 
     [SerializeField] private float ballTouchPower; 
     [SerializeField] private float ballLaunchInterval; 
     [SerializeField] private Vector2 startPosition; // Start ball pos
     [SerializeField] private int segmentCount = 3; //Кол-во предсказанных скачков
     [SerializeField] private int startLevel = 1;  //Current level number
+    
 
     //для  WaitTouchToLunch()
     private bool mouseDownIsDetected = false;
@@ -37,7 +40,7 @@ public class GameManager : MonoBehaviour
     //Awake is always called before any Start functions
     void Awake()
     {
-
+        Application.targetFrameRate = 100;
         //Check if instance already exists
         if (instance == null)
 
@@ -54,6 +57,7 @@ public class GameManager : MonoBehaviour
         DontDestroyOnLoad(gameObject);
 
         //Get components
+        adaptBounds = bounds.GetComponent<AdaptBounds>();
         levelManager = GetComponent<LevelManager>();
         lineRenderer = GetComponent<LineRenderer>();
         colorManager = GetComponent<ColorManager>();
@@ -65,7 +69,7 @@ public class GameManager : MonoBehaviour
         gameStatus = GameStatus.PREPARING; //Instance of GameStatus.
 
         //Call the InitGame function to initialize the first level 
-        InitGame();
+        
     }
     //
     //
@@ -80,7 +84,7 @@ public class GameManager : MonoBehaviour
 
     void Start()
     {
-        
+        InitGame();
     }
  
     void FixedUpdate()

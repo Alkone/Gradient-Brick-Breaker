@@ -299,7 +299,7 @@ Camera:
   far clip plane: 50
   field of view: 111
   orthographic: 1
-  orthographic size: 4.96875
+  orthographic size: 6.128125
   m_Depth: -1
   m_CullingMask:
     serializedVersion: 2
@@ -537,7 +537,7 @@ Prefab:
     - target: {fileID: 114369899425536314, guid: 2d47c2b85c2384b3e9775fa3b75e27ef,
         type: 2}
       propertyPath: ballLaunchInterval
-      value: 0.03
+      value: 0.04
       objectReference: {fileID: 0}
     - target: {fileID: 114005096843525392, guid: 2d47c2b85c2384b3e9775fa3b75e27ef,
         type: 2}
@@ -552,17 +552,17 @@ Prefab:
     - target: {fileID: 114448863305164002, guid: 2d47c2b85c2384b3e9775fa3b75e27ef,
         type: 2}
       propertyPath: mainBlockColors.Array.data[12].r
-      value: 0.3018868
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 114448863305164002, guid: 2d47c2b85c2384b3e9775fa3b75e27ef,
         type: 2}
       propertyPath: mainBlockColors.Array.data[12].g
-      value: 0.3018868
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 114448863305164002, guid: 2d47c2b85c2384b3e9775fa3b75e27ef,
         type: 2}
       propertyPath: mainBlockColors.Array.data[12].b
-      value: 0.3018868
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 114448863305164002, guid: 2d47c2b85c2384b3e9775fa3b75e27ef,
         type: 2}
@@ -712,13 +712,23 @@ Prefab:
     - target: {fileID: 114369899425536314, guid: 2d47c2b85c2384b3e9775fa3b75e27ef,
         type: 2}
       propertyPath: ballTouchPower
-      value: 1
+      value: 0.6
       objectReference: {fileID: 0}
     - target: {fileID: 114005096843525392, guid: 2d47c2b85c2384b3e9775fa3b75e27ef,
         type: 2}
       propertyPath: lifeOfSpawnBoxes
       value: 2
       objectReference: {fileID: 0}
+    - target: {fileID: 114005096843525392, guid: 2d47c2b85c2384b3e9775fa3b75e27ef,
+        type: 2}
+      propertyPath: parentObject
+      value: 
+      objectReference: {fileID: 1794167953}
+    - target: {fileID: 114369899425536314, guid: 2d47c2b85c2384b3e9775fa3b75e27ef,
+        type: 2}
+      propertyPath: bounds
+      value: 
+      objectReference: {fileID: 1805516420}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 2d47c2b85c2384b3e9775fa3b75e27ef, type: 2}
   m_IsPrefabAsset: 0
@@ -750,3 +760,8 @@ Transform:
   m_Father: {fileID: 0}
   m_RootOrder: 6
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!1 &1805516420 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 1350802322291590, guid: 6daa7227cac79d74f92c1c78dd71734d,
+    type: 2}
+  m_PrefabInternal: {fileID: 567965761}
