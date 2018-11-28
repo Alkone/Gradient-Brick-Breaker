@@ -32,7 +32,6 @@ public class GameManager : MonoBehaviour
 
     //для  WaitTouchToLunch()
     private bool mouseDownIsDetected = false;
-    private Vector2 m_MouseDownPosition;
     private bool firstBallIsStoped = false;
     float angle;
 
@@ -194,14 +193,13 @@ public class GameManager : MonoBehaviour
         Vector2 startVector;
         if (Input.GetMouseButtonDown(0) == true && !mouseDownIsDetected)
         {
-            m_MouseDownPosition = GetCurrentGMousePos();
             mouseDownIsDetected = true;
         }
         if (mouseDownIsDetected)
         {
-            angle = GetFixetAngle(Vector2.left, GetCurrentGMousePos() - m_MouseDownPosition);
+            angle = GetFixetAngle(Vector2.left, GetCurrentGMousePos() - startPosition);
             Debug.Log("Angle - " + angle);
-            startVector = RotateVector(Vector2.left, 180 - angle) + startPosition;
+            startVector = RotateVector(Vector2.left, angle) + startPosition;
             Debug.Log("Start vector - " + startVector);
             trajectorySimulator.SimulatePath(ballObjectsList[0], GetVectorByPoints(startPosition, startVector), segmentCount);
             if (Input.GetMouseButtonUp(0) == true)
