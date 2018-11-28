@@ -6,45 +6,27 @@ public class AddBall : MonoBehaviour {
 
     [SerializeField] private GameObject addablePrefab;
 
-    //Ссылка на контролер
-    private LevelManager levelManager;
-
     private bool ballAdded = false;
-
-    private void Start()
-    {
-        levelManager = GameManager.instance.GetLevelManager();
-    }
 
     private void OnTriggerEnter2D(Collider2D collision)
     {
         if (collision.gameObject.tag == "Ball" && !ballAdded)
         {
-            AddBallAndDestroyThis();
+            Destroy();
+            GameManager.instance.CreateBall(gameObject.transform.position, addablePrefab);
+            ballAdded = true;
         }
     }
 
-    private void Add()
-    {
-        GameManager.instance.CreateBall(gameObject.transform.position, addablePrefab);
-        ballAdded = true;
-    }
-
-    public void AddBallAndDestroyThis()
-    {
-        Add();
-        StartCoroutine("DestroyThisObject");
-    }
-
-    public void DestroyOnly()
+    public void Destroy()
     {
         StartCoroutine("DestroyThisObject");
     }
+
 
     private IEnumerator DestroyThisObject()
     {
         yield return new WaitForSeconds((float)0.02);
-        levelManager.RemoveGameObject(gameObject);
         Destroy(gameObject);
     }
 }

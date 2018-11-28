@@ -36,7 +36,6 @@ public class GameManager : MonoBehaviour
     private bool firstBallIsStoped = false;
     float angle;
 
-    private bool playerLose = false;
 
     //Awake is always called before any Start functions
     void Awake()
@@ -75,38 +74,21 @@ public class GameManager : MonoBehaviour
     //
     //
     //
-    void Start()
-    {
-        InitGame();
-    }
 
     void InitGame()
     {
+        startPosition = new Vector2(0, -4);
         StartCoroutine(GameStateObserver());
         NewGame();
     }
 
-    public void NewGame()
+    void Start()
     {
-        levelManager.SetupScene(startLevel);
-        ballObjectsList.Clear();
-        DestroyAllBals();
-        startPosition = new Vector2(0, -4);
-        CreateBall(startPosition, ballPrefub1);
+        InitGame();
     }
-
-    public void PlayerLose()
-    {
-        playerLose = true;
-    }
-
+ 
     void FixedUpdate()
     {
-        if (playerLose)
-        {
-            playerLose = false;
-            NewGame();
-        }
         if (gameStatus == GameStatus.READY)
         {
             WaitTouchToLunch();
@@ -149,6 +131,13 @@ public class GameManager : MonoBehaviour
                 Debug.Log(rb2d.GetRelativeVector(startPosition));
             }
         }
+    }
+
+    public void NewGame()
+    {
+        levelManager.SetupScene(startLevel);
+        ballObjectsList.Clear();
+        CreateBall(startPosition, ballPrefub1);
     }
 
     //Getters private field link
@@ -213,14 +202,7 @@ public class GameManager : MonoBehaviour
 
     }
 
- private void DestroyAllBals()
-    {
-        foreach(var ball in ballObjectsList)
-        {
-            ball.GetComponent<Ball>().DestroyBall();
-        }
-        ballObjectsList.Clear();
-    }
+ 
 
     //Возвращает угол между 10 и 170
     private float GetFixetAngle(Vector2 vector1, Vector2 vector2)

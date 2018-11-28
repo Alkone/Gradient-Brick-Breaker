@@ -1,7 +1,6 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-using UnityEngine.UI;
 using Random = UnityEngine.Random;
 
 public class LevelManager : MonoBehaviour {
@@ -12,9 +11,6 @@ public class LevelManager : MonoBehaviour {
     [SerializeField] private GameObject m_BlockPrefub1;
     [SerializeField] private GameObject m_AddBallPoint1;
     [SerializeField] GameObject parentObject; //папка куда будем складывать все объекты
-
-    //UI
-    [SerializeField] private Text textLevel;
 
     private float cellSize;
     private Vector2 screenSize;
@@ -27,7 +23,7 @@ public class LevelManager : MonoBehaviour {
     //Status
     private bool permissionToGenBlockLine;
 
-    void Awake () {
+    void Start () {
         permissionToGenBlockLine = false;
 
         //Create Lists
@@ -41,12 +37,7 @@ public class LevelManager : MonoBehaviour {
         //get block size = cellSize*cellSize
         m_BlockPrefub1.transform.localScale = new Vector3(cellSize, cellSize, 0);
         //setting start point of the blocks
-        spawnPos = new Vector3 (-screenSize.x + cellSize / 2 , screenSize.y - cellSize*2, 0);
-    }
-
-    public float GetCellSize()
-    {
-        return cellSize;
+        spawnPos = new Vector3 (-screenSize.x + cellSize / 2 , screenSize.y + cellSize/2, 0);
     }
 
     //Clean and start create new levels
@@ -173,7 +164,7 @@ public class LevelManager : MonoBehaviour {
         {
             foreach (var addBall in addBallsList)
             {
-                addBall.GetComponent<AddBall>().DestroyOnly();
+                addBall.GetComponent<AddBall>().Destroy();
             }
         }
     }
@@ -189,7 +180,6 @@ public class LevelManager : MonoBehaviour {
     {
         if (permissionToGenBlockLine)
         {
-            textLevel.text = currentLevel.ToString();
             CreateLevel(currentLevel);
             linesCount++;
             currentLevel++;

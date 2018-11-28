@@ -49,18 +49,14 @@ public class Block : MonoBehaviour {
 
     private void OnCollisionEnter2D(Collision2D collision)
     {
-        if (collision.gameObject.layer == 8)
+        GetComponent<Animation>().Play();
+        if (lifeCount < 2)
         {
-            GetComponent<Animation>().Play();
-            if (lifeCount < 2)
-            {
-                Destroy();
-            }
-            else
-            {
-                lifeCount--;
-                SetColor();
-            }
+            Destroy();
+        }
+        else{
+            lifeCount--;
+            SetColor();
         }
     }
 
