@@ -11,33 +11,40 @@ public class AdaptBounds : MonoBehaviour {
     [SerializeField] private GameObject botBound;
     [SerializeField] private GameObject topBound;
 
-    [SerializeField] private float collider2dWidth = 1;
-    
 
-	// Use this for initialization
-	void Start() {
+    // Use this for initialization
+    void Start() {
+        float cellSize = GameManager.instance.GetLevelManager().GetCellSize(); //Получаем размер ячейки из LevelManager-a
         float width = camera.pixelWidth;
         float height = camera.pixelHeight;
         Vector2 worldCameraSize = camera.ScreenToWorldPoint(new Vector2(width, height));
 
         //Задаем размеры коллайдеров и местоположение относительно геймобджекта
-        leftBound.GetComponent<BoxCollider2D>().offset = new Vector2(-leftBound.transform.localScale.x / 2, 0);
-        leftBound.GetComponent<BoxCollider2D>().size = new Vector2(collider2dWidth, worldCameraSize.y*2);
+        leftBound.GetComponent<BoxCollider2D>().offset = new Vector2(0, 0); //положение коллайдера относительно объекта
+        leftBound.GetComponent<BoxCollider2D>().autoTiling = true; // включаем авто растягивание коллайдера
+        leftBound.GetComponent<BoxCollider2D>().size = new Vector2(1, 1); // размер коллайдера = размеру gameObject
+        leftBound.transform.localScale = new Vector2(cellSize, worldCameraSize.y * 2); // задаем размеры GameObject
 
-        rightBound.GetComponent<BoxCollider2D>().offset = new Vector2(leftBound.transform.localScale.x / 2, 0);
-        rightBound.GetComponent<BoxCollider2D>().size = new Vector2(collider2dWidth, worldCameraSize.y * 2);
+        rightBound.GetComponent<BoxCollider2D>().offset = new Vector2(0, 0); //положение коллайдера относительно объекта
+        rightBound.GetComponent<BoxCollider2D>().autoTiling = true; // включаем авто растягивание коллайдера
+        rightBound.GetComponent<BoxCollider2D>().size = new Vector2(1, 1); // размер коллайдера = размеру gameObject
+        rightBound.transform.localScale = new Vector2(cellSize, worldCameraSize.y * 2); // задаем размеры GameObject
 
-        topBound.GetComponent<BoxCollider2D>().offset = new Vector2(0, leftBound.transform.localScale.x / 2);
-        topBound.GetComponent<BoxCollider2D>().size = new Vector2(worldCameraSize.x * 2, collider2dWidth);
+        topBound.GetComponent<BoxCollider2D>().offset = new Vector2(0, 0); //положение коллайдера относительно объекта
+        topBound.GetComponent<BoxCollider2D>().autoTiling = true; // включаем авто растягивание коллайдера
+        topBound.GetComponent<BoxCollider2D>().size = new Vector2(1, 1); // размер коллайдера = размеру gameObject
+        topBound.transform.localScale = new Vector2(worldCameraSize.x*2, cellSize*2); // задаем размеры GameObject
 
-        botBound.GetComponent<BoxCollider2D>().offset = new Vector2(0, -leftBound.transform.localScale.x / 2);
-        botBound.GetComponent<BoxCollider2D>().size = new Vector2(worldCameraSize.x * 2, collider2dWidth);
+        botBound.GetComponent<BoxCollider2D>().offset = new Vector2(0, 0); //положение коллайдера относительно объекта
+        botBound.GetComponent<BoxCollider2D>().autoTiling = true; // включаем авто растягивание коллайдера
+        botBound.GetComponent<BoxCollider2D>().size = new Vector2(1, 1); // размер коллайдера = размеру gameObject
+        botBound.transform.localScale = new Vector2(worldCameraSize.x * 2, cellSize); // задаем размеры GameObject
 
         //Передвигаем коллайдеры в зависимости от размера камеры
-        Vector2 middleBot = camera.ScreenToWorldPoint(new Vector2(width / 2, 0));
-        Vector2 middleTop = camera.ScreenToWorldPoint(new Vector2(width / 2, height));
-        Vector2 middleLeft = camera.ScreenToWorldPoint(new Vector2(0, height/2));
-        Vector2 middleRight = camera.ScreenToWorldPoint(new Vector2(width, height/2));
+        Vector2 middleBot = new Vector2(0, -worldCameraSize.y + cellSize/2);
+        Vector2 middleTop = new Vector2(0, worldCameraSize.y - cellSize);
+        Vector2 middleLeft = new Vector2(-worldCameraSize.x-cellSize/2, 0);
+        Vector2 middleRight = new Vector2(worldCameraSize.x + cellSize / 2, 0);
 
         leftBound.transform.position = middleLeft;
         rightBound.transform.position = middleRight;

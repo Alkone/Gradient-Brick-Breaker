@@ -36,9 +36,16 @@ public class Ball : BaseThrowable, IThrowable
         isLaunched = false;
     }
 
-    private void FixedUpdate()
+    public void DestroyBall()
     {
+        StartCoroutine(DestroyThisObject());
     }
-    
+
+    private IEnumerator DestroyThisObject()
+    {
+        yield return new WaitForSeconds((float)0.02);
+        Destroy(gameObject);
+    }
+
 
 }
