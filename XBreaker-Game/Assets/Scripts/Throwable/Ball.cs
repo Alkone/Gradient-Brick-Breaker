@@ -3,12 +3,13 @@ using System.Collections.Generic;
 using UnityEngine;
 
 public class Ball : BaseThrowable, IThrowable
-{
-    public void Launch(Vector2 vector)
+
+{    public void Launch(Vector2 vector)
     {
-            rb2D.AddForce(vector, ForceMode2D.Impulse);
+        rb2D.AddForce(vector, ForceMode2D.Impulse);
             Debug.Log("Ball " + gameObject.GetInstanceID() + " has launched!");
             isLaunched = true;
+        StartCoroutine(YVelocityFixer(rb2D));
     }
 
     public void Stop()
@@ -19,7 +20,7 @@ public class Ball : BaseThrowable, IThrowable
         {
             stopVector.x = 0;
             gameObject.GetComponent<Rigidbody2D>().velocity = stopVector;
-            Debug.Log("X velocity is Fixed to " + gameObject.ToString());
+            Debug.Log("X velocity is STOPED to " + gameObject.ToString());
         }
         //---
 
@@ -37,6 +38,7 @@ public class Ball : BaseThrowable, IThrowable
 
     private void FixedUpdate()
     {
-
     }
+    
+
 }

@@ -7,6 +7,7 @@ public class LevelManager : MonoBehaviour {
 
     [SerializeField] private int m_BlocksInLine = 10;
     [SerializeField] private int currentLevel;
+    [SerializeField] private int linesCount = 0;
     [SerializeField] private GameObject m_BlockPrefub1;
     [SerializeField] private GameObject m_AddBallPoint1;
 
@@ -59,7 +60,7 @@ public class LevelManager : MonoBehaviour {
     }
 
 
-    private void CreateLevel()
+    private void CreateLevel(int blockLife)
     {
         bool addPointCreated = false;
         Vector2 tempSpawnPos = spawnPos;
@@ -68,29 +69,29 @@ public class LevelManager : MonoBehaviour {
             switch ((int)Random.Range(1, 9))
             {
                 case 1:
-                    CreateGameObject(m_BlockPrefub1, tempSpawnPos, currentLevel);
+                    CreateGameObject(m_BlockPrefub1, tempSpawnPos, blockLife);
                     break;
                 case 2:
-                    CreateGameObject(m_BlockPrefub1, tempSpawnPos, currentLevel);
+                    CreateGameObject(m_BlockPrefub1, tempSpawnPos, blockLife);
                     break;
                 case 3:
                     if (!addPointCreated)
                     {
-                        CreateGameObject(m_AddBallPoint1, tempSpawnPos, currentLevel);
+                        CreateGameObject(m_AddBallPoint1, tempSpawnPos, blockLife);
                         addPointCreated = true;
                     }
                     break;
                 case 4:
                     if (!addPointCreated)
                     {
-                        CreateGameObject(m_AddBallPoint1, tempSpawnPos, currentLevel);
+                        CreateGameObject(m_AddBallPoint1, tempSpawnPos, blockLife);
                         addPointCreated = true;
                     }
                     break;
                 case 5:
                     if (!addPointCreated)
                     {
-                        CreateGameObject(m_AddBallPoint1, tempSpawnPos, currentLevel);
+                        CreateGameObject(m_AddBallPoint1, tempSpawnPos, blockLife);
                         addPointCreated = true;
                     }
                     break;
@@ -101,7 +102,7 @@ public class LevelManager : MonoBehaviour {
                 case 8:
                     if (addPointCreated)
                     {
-                        CreateGameObject(m_BlockPrefub1, tempSpawnPos, currentLevel * 2);
+                        CreateGameObject(m_BlockPrefub1, tempSpawnPos, blockLife * 2);
                     }
                     break;
             }
@@ -167,6 +168,7 @@ public class LevelManager : MonoBehaviour {
         }
     }
 
+
     //Move level down on one cell size.
     private void MoveLevelDownOnOneCell()
     {
@@ -177,10 +179,12 @@ public class LevelManager : MonoBehaviour {
     {
         if (permissionToGenBlockLine)
         {
-            CreateLevel();
+            CreateLevel(currentLevel);
+            linesCount++;
+            currentLevel++;
             MoveLevelDownOnOneCell();
             permissionToGenBlockLine = false;
-            currentLevel++;
         }
+        
     }
 }
