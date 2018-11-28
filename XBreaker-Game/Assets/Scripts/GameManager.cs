@@ -5,7 +5,7 @@ using UnityEngine;
 
 //Singleton
 public class GameManager : MonoBehaviour
-{    
+{
     //Singleton
     public static GameManager instance = null; //Static instance of GameManager which allows it to be accessed by any other script.
     //
@@ -15,20 +15,20 @@ public class GameManager : MonoBehaviour
     private TrajectorySimulation trajectorySimulator; // Store a reference to our LevelManager which simulate gameObeject path.
     private ColorManager colorManager; //
     private LineRenderer lineRenderer; // Store a reference to our LineRenderer.
-    
+
 
     //Lists
     private List<GameObject> ballObjectsList;
 
     ////Inspector fields
     [SerializeField] private GameObject bounds;
-    [SerializeField] private GameObject ballPrefub1; 
-    [SerializeField] private float ballTouchPower; 
-    [SerializeField] private float ballLaunchInterval; 
+    [SerializeField] private GameObject ballPrefub1;
+    [SerializeField] private float ballTouchPower;
+    [SerializeField] private float ballLaunchInterval;
     [SerializeField] private Vector2 startPosition; // Start ball pos
     [SerializeField] private int segmentCount = 3; //Кол-во предсказанных скачков
     [SerializeField] private int startLevel = 1;  //Current level number
-    
+
 
     //для  WaitTouchToLunch()
     private bool mouseDownIsDetected = false;
@@ -70,7 +70,7 @@ public class GameManager : MonoBehaviour
         gameStatus = GameStatus.PREPARING; //Instance of GameStatus.
 
         //Call the InitGame function to initialize the first level 
-        
+
     }
     //
     //
@@ -89,10 +89,11 @@ public class GameManager : MonoBehaviour
     public void NewGame()
     {
         levelManager.SetupScene(startLevel);
-        ballObjectsList.Clear();
         DestroyAllBals();
+        ballObjectsList.Clear();
         startPosition = new Vector2(0, -4);
         CreateBall(startPosition, ballPrefub1);
+        gameStatus = GameStatus.LAUNCHED;
     }
 
     public void PlayerLose()
@@ -156,6 +157,7 @@ public class GameManager : MonoBehaviour
     {
         return colorManager;
     }
+
     public LevelManager GetLevelManager()
     {
         return levelManager;
@@ -213,9 +215,9 @@ public class GameManager : MonoBehaviour
 
     }
 
- private void DestroyAllBals()
+    private void DestroyAllBals()
     {
-        foreach(var ball in ballObjectsList)
+        foreach (var ball in ballObjectsList)
         {
             ball.GetComponent<Ball>().DestroyBall();
         }
@@ -268,7 +270,7 @@ public class GameManager : MonoBehaviour
     {
         IThrowable throwable;
         List<GameObject> currentStateObjectsList = new List<GameObject>(ballObjectsList);
- 
+
         for (int i = 0; i < ballObjectsList.Count; i++)
         {
             throwable = currentStateObjectsList[i].GetComponent<IThrowable>();
