@@ -130,7 +130,7 @@ public class LevelManager : MonoBehaviour {
         //if Block
         if (prefub.GetComponent<Block>())
         {
-            go.GetComponent<Block>().SetLifeCount(blockLife);
+            go.GetComponent<Block>().lifeCount = blockLife;
             blocksList.Add(go);
 
         //if AddBall
@@ -165,7 +165,7 @@ public class LevelManager : MonoBehaviour {
         {
             foreach (var block in blocksList)
             {
-                block.GetComponent<Block>().Destroy();
+                block.GetComponent<Block>().SelfDestroy();
             }
         }
         //if AddBall exists

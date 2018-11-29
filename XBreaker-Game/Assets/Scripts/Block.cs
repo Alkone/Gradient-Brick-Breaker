@@ -6,15 +6,11 @@ using UnityEngine.UI;
 public class Block : MonoBehaviour {
 
     //HP блока
-    [SerializeField] private int lifeCount;
-    private TextMesh hpText;
-
-    //Ссылка на контролер
-    private LevelManager levelManager;
-    //Ссылка на спрайтрендер
-    private SpriteRenderer spriteRenderer;
-    //Массив возможных цветов
-    private Color[] colors;
+    public int lifeCount;
+    private TextMesh hpText; // Ссылка на Text компонент дочернего объекта
+    private LevelManager levelManager; //Ссылка на контролер
+    private SpriteRenderer spriteRenderer; //Ссылка на спрайтрендер
+    private Color[] colors; //Массив возможных цветов
     private Animation blockAnimation;
 
 	// Use this for initialization
@@ -23,28 +19,13 @@ public class Block : MonoBehaviour {
         spriteRenderer = GetComponent<SpriteRenderer>();
         levelManager = GameManager.instance.GetLevelManager();
         colors = GameManager.instance.GetColorManager().GetBlockColors();
-        SetColor();
+        UpdateBlock();
     }
 	
-	// Update is called once per frame
-	void Update () {
-        hpText.text = lifeCount.ToString();
-	}
-
-    public void SetLifeCount(int life)
+    private void UpdateBlock()
     {
-        lifeCount = life;
-    }
-
-    private void SetColor(){
-        spriteRenderer.material.color = colors[lifeCount];
-    }
-
-    //DON'T WORKING
-    private void SetupAnimation()
-    {
-        AnimationCurve curve = AnimationCurve.Linear(0.0F, 1.0F, 2.0F, 0.0F);
-
+        hpText.text = lifeCount.ToString(); // обновляет Text в дочернем объекте
+        spriteRenderer.material.color = colors[lifeCount]; // Задает цвет в соответствии с hp
     }
 
     private void OnCollisionEnter2D(Collision2D collision)
@@ -54,17 +35,17 @@ public class Block : MonoBehaviour {
             GetComponent<Animation>().Play();
             if (lifeCount < 2)
             {
-                Destroy();
+                SelfDestroy();
             }
             else
             {
                 lifeCount--;
-                SetColor();
+                UpdateBlock();
             }
         }
     }
 
-    public void Destroy()
+    public void SelfDestroy()
     {
         StartCoroutine("DestroyThisObject");
     }
