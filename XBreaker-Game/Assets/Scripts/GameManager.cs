@@ -10,7 +10,7 @@ public class GameManager : MonoBehaviour
     public static GameManager instance = null; //Static instance of GameManager which allows it to be accessed by any other script.
     //
     private AdaptBounds adaptBounds;
-    private GameStatus gameStatus; //Store a reference to our GameStatus which control level.
+    public GameStatus gameStatus; //Store a reference to our GameStatus which control level.
     private LevelManager levelManager; //Store a reference to our LevelManager which control level.
     private TrajectorySimulation trajectorySimulator; // Store a reference to our LevelManager which simulate gameObeject path.
     private ColorManager colorManager; //
@@ -25,7 +25,7 @@ public class GameManager : MonoBehaviour
     [SerializeField] private GameObject ballPrefub1;
     [SerializeField] private float ballTouchPower;
     [SerializeField] private float ballLaunchInterval;
-    [SerializeField] private Vector2 startPosition; // Start ball pos
+    public Vector2 startPosition; // Start ball pos
     [SerializeField] private int segmentCount = 3; //Кол-во предсказанных скачков
     [SerializeField] private int startLevel = 1;  //Current level number
 
@@ -65,9 +65,6 @@ public class GameManager : MonoBehaviour
         //Init objects
         trajectorySimulator = new TrajectorySimulation(lineRenderer);
         ballObjectsList = new List<GameObject>();
-
-        gameStatus = GameStatus.PREPARING; //Instance of GameStatus.
-
         //Call the InitGame function to initialize the first level 
 
     }
@@ -93,6 +90,7 @@ public class GameManager : MonoBehaviour
         startPosition = new Vector2(0, -4);
         CreateBall(startPosition, ballPrefub1);
         gameStatus = GameStatus.LAUNCHED;
+        firstBallIsStoped = false;
     }
 
     public void PlayerLose()
@@ -141,13 +139,7 @@ public class GameManager : MonoBehaviour
         }
         if (gameStatus == GameStatus.PREPARING)
         {
-            //Перебераем лист шариков и двигаем их в начальную позицию
-            foreach (var go in ballObjectsList)
-            {
-                Rigidbody2D rb2d = go.GetComponent<Rigidbody2D>();
-                rb2d.MovePosition(startPosition);
-                Debug.Log(rb2d.GetRelativeVector(startPosition));
-            }
+
         }
     }
 
@@ -171,7 +163,7 @@ public class GameManager : MonoBehaviour
         go.layer = 9;
         go.GetComponent<Ball>().isLaunched = true;
         ballObjectsList.Add(go);
-        go.GetComponent<Rigidbody2D>().gravityScale = 2;
+        go.GetComponent<Ball>().Launch(Vector2.down);
         return true;
     }
 
@@ -179,10 +171,10 @@ public class GameManager : MonoBehaviour
     public void StopBall(GameObject ballObject)
     {
         ballObject.GetComponent<IThrowable>().Stop();
+
         if (!firstBallIsStoped)
         {
-            startPosition = ballObject.transform.position;
-            Debug.Log(startPosition);
+            startPosition = ballObject.GetComponent<Rigidbody2D>().position;
             firstBallIsStoped = true;
         }
     }
@@ -285,20 +277,19 @@ public class GameManager : MonoBehaviour
         {
             if (gameStatus == GameStatus.PREPARING)
             {
-                //if (AllBallsInSomePos(startPosition))
-                gameStatus = GameStatus.READY;
+               if (AllBallsInSomePos()) gameStatus = GameStatus.READY;
             }
-            else if (gameStatus == GameStatus.READY)
+            if (gameStatus == GameStatus.READY)
             {
                 if (!AllBallsIsStoped()) gameStatus = GameStatus.LAUNCHED;
             }
-            else if (gameStatus == GameStatus.LAUNCHED)
+            if (gameStatus == GameStatus.LAUNCHED)
             {
                 if (AllBallsIsStoped()) gameStatus = GameStatus.ENDED;
             }
-            else if (gameStatus == GameStatus.ENDED)
+            if (gameStatus == GameStatus.ENDED)
             {
-                if (AllBallsInSomePos(startPosition)) gameStatus = GameStatus.READY;
+                if (AllBallsInSomePos()) gameStatus = GameStatus.READY;
                 else gameStatus = GameStatus.PREPARING;
             }
             Debug.Log(gameStatus.ToString());
@@ -321,17 +312,15 @@ public class GameManager : MonoBehaviour
     }
 
     //Проверяет все ли шарики в стартовой позиции
-    public bool AllBallsInSomePos(Vector2 pos)
+    public bool AllBallsInSomePos()
     {
-        bool status = true;
         foreach (var ballObject in ballObjectsList)
         {
-            if (!pos.Equals(ballObject.transform.position))
+            if (!ballObject.GetComponent<Ball>().inLaunchPosition)
             {
-                status = false;
+                return false;
             }
         }
-        Debug.Log(status.ToString());
-        return status;
+        return true;
     }
 }

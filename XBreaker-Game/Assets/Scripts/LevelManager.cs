@@ -178,11 +178,17 @@ public class LevelManager : MonoBehaviour {
         }
     }
 
+    //Change position to 0,0
+    private void ResetPosition(GameObject parent)
+    {
+        parent.transform.position = new Vector2(0, 0);
+    }
+
 
     //Move level down on one cell size.
     private void MoveLevelDownOnOneCell(GameObject parent)
     {
-        parent.transform.position = new Vector2(parent.transform.position.x, parent.transform.position.y - cellSize);
+        parent.transform.position = new Vector2(0, parent.transform.position.y - cellSize);
     }
 
     private void FixedUpdate()

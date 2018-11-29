@@ -9,6 +9,7 @@ public class BotBound : MonoBehaviour
     {
         if (collision.gameObject.layer == 8 || collision.gameObject.layer == 9)
         {
+            Debug.Log("Ball stopped " + collision.gameObject.ToString());
             GameManager.instance.StopBall(collision.gameObject);
         }
         else if (collision.gameObject.layer == 10)

@@ -6,34 +6,38 @@ public class Ball : BaseThrowable, IThrowable
 
 {    public void Launch(Vector2 vector)
     {
-        rb2D.AddForce(vector, ForceMode2D.Impulse);
-            Debug.Log("Ball " + gameObject.GetInstanceID() + " has launched!");
-            isLaunched = true;
-        StartCoroutine(YVelocityFixer(rb2D));
+        //rb2D.AddForce(vector, ForceMode2D.Impulse);
+        //    Debug.Log("Ball " + gameObject.GetInstanceID() + " has launched!");
+        //    isLaunched = true;
+        //StartCoroutine(YVelocityFixer(rb2D));
+        movingPosition = vector;
+        isMoving = true;
+        isLaunched = true;
     }
 
     public void Stop()
     {
-        //Гашение перемещения по x
-        Vector2 stopVector = gameObject.GetComponent<Rigidbody2D>().velocity;
-        if(stopVector.x != 0)
-        {
-            stopVector.x = 0;
-            gameObject.GetComponent<Rigidbody2D>().velocity = stopVector;
-            Debug.Log("X velocity is STOPED to " + gameObject.ToString());
-        }
-        //---
+        isMoving = false;
+        isLaunched = false;
+        inLaunchPosition = false;
 
-        //Подготовка новых шариков шариков
-        if(gameObject.layer == 9)
+        if (gameObject.layer == 9)
         {
-            gameObject.GetComponent<Rigidbody2D>().gravityScale = 0;
             gameObject.layer = 8;
         }
         ///---
- 
-        Debug.Log("Ball " + gameObject.GetInstanceID() + " has stopped!");
-        isLaunched = false;
+
+        ////Гашение перемещения по x
+        //Vector2 stopVector = gameObject.GetComponent<Rigidbody2D>().velocity;
+        //if(stopVector.x != 0)
+        //{
+        //    stopVector.x = 0;
+        //    gameObject.GetComponent<Rigidbody2D>().velocity = stopVector;
+        //    Debug.Log("X velocity is STOPED to " + gameObject.ToString());
+        //}
+        ////---
+
+        //Подготовка новых шариков шариков
     }
 
     public void DestroyBall()
