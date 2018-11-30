@@ -20,9 +20,9 @@ GameObject:
   m_Component:
   - component: {fileID: 4617737051819036}
   - component: {fileID: 212580480191264816}
-  - component: {fileID: 50363153365968102}
   - component: {fileID: 58662592733763004}
   - component: {fileID: 114112533070501972}
+  - component: {fileID: 50390592596601940}
   m_Layer: 8
   m_Name: Ball
   m_TagString: Ball
@@ -73,7 +73,7 @@ Transform:
   m_Father: {fileID: 4617737051819036}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!50 &50363153365968102
+--- !u!50 &50390592596601940
 Rigidbody2D:
   serializedVersion: 4
   m_ObjectHideFlags: 1
@@ -84,7 +84,7 @@ Rigidbody2D:
   m_Simulated: 1
   m_UseFullKinematicContacts: 0
   m_UseAutoMass: 1
-  m_Mass: 0.0001
+  m_Mass: 1
   m_LinearDrag: 0
   m_AngularDrag: 0
   m_GravityScale: 0

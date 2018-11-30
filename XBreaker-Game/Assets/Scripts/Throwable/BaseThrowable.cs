@@ -30,25 +30,27 @@ public abstract class BaseThrowable : MonoBehaviour
 
         } else if(GameManager.instance.gameStatus == GameStatus.PREPARING)
         {
-            if(rb2D.position == GameManager.instance.startPosition)
+            Vector2 startPosition = GameManager.instance.startPosition;
+            if (rb2D.position == startPosition)
             {
                 inLaunchPosition = true;
             }
             else
             {
                 Debug.Log("ball pos " + rb2D.position.x + " " + rb2D.position.y);
-                Debug.Log("startpos " + GameManager.instance.startPosition.x +" " + GameManager.instance.startPosition.y);
-
-
-                Debug.Log("rb2D.position.x - GameManager.instance.startPosition.x " + (bool)(Mathf.Abs(rb2D.position.x - GameManager.instance.startPosition.x) < 0.01));
-                Debug.Log("rb2D.position.y - GameManager.instance.startPosition.y" + (bool)(Mathf.Abs(rb2D.position.y - GameManager.instance.startPosition.y) < 0.01));
-
-                if (Mathf.Abs(rb2D.position.x - GameManager.instance.startPosition.x) < 0.01 && Mathf.Abs(rb2D.position.y - GameManager.instance.startPosition.y) < 0.01)
+                Debug.Log("startpos " + startPosition.x +" " + startPosition.y);
+                if (rb2D.position != startPosition)
                 {
-                    rb2D.MovePosition(GameManager.instance.startPosition);
-                }
+                    if (Mathf.Abs(rb2D.position.x - startPosition.x) < 0.05 && Mathf.Abs(rb2D.position.y - startPosition.y) < 0.05)
+                    {
+                        rb2D.MovePosition(startPosition);
+                    }
+                    else
+                    {
 
-                rb2D.MovePosition(rb2D.position + GameManager.instance.startPosition * Time.fixedDeltaTime * 10);
+                        rb2D.MovePosition(rb2D.position + (startPosition - rb2D.position).normalized * Time.fixedDeltaTime * 5);
+                    }
+                }
             }
         }
     }
@@ -59,8 +61,12 @@ public abstract class BaseThrowable : MonoBehaviour
         {
             movingPosition = Vector2.Reflect(movingPosition, collision.contacts[0].normal);
         }
+        //if (collision.gameObject.layer == 13)
+        //{
+        //    isMoving = false;
+        //}
     }
-    
+
     protected void FixYVelocity(Rigidbody2D rb2D)
     {
         Vector2 fixedVelocity = new Vector2(); ;

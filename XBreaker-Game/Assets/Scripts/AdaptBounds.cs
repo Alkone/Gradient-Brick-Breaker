@@ -4,20 +4,18 @@ using UnityEngine;
 
 public class AdaptBounds : MonoBehaviour {
 
-
-    [SerializeField] private Camera camera;
-    [SerializeField] private GameObject leftBound;
-    [SerializeField] private GameObject rightBound;
-    [SerializeField] private GameObject botBound;
-    [SerializeField] private GameObject topBound;
+    public GameObject leftBound;
+    public GameObject rightBound;
+    public GameObject botBound;
+    public GameObject topBound;
 
 
     // Use this for initialization
     void Start() {
-        float cellSize = GameManager.instance.GetLevelManager().GetCellSize(); //Получаем размер ячейки из LevelManager-a
-        float width = camera.pixelWidth;
-        float height = camera.pixelHeight;
-        Vector2 worldCameraSize = camera.ScreenToWorldPoint(new Vector2(width, height));
+        float cellSize = LevelManager.CellSize; //Получаем размер ячейки из LevelManager-a
+        float width = Camera.main.pixelWidth;
+        float height = Camera.main.pixelHeight;
+        Vector2 worldCameraSize = Camera.main.ScreenToWorldPoint(new Vector2(width, height));
 
         //Задаем размеры коллайдеров и местоположение относительно геймобджекта
         leftBound.GetComponent<BoxCollider2D>().offset = new Vector2(0, 0); //положение коллайдера относительно объекта

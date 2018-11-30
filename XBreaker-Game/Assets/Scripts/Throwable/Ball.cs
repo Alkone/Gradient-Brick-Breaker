@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class Ball : BaseThrowable, IThrowable
+public class Ball : BaseThrowable
 
 {    public void Launch(Vector2 vector)
     {
@@ -15,7 +15,7 @@ public class Ball : BaseThrowable, IThrowable
         isLaunched = true;
     }
 
-    public void Stop()
+    public Vector2 Stop()
     {
         isMoving = false;
         isLaunched = false;
@@ -25,8 +25,8 @@ public class Ball : BaseThrowable, IThrowable
         {
             gameObject.layer = 8;
         }
-        ///---
 
+        ///---
         ////Гашение перемещения по x
         //Vector2 stopVector = gameObject.GetComponent<Rigidbody2D>().velocity;
         //if(stopVector.x != 0)
@@ -36,8 +36,9 @@ public class Ball : BaseThrowable, IThrowable
         //    Debug.Log("X velocity is STOPED to " + gameObject.ToString());
         //}
         ////---
-
-        //Подготовка новых шариков шариков
+        ///
+        Debug.Log("POSITION IN BALL " + rb2D.position.y);
+        return rb2D.position;
     }
 
     public void DestroyBall()

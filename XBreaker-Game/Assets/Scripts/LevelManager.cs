@@ -5,6 +5,10 @@ using UnityEngine.UI;
 using Random = UnityEngine.Random;
 
 public class LevelManager : MonoBehaviour {
+    //Static
+    public static Vector2 ScreenSizeInGlobalCoordinates { get; private set; }
+    public static float CellSize { get; private set; }
+
 
     [SerializeField] private int m_BlocksInLine = 10;
     [SerializeField] private int currentLevel;
@@ -16,8 +20,6 @@ public class LevelManager : MonoBehaviour {
     //UI
     [SerializeField] private Text textLevel;
 
-    private float cellSize;
-    private Vector2 screenSize;
     private Vector3 spawnPos;
 
     //Листы хранящие игровые объекты
@@ -27,26 +29,28 @@ public class LevelManager : MonoBehaviour {
     //Status
     private bool permissionToGenBlockLine;
 
-    void Awake () {
-        permissionToGenBlockLine = false;
+
+
+    void Awake() {
+        // geting screen size in global cordinates
+        ScreenSizeInGlobalCoordinates = Camera.main.ScreenToWorldPoint(new Vector2(Screen.width, Screen.height));
 
         //Create Lists
         blocksList = new List<GameObject>();
         addBallsList = new List<GameObject>();
 
-        // geting screen size in global cordinates
-        screenSize = Camera.main.ScreenToWorldPoint(new Vector2(Screen.width, Screen.height));
         //get optimal block size
-        cellSize = 2 * screenSize.x / m_BlocksInLine;
+        CellSize = 2 * ScreenSizeInGlobalCoordinates.x / m_BlocksInLine;
         //get block size = cellSize*cellSize
-        m_BlockPrefub1.transform.localScale = new Vector3(cellSize, cellSize, 0);
+        m_BlockPrefub1.transform.localScale = new Vector3(CellSize, CellSize, 0);
         //setting start point of the blocks
-        spawnPos = new Vector3 (-screenSize.x + cellSize / 2 , screenSize.y - cellSize*2, 0);
+        spawnPos = new Vector3(-ScreenSizeInGlobalCoordinates.x + CellSize / 2, ScreenSizeInGlobalCoordinates.y - CellSize * 2, 0);
+
     }
 
-    public float GetCellSize()
+    private void Start()
     {
-        return cellSize;
+        permissionToGenBlockLine = false;
     }
 
     //Clean and start create new levels
@@ -116,7 +120,7 @@ public class LevelManager : MonoBehaviour {
                     }
                     break;
             }
-            tempSpawnPos.x += cellSize;
+            tempSpawnPos.x += CellSize;
         }
     }
 
@@ -188,7 +192,7 @@ public class LevelManager : MonoBehaviour {
     //Move level down on one cell size.
     private void MoveLevelDownOnOneCell(GameObject parent)
     {
-        parent.transform.position = new Vector2(0, parent.transform.position.y - cellSize);
+        parent.transform.position = new Vector2(0, parent.transform.position.y - CellSize);
     }
 
     private void FixedUpdate()

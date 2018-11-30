@@ -12,7 +12,7 @@ public class BotBound : MonoBehaviour
             Debug.Log("Ball stopped " + collision.gameObject.ToString());
             GameManager.instance.StopBall(collision.gameObject);
         }
-        else if (collision.gameObject.layer == 10)
+        if (collision.gameObject.layer == 10)
         {
             GameManager.instance.PlayerLose();
         }
@@ -21,5 +21,4 @@ public class BotBound : MonoBehaviour
             collision.gameObject.GetComponent<AddBall>().AddBallAndDestroyThis();
         }
     }
-
 }
