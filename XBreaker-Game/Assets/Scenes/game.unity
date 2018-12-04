@@ -130,6 +130,11 @@ Prefab:
       propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.size
       value: 1
       objectReference: {fileID: 0}
+    - target: {fileID: 114780282994322754, guid: c6ff60f808fabd247b44e7f39020c59b,
+        type: 2}
+      propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.size
+      value: 1
+      objectReference: {fileID: 0}
     - target: {fileID: 224429529138169630, guid: c6ff60f808fabd247b44e7f39020c59b,
         type: 2}
       propertyPath: m_LocalPosition.x
@@ -258,6 +263,31 @@ Prefab:
     - target: {fileID: 1590629017345154, guid: c6ff60f808fabd247b44e7f39020c59b, type: 2}
       propertyPath: m_IsActive
       value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 114780282994322754, guid: c6ff60f808fabd247b44e7f39020c59b,
+        type: 2}
+      propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_Mode
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 114780282994322754, guid: c6ff60f808fabd247b44e7f39020c59b,
+        type: 2}
+      propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_CallState
+      value: 2
+      objectReference: {fileID: 0}
+    - target: {fileID: 114780282994322754, guid: c6ff60f808fabd247b44e7f39020c59b,
+        type: 2}
+      propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_Target
+      value: 
+      objectReference: {fileID: 491243436}
+    - target: {fileID: 114780282994322754, guid: c6ff60f808fabd247b44e7f39020c59b,
+        type: 2}
+      propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_MethodName
+      value: ShowAd
+      objectReference: {fileID: 0}
+    - target: {fileID: 114780282994322754, guid: c6ff60f808fabd247b44e7f39020c59b,
+        type: 2}
+      propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_Arguments.m_ObjectArgumentAssemblyTypeName
+      value: UnityEngine.Object, UnityEngine
       objectReference: {fileID: 0}
     m_RemovedComponents:
     - {fileID: 95752981011162308, guid: c6ff60f808fabd247b44e7f39020c59b, type: 2}
@@ -1398,7 +1428,7 @@ Prefab:
     - target: {fileID: 114369899425536314, guid: 2d47c2b85c2384b3e9775fa3b75e27ef,
         type: 2}
       propertyPath: ballTouchPower
-      value: 15
+      value: 10
       objectReference: {fileID: 0}
     - target: {fileID: 114005096843525392, guid: 2d47c2b85c2384b3e9775fa3b75e27ef,
         type: 2}
