@@ -713,7 +713,7 @@ PlayerSettings:
   facebookSdkVersion: 7.9.4
   apiCompatibilityLevel: 3
   cloudProjectId: 79a538b2-75e6-4055-a62e-1c5703c27e80
-  projectName: XBreaker (1)
+  projectName: XBreaker
   organizationId: devalkone
   cloudEnabled: 0
   enableNativePlatformBackendsForNewInputSystem: 0
