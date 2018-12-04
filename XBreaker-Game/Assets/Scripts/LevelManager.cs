@@ -17,6 +17,9 @@ public class LevelManager : MonoBehaviour {
     [SerializeField] private GameObject m_AddBallPoint1;
     [SerializeField] GameObject parentObject; //папка куда будем складывать все объекты
 
+    [SerializeField] private GameObject topBound; //ВРЕМЕННОЕ решение с цветом
+    private Color[] colors; //Массив возможных цветов ВРЕМЕННОЕ
+
     //UI
     [SerializeField] private Text textLevel;
 
@@ -48,7 +51,13 @@ public class LevelManager : MonoBehaviour {
         spawnPos = new Vector3 (-screenSize.x + cellSize / 2 , screenSize.y - cellSize*2, 0);
     }
 
-    public float GetCellSize()
+    private void Start()
+    {
+    colors = GameManager.instance.GetColorManager().GetBlockColors();  // ВРЕМЕННОЕ
+
+}
+
+public float GetCellSize()
     {
         return cellSize;
     }
@@ -161,6 +170,7 @@ public class LevelManager : MonoBehaviour {
     //Создает объекты и добавляет в списки
     private void CreateGameObject(GameObject prefub, Vector2 pos, int blockLife)
     {
+        if (blockLife == 0) blockLife = 1;
         GameObject go;
         go = Instantiate(prefub, pos, Quaternion.identity, parentObject.transform);
 
@@ -230,6 +240,7 @@ public class LevelManager : MonoBehaviour {
             CreateLevel(currentLevel);
             linesCount++;
             currentLevel++;
+            topBound.GetComponent<SpriteRenderer>().material.color = colors[currentLevel];
             MoveLevelDownOnOneCell(parentObject);
             permissionToGenBlockLine = false;
         }
