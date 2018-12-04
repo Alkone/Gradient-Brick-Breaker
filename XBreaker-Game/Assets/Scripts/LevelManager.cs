@@ -10,6 +10,10 @@ public class LevelManager : MonoBehaviour {
     [SerializeField] private int currentLevel;
     [SerializeField] private int linesCount = 0;
     [SerializeField] private GameObject m_BlockPrefub1;
+    [SerializeField] private GameObject m_HalfBlock0;
+    [SerializeField] private GameObject m_HalfBlock90;
+    [SerializeField] private GameObject m_HalfBlock180;
+    [SerializeField] private GameObject m_HalfBlock270;
     [SerializeField] private GameObject m_AddBallPoint1;
     [SerializeField] GameObject parentObject; //папка куда будем складывать все объекты
 
@@ -76,7 +80,7 @@ public class LevelManager : MonoBehaviour {
         Vector2 tempSpawnPos = spawnPos;
         for (int column = 0; column < m_BlocksInLine; column++)
         {
-            switch ((int)Random.Range(1, 9))
+            switch ((int)Random.Range(1, 20))
             {
                 case 1:
                     CreateGameObject(m_BlockPrefub1, tempSpawnPos, blockLife);
@@ -114,6 +118,39 @@ public class LevelManager : MonoBehaviour {
                     {
                         CreateGameObject(m_BlockPrefub1, tempSpawnPos, blockLife * 2);
                     }
+                    break;
+                case 9:
+                        CreateGameObject(m_HalfBlock0, tempSpawnPos, blockLife / 2);
+                    break;
+                case 10:
+                        CreateGameObject(m_HalfBlock90, tempSpawnPos, blockLife / 2);
+                    break;
+                case 11:
+                        CreateGameObject(m_HalfBlock180, tempSpawnPos, blockLife / 2);
+                    break;
+                case 12:
+                        CreateGameObject(m_HalfBlock270, tempSpawnPos, blockLife / 2);
+                    break;
+                case 13:
+                    CreateGameObject(m_BlockPrefub1, tempSpawnPos, blockLife);
+                    break;
+                case 14:
+        
+                    break;
+                case 15:
+       
+                    break;
+                case 16:
+                    CreateGameObject(m_BlockPrefub1, tempSpawnPos, blockLife);
+                    break;
+                case 17:
+                    CreateGameObject(m_AddBallPoint1, tempSpawnPos, blockLife);
+                    break;
+                case 18:
+                    CreateGameObject(m_BlockPrefub1, tempSpawnPos, blockLife);
+                    break;
+                case 19:
+                    CreateGameObject(m_BlockPrefub1, tempSpawnPos, blockLife);
                     break;
             }
             tempSpawnPos.x += cellSize;
@@ -158,7 +195,7 @@ public class LevelManager : MonoBehaviour {
     }
 
     //Clean level
-    private void CleanLevel()
+    public void CleanLevel()
     {
         //if Block exists
         if (blocksList != null)

@@ -15,14 +15,8 @@ public class Ball : BaseThrowable, IThrowable
     public void Stop()
     {
         //Гашение перемещения по x
-        Vector2 stopVector = gameObject.GetComponent<Rigidbody2D>().velocity;
-        if(stopVector.x != 0)
-        {
-            stopVector.x = 0;
-            gameObject.GetComponent<Rigidbody2D>().velocity = stopVector;
-            Debug.Log("X velocity is STOPED to " + gameObject.ToString());
-        }
-        //---
+        gameObject.GetComponent<Rigidbody2D>().velocity = Vector2.zero;
+     
 
         //Подготовка новых шариков шариков
         if(gameObject.layer == 9)

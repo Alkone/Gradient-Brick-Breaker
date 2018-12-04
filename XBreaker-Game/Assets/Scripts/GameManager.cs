@@ -21,8 +21,7 @@ public class GameManager : MonoBehaviour
     private List<GameObject> ballObjectsList;
 
     ////Inspector fields
-    [SerializeField] private GameObject bounds;
-    [SerializeField] private GameObject ballPrefub1;
+    [SerializeField] private GameObject loseScreen, boundsParent, ballPrefub1;
     [SerializeField] private float ballTouchPower;
     [SerializeField] private float ballLaunchInterval;
     [SerializeField] private Vector2 startPosition; // Start ball pos
@@ -57,7 +56,7 @@ public class GameManager : MonoBehaviour
         DontDestroyOnLoad(gameObject);
 
         //Get components
-        adaptBounds = bounds.GetComponent<AdaptBounds>();
+        adaptBounds = boundsParent.GetComponent<AdaptBounds>();
         levelManager = GetComponent<LevelManager>();
         lineRenderer = GetComponent<LineRenderer>();
         colorManager = GetComponent<ColorManager>();
@@ -82,15 +81,21 @@ public class GameManager : MonoBehaviour
     void InitGame()
     {
         StartCoroutine(GameStateObserver());
+        levelManager.SetupScene(startLevel);
+
         NewGame();
     }
 
     public void NewGame()
     {
-        levelManager.SetupScene(startLevel);
-        DestroyAllBals();
-        ballObjectsList.Clear();
+        levelManager.CleanLevel(); //Очищает сцену 
+        DestroyAllBals(); //Уничтожает GameObject и чистит список
+        
         startPosition = new Vector2(0, -4);
+
+        playerLose = false;
+        loseScreen.SetActive(false); //убираем экран проигрыша
+
         CreateBall(startPosition, ballPrefub1);
         gameStatus = GameStatus.LAUNCHED;
     }
@@ -98,20 +103,20 @@ public class GameManager : MonoBehaviour
     public void PlayerLose()
     {
         playerLose = true;
+
     }
 
     void FixedUpdate()
     {
         if (playerLose)
         {
-            playerLose = false;
-            NewGame();
+            loseScreen.SetActive(true);
         }
-        if (gameStatus == GameStatus.READY)
+        else if (gameStatus == GameStatus.READY)
         {
             WaitTouchToLunch();
         }
-        if (gameStatus == GameStatus.LAUNCHED)
+        else if (gameStatus == GameStatus.LAUNCHED)
         {
             if (lineRenderer.positionCount != 0)
                 lineRenderer.positionCount = 0;
@@ -133,13 +138,13 @@ public class GameManager : MonoBehaviour
 
             }
         }
-        if (gameStatus == GameStatus.ENDED)
+        else if (gameStatus == GameStatus.ENDED)
         {
             Time.timeScale = 1;
             levelManager.GenerateNextBlockLine();
             gameStatus = GameStatus.PREPARING;
         }
-        if (gameStatus == GameStatus.PREPARING)
+        else if (gameStatus == GameStatus.PREPARING)
         {
             //Перебераем лист шариков и двигаем их в начальную позицию
             foreach (var go in ballObjectsList)
@@ -168,6 +173,7 @@ public class GameManager : MonoBehaviour
     public bool CreateBall(Vector2 position, GameObject ballPrefub)
     {
         GameObject go = Instantiate<GameObject>(ballPrefub, position, Quaternion.identity);
+        go.transform.localScale *= levelManager.GetCellSize();
         go.layer = 9;
         go.GetComponent<Ball>().isLaunched = true;
         ballObjectsList.Add(go);
