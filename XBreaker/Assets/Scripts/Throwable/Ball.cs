@@ -6,6 +6,7 @@ public class Ball : BaseThrowable, IThrowable
 
 {    public void Launch(Vector2 vector)
     {
+        gameObject.layer = 8;
         rb2D.AddForce(vector, ForceMode2D.Impulse);
             Debug.Log("Ball " + gameObject.GetInstanceID() + " has launched!");
             isLaunched = true;
@@ -14,16 +15,14 @@ public class Ball : BaseThrowable, IThrowable
 
     public void Stop()
     {
+        gameObject.layer = 9;
         //Гашение перемещения по x
         gameObject.GetComponent<Rigidbody2D>().velocity = Vector2.zero;
      
 
         //Подготовка новых шариков шариков
-        if(gameObject.layer == 9)
-        {
             gameObject.GetComponent<Rigidbody2D>().gravityScale = 0;
-            gameObject.layer = 8;
-        }
+
         ///---
  
         Debug.Log("Ball " + gameObject.GetInstanceID() + " has stopped!");

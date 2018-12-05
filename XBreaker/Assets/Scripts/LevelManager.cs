@@ -18,6 +18,7 @@ public class LevelManager : MonoBehaviour {
     [SerializeField] GameObject parentObject; //папка куда будем складывать все объекты
 
     [SerializeField] private GameObject topBound; //ВРЕМЕННОЕ решение с цветом
+    [SerializeField] private GameObject botBound; //ВРЕМЕННОЕ решение с цветом
     private Color[] colors; //Массив возможных цветов ВРЕМЕННОЕ
 
     //UI
@@ -47,8 +48,13 @@ public class LevelManager : MonoBehaviour {
         cellSize = 2 * screenSize.x / m_BlocksInLine;
         //get block size = cellSize*cellSize
         m_BlockPrefub1.transform.localScale = new Vector3(cellSize, cellSize, 0);
+        m_HalfBlock0.transform.localScale = new Vector3(cellSize, cellSize, 0);
+        m_HalfBlock90.transform.localScale = new Vector3(cellSize, cellSize, 0);
+        m_HalfBlock180.transform.localScale = new Vector3(cellSize, cellSize, 0);
+        m_HalfBlock270.transform.localScale = new Vector3(cellSize, cellSize, 0);
+        m_AddBallPoint1.transform.localScale = new Vector3(cellSize, cellSize, 0);
         //setting start point of the blocks
-        spawnPos = new Vector3 (-screenSize.x + cellSize / 2 , screenSize.y - cellSize*2, 0);
+        spawnPos = new Vector3 (-screenSize.x + cellSize / 2 , screenSize.y - cellSize*2.5f, 0);
     }
 
     private void Start()
@@ -241,6 +247,7 @@ public float GetCellSize()
             linesCount++;
             currentLevel++;
             topBound.GetComponent<SpriteRenderer>().material.color = colors[currentLevel];
+            botBound.GetComponent<SpriteRenderer>().material.color = colors[currentLevel];
             MoveLevelDownOnOneCell(parentObject);
             permissionToGenBlockLine = false;
         }
