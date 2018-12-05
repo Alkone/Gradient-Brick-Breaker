@@ -52,7 +52,7 @@ public class Block : MonoBehaviour {
 
     private IEnumerator DestroyThisObject()
     {
-        yield return new WaitForSeconds((float)0.02);
+        yield return new WaitForSeconds((float)0.01);
         levelManager.RemoveGameObject(gameObject);
         Destroy(gameObject);
     }

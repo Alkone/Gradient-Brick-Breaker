@@ -13,7 +13,7 @@ public class BotBound : MonoBehaviour
         }
         else if (collision.gameObject.layer == 10)
         {
-            GameManager.instance.PlayerLose();
+            GameManager.instance.LoseGame();
         }
         else if (collision.gameObject.layer == 12)
         {

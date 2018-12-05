@@ -24,7 +24,7 @@ public class GameManager : MonoBehaviour
     private List<GameObject> ballObjectsList;
 
     ////Inspector fields
-    [SerializeField] private GameObject loseScreen, boundsParent, ballPrefub1;
+    [SerializeField] private GameObject loseScreen, pauseScreen, boundsParent, ballPrefub1;
     [SerializeField] private float ballTouchPower;
     [SerializeField] private float ballLaunchInterval;
     [SerializeField] private Vector2 startPosition; // Start ball pos
@@ -37,7 +37,12 @@ public class GameManager : MonoBehaviour
     private bool firstBallIsStoped = false;
     float angle;
 
-    private bool playerLose = false;
+    //Переменные состояния игры
+    private bool gameLosed = false;
+    private bool loseFlag = false; // вспомогательная переменная
+
+    private bool gamePaused = false;
+    private bool pauseFlag = false; // вспомогательная переменная
 
     //ADS
     private string gameId = "2949663";
@@ -93,7 +98,7 @@ public class GameManager : MonoBehaviour
         {
             Monetization.Initialize(gameId, true);
         }
-        ballPrefub1.transform.localScale = Vector2.one*levelManager.GetCellSize()*0.28f;
+        ballPrefub1.transform.localScale = Vector2.one * levelManager.GetCellSize() * 0.28f;
         InitGame();
     }
 
@@ -104,50 +109,36 @@ public class GameManager : MonoBehaviour
         StartGame("new");
     }
 
-    public void StartGame(string type)
+    private void Update()
     {
-        switch (type)
+        if (gameLosed)
         {
-            case "new":
-                levelManager.SetupScene(startLevel); //Очищает сцену 
-                DestroyAllBals(); //Уничтожает GameObject и чистит список
-
-                startPosition = new Vector2(0, -4);
-                playerLose = false;
-                CreateBall(startPosition, ballPrefub1);
-                loseScreen.SetActive(false); //убираем экран проигрыша
-                gameStatus = GameStatus.LAUNCHED;
-                break;
-
-            case "continue":
-                levelManager.CleanLevel(); //Очищает сцену 
-
-                startPosition = new Vector2(0, -4);
-
-                playerLose = false;
-                loseScreen.SetActive(false); //убираем экран проигрыша
-
-                CreateBall(startPosition, ballPrefub1);
-                gameStatus = GameStatus.LAUNCHED;
-                break;
-            default:
-                break;
+            loseScreen.SetActive(true);
+            loseFlag = true;
         }
-    }
+        else if (!gameLosed && loseFlag)
+        {
+            loseScreen.SetActive(false);
+            loseFlag = false;
+        }
 
-    public void PlayerLose()
-    {
-        playerLose = true;
-
+        if (gamePaused)
+        {
+            Time.timeScale = 0;
+            pauseScreen.SetActive(true);
+            pauseFlag = true;
+        }
+        else if (!gamePaused && pauseFlag)
+        {
+            Time.timeScale = 1;
+            pauseScreen.SetActive(false);
+            pauseFlag = false;
+        }
     }
 
     void FixedUpdate()
     {
-        if (playerLose)
-        {
-            loseScreen.SetActive(true);
-        }
-        else if (gameStatus == GameStatus.READY)
+        if (gameStatus == GameStatus.READY)
         {
             WaitTouchToLunch();
         }
@@ -156,22 +147,22 @@ public class GameManager : MonoBehaviour
             if (lineRenderer.positionCount != 0)
                 lineRenderer.positionCount = 0;
 
-            //Ускоряем время по тапу
-            if (Input.GetMouseButtonDown(0) == true && !mouseDownIsDetected)
-            {
-                mouseDownIsDetected = true;
-                Time.timeScale = 4;
-            }
-            if (mouseDownIsDetected)
-            {
+            ////Ускоряем время по тапу
+            //if (Input.GetMouseButtonDown(0) == true && !mouseDownIsDetected)
+            //{
+            //    mouseDownIsDetected = true;
+            //    Time.timeScale = 4;
+            //}
+            //if (mouseDownIsDetected)
+            //{
 
-                if (Input.GetMouseButtonUp(0) == true)
-                {
-                    Time.timeScale = 1;
-                    mouseDownIsDetected = false;
-                }
+            //    if (Input.GetMouseButtonUp(0) == true)
+            //    {
+            //        Time.timeScale = 1;
+            //        mouseDownIsDetected = false;
+            //    }
 
-            }
+            //}
         }
         else if (gameStatus == GameStatus.ENDED)
         {
@@ -184,12 +175,61 @@ public class GameManager : MonoBehaviour
             //Перебераем лист шариков и двигаем их в начальную позицию
             foreach (var go in ballObjectsList)
             {
-                    Rigidbody2D rb2d = go.GetComponent<Rigidbody2D>();
-                    rb2d.MovePosition(rb2d.position + (startPosition - rb2d.position) );
-                    Debug.Log(rb2d.GetRelativeVector(startPosition));
+                Rigidbody2D rb2d = go.GetComponent<Rigidbody2D>();
+                rb2d.MovePosition(rb2d.position + (startPosition - rb2d.position));
+                Debug.Log(rb2d.GetRelativeVector(startPosition));
             }
         }
     }
+
+
+    public void StartGame(string type)
+    {
+        switch (type)
+        {
+            case "new":
+                levelManager.SetupScene(startLevel); //Очищает сцену 
+                DestroyAllBals(); //Уничтожает GameObject и чистит список
+
+                startPosition = new Vector2(0, -4);
+                gameLosed = false;
+                CreateBall(startPosition, ballPrefub1);
+                gameStatus = GameStatus.LAUNCHED;
+                break;
+
+            case "continue":
+                levelManager.CleanLevel(); //Очищает сцену 
+
+                startPosition = new Vector2(0, -4);
+
+                gameLosed = false;
+                loseScreen.SetActive(false); //убираем экран проигрыша
+
+                CreateBall(startPosition, ballPrefub1);
+                gameStatus = GameStatus.LAUNCHED;
+                break;
+            default:
+                break;
+        }
+    }
+
+    public void LoseGame()
+    {
+        gameLosed = true;
+    }
+
+    public void PauseGame()
+    {
+        gamePaused = true;
+    }
+
+    public void ResumeGame()
+    {
+        gamePaused = false;
+    }
+
+
+
 
     //Getters private field link
     public ColorManager GetColorManager()
@@ -202,7 +242,7 @@ public class GameManager : MonoBehaviour
         return levelManager;
     }
 
-    //end getters
+
 
     //Создает шарик в заданной позиции с гравитацией
     public bool CreateBall(Vector2 position, GameObject ballPrefub)
@@ -230,29 +270,36 @@ public class GameManager : MonoBehaviour
     //Ждет пока игрок прикоснется к экрану и начнет игру
     private void WaitTouchToLunch()
     {
-        Vector2 startVector;
-        if (Input.GetMouseButtonDown(0) == true && !mouseDownIsDetected)
+        if (GetCurrentGMousePos().y < adaptBounds.m_TopMiddleGameZone.y && GetCurrentGMousePos().y > adaptBounds.m_BotMiddleGameZone.y)
         {
-            mouseDownIsDetected = true;
-        }
-        if (mouseDownIsDetected)
-        {
-            angle = GetFixetAngle(Vector2.left, GetCurrentGMousePos() - startPosition);
-            Debug.Log("Angle - " + angle);
-            startVector = RotateVector(Vector2.left, angle) + startPosition;
-            Debug.Log("Start vector - " + startVector);
-            trajectorySimulator.SimulatePath(ballObjectsList[0], GetVectorByPoints(startPosition, startVector), segmentCount);
-            if (Input.GetMouseButtonUp(0) == true)
+            Vector2 startVector;
+            if (Input.GetMouseButtonDown(0) && !mouseDownIsDetected)
             {
-                //Запускает шарик
-                firstBallIsStoped = false;
-                StartCoroutine(StartBall(ballObjectsList, GetVectorByPoints(startPosition, startVector), ballLaunchInterval));
-                mouseDownIsDetected = false;
+                mouseDownIsDetected = true;
             }
+            if (mouseDownIsDetected)
+            {
+                angle = GetFixetAngle(Vector2.left, GetCurrentGMousePos() - startPosition);
+                Debug.Log("Angle - " + angle);
+                startVector = RotateVector(Vector2.left, angle) + startPosition;
+                Debug.Log("Start vector - " + startVector);
+                trajectorySimulator.SimulatePath(ballObjectsList[0], GetVectorByPoints(startPosition, startVector), segmentCount);
+                if (Input.GetMouseButtonUp(0))
+                {
+                    //Запускает шарик
+                    firstBallIsStoped = false;
+                    StartCoroutine(StartBall(ballObjectsList, GetVectorByPoints(startPosition, startVector), ballLaunchInterval));
+                    mouseDownIsDetected = false;
+                }
+            }
+        } else if(mouseDownIsDetected && Input.GetMouseButtonUp(0))
+        {
+            lineRenderer.positionCount = 0;
+            mouseDownIsDetected = false;
         }
-
     }
 
+    //Уничтожает все шарики и очищает лист
     private void DestroyAllBals()
     {
         foreach (var ball in ballObjectsList)

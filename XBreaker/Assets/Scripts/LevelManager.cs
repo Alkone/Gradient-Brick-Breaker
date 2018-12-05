@@ -54,7 +54,7 @@ public class LevelManager : MonoBehaviour {
         m_HalfBlock270.transform.localScale = new Vector3(cellSize, cellSize, 0);
         m_AddBallPoint1.transform.localScale = new Vector3(cellSize, cellSize, 0);
         //setting start point of the blocks
-        spawnPos = new Vector3 (-screenSize.x + cellSize / 2 , screenSize.y - cellSize*2.5f, 0);
+        spawnPos = new Vector3 (-screenSize.x + cellSize / 2 , screenSize.y - cellSize*2f, 0);
     }
 
     private void Start()
