@@ -37,7 +37,7 @@ public class AdaptBounds : MonoBehaviour {
 
         botBound.GetComponent<BoxCollider2D>().offset = new Vector2(0, 0); //положение коллайдера относительно объекта
         botBound.GetComponent<BoxCollider2D>().autoTiling = true; // включаем авто растягивание коллайдера
-        botBound.GetComponent<BoxCollider2D>().size = new Vector2(1, 1); // размер коллайдера = размеру gameObject
+        botBound.GetComponent<BoxCollider2D>().size = new Vector2(0.99f, 1); // размер коллайдера = размеру gameObject
         botBound.transform.localScale = new Vector2(worldCameraSize.x * 2, cellSize*2f); // задаем размеры GameObject
 
         //Передвигаем коллайдеры в зависимости от размера камеры

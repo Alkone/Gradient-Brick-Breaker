@@ -159,7 +159,11 @@ public float GetCellSize()
                     CreateGameObject(m_BlockPrefub1, tempSpawnPos, blockLife);
                     break;
                 case 17:
-                    CreateGameObject(m_AddBallPoint1, tempSpawnPos, blockLife);
+                    if (!addPointCreated)
+                    {
+                        CreateGameObject(m_AddBallPoint1, tempSpawnPos, blockLife);
+                        addPointCreated = true;
+                    }
                     break;
                 case 18:
                     CreateGameObject(m_BlockPrefub1, tempSpawnPos, blockLife);

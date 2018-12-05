@@ -93,6 +93,7 @@ public class GameManager : MonoBehaviour
         {
             Monetization.Initialize(gameId, true);
         }
+        ballPrefub1.transform.localScale = Vector2.one*levelManager.GetCellSize()*0.28f;
         InitGame();
     }
 
@@ -207,7 +208,6 @@ public class GameManager : MonoBehaviour
     public bool CreateBall(Vector2 position, GameObject ballPrefub)
     {
         GameObject go = Instantiate<GameObject>(ballPrefub, position, Quaternion.identity);
-        go.transform.localScale *= levelManager.GetCellSize();
         go.layer = 9;
         go.GetComponent<Ball>().isLaunched = true;
         ballObjectsList.Add(go);
