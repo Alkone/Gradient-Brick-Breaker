@@ -359,7 +359,7 @@ public class GameManager : MonoBehaviour
         for (int i = 0; i < ballObjectsList.Count; i++)
         {
             throwable = currentStateObjectsList[i].GetComponent<IThrowable>();
-            yield return new WaitForSeconds(delay);
+            yield return new WaitForSecondsRealtime(delay);
             throwable.Launch(startingVector * ballTouchPower);
         }
 
