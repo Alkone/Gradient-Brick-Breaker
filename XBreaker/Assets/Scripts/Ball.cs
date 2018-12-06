@@ -4,19 +4,29 @@ using UnityEngine;
 
 public class Ball : MonoBehaviour
 {
-    protected Rigidbody2D rb2D;
-
+    private Rigidbody2D rb2D;
+    private CircleCollider2D cc2D;
     public bool isLaunched { get; set; } = false;
     public bool isFalling { get; set; } = false;
+    private RaycastHit2D hit;
+
+    private float cirlceCastRadius;
 
     private Vector2 movingVector;
 
     private Vector2 velocity;
 
+    private LayerMask layerMask;
 
     private void Start()
     {
         rb2D = gameObject.GetComponent<Rigidbody2D>();
+        cc2D = gameObject.GetComponent<CircleCollider2D>();
+        cirlceCastRadius = cc2D.radius * gameObject.transform.localScale.x;
+        Debug.Log(cirlceCastRadius);
+
+        layerMask = LayerMask.GetMask("Bound", "Block");
+
         gameObject.layer = 8;
         movingVector = Vector2.down * 100;
         isLaunched = true;
@@ -25,10 +35,27 @@ public class Ball : MonoBehaviour
     private void FixedUpdate()
     {
 
+       
         if (isLaunched)
         {
-            rb2D.MovePosition(rb2D.position + movingVector * Time.fixedDeltaTime * 20);
-
+            Vector2 nextPoint = rb2D.position + movingVector * Time.fixedDeltaTime * 15;
+            hit = Physics2D.CircleCast(rb2D.position, cirlceCastRadius, movingVector, Vector2.Distance(rb2D.position, nextPoint));
+            Debug.Log("Distance = " + Vector2.Distance(rb2D.position, nextPoint));
+            if (hit)
+            {
+                if (hit.collider.gameObject.layer == 13)
+                {
+                    isLaunched = false;
+                    nextPoint = hit.centroid;
+                }
+                    Debug.Log("Hit!!!! " + hit.collider.ToString());
+                    nextPoint = hit.centroid;
+                    Debug.Log("hit.centroid " + nextPoint);
+                    movingVector = Vector2.Reflect(movingVector, hit.normal);
+                
+            }
+                rb2D.MovePosition(nextPoint);
+            Debug.Log("Переместил " + rb2D.position);
         }
         //else if (GameManager.instance.gameStatus == GameStatus.PREPARING)
         //{
@@ -72,13 +99,13 @@ public class Ball : MonoBehaviour
         Debug.Log("Ball " + gameObject.GetInstanceID() + " has stopped!");
     }
 
-    private void OnCollisionEnter2D(Collision2D collision)
-    {
-        if (collision.gameObject.layer == 10 || collision.gameObject.layer == 11)
-        {
-            movingVector = Vector2.Reflect(movingVector, collision.contacts[0].normal);
-        }
-    }
+    //private void OnCollisionEnter2D(Collision2D collision)
+    //{
+    //    if (collision.gameObject.layer == 10 || collision.gameObject.layer == 11)
+    //    {
+    //        movingVector = Vector2.Reflect(movingVector, collision.contacts[0].normal);
+    //    }
+    //}
 
     //private void FixYVelocity(Rigidbody2D rb2D)
     //{
