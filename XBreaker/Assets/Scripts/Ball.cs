@@ -50,9 +50,7 @@ public class Ball : MonoBehaviour
                 }
                     Debug.Log("Hit!!!! " + hit.collider.ToString());
                     nextPoint = hit.centroid;
-                    Debug.Log("hit.centroid " + nextPoint);
                     movingVector = Vector2.Reflect(movingVector, hit.normal);
-                
             }
                 rb2D.MovePosition(nextPoint);
             Debug.Log("Переместил " + rb2D.position);
