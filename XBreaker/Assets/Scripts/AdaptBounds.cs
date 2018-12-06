@@ -25,8 +25,7 @@ public class AdaptBounds : MonoBehaviour {
         float width = Camera.main.pixelWidth;
         float height = Camera.main.pixelHeight;
         float cellDeltha = height % calculatedCellSize; // Остаток
-        m_TopMiddleGameZone = new Vector2(0, height - (calculatedCellSize * 1.5f + cellDeltha / 2));
-        m_BotMiddleGameZone = new Vector2(0, -height + (calculatedCellSize * 1.5f + cellDeltha / 2));
+
 
         //Задаем размеры коллайдеров и местоположение относительно геймобджекта
         leftBound.GetComponent<BoxCollider2D>().offset = new Vector2(0, 0); //положение коллайдера относительно объекта
@@ -59,6 +58,9 @@ public class AdaptBounds : MonoBehaviour {
 
         topBound.transform.position = new Vector2(0, height / 2 - topBoundSpriteSize.y * topBoundRatio.y/2);
         botBound.transform.position = new Vector2(0, -height / 2 + botBoundSpriteSize.y * botBoundRatio.y/2);
+
+        m_TopMiddleGameZone = new Vector2(0, height - (topBoundSpriteSize.y * topBoundRatio.y));
+        m_BotMiddleGameZone = new Vector2(0, -height + (botBoundSpriteSize.y * botBoundRatio.y));
     }
 
     public static Vector2 GetRatioSpriteToGlobal(GameObject gameObject, float x, float y)

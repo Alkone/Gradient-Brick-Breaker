@@ -98,7 +98,7 @@ public class GameManager : MonoBehaviour
         {
             Monetization.Initialize(gameId, true);
         }
-        ballPrefub1.transform.localScale = Vector2.one * levelManager.GetCellSize() * 0.28f;
+        ballPrefub1.transform.localScale = Vector2.one * levelManager.GetLocalCellSize()*0.4f;
         InitGame();
     }
 
@@ -146,23 +146,6 @@ public class GameManager : MonoBehaviour
         {
             if (lineRenderer.positionCount != 0)
                 lineRenderer.positionCount = 0;
-
-            ////Ускоряем время по тапу
-            //if (Input.GetMouseButtonDown(0) == true && !mouseDownIsDetected)
-            //{
-            //    mouseDownIsDetected = true;
-            //    Time.timeScale = 4;
-            //}
-            //if (mouseDownIsDetected)
-            //{
-
-            //    if (Input.GetMouseButtonUp(0) == true)
-            //    {
-            //        Time.timeScale = 1;
-            //        mouseDownIsDetected = false;
-            //    }
-
-            //}
         }
         else if (gameStatus == GameStatus.ENDED)
         {
@@ -248,17 +231,14 @@ public class GameManager : MonoBehaviour
     public bool CreateBall(Vector2 position, GameObject ballPrefub)
     {
         GameObject go = Instantiate<GameObject>(ballPrefub, position, Quaternion.identity);
-        go.layer = 9;
-        go.GetComponent<Ball>().isLaunched = true;
         ballObjectsList.Add(go);
-        go.GetComponent<Rigidbody2D>().gravityScale = 2;
         return true;
     }
 
     //Останавливает шарик
     public void StopBall(GameObject ballObject)
     {
-        ballObject.GetComponent<IThrowable>().Stop();
+        ballObject.GetComponent<Ball>().Stop();
         if (!firstBallIsStoped)
         {
             startPosition = ballObject.transform.position;
@@ -353,14 +333,12 @@ public class GameManager : MonoBehaviour
     //Корутин на зпуск шариков с интервалом
     public IEnumerator StartBall(List<GameObject> ballObjectsList, Vector2 startingVector, float delay)
     {
-        IThrowable throwable;
         List<GameObject> currentStateObjectsList = new List<GameObject>(ballObjectsList);
 
         for (int i = 0; i < ballObjectsList.Count; i++)
         {
-            throwable = currentStateObjectsList[i].GetComponent<IThrowable>();
-            yield return new WaitForSecondsRealtime(delay);
-            throwable.Launch(startingVector * ballTouchPower);
+            yield return new WaitForSeconds(delay);
+            currentStateObjectsList[i].GetComponent<Ball>().Launch(startingVector * ballTouchPower);
         }
 
     }

@@ -17,8 +17,7 @@ public class TrajectorySimulation
     public TrajectorySimulation(LineRenderer sightLine)
     {
         this.sightLine = sightLine;
-        layerMask = LayerMask.GetMask("Bound", "Block", "BotBound");
-
+        layerMask = LayerMask.GetMask("Bound", "Block");
     }
 
 

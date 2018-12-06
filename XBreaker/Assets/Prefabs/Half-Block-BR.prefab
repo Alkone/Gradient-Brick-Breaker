@@ -22,7 +22,7 @@ GameObject:
   - component: {fileID: 212137550961507350}
   - component: {fileID: 114986873715213668}
   - component: {fileID: 111228052190314472}
-  - component: {fileID: 60384755267123102}
+  - component: {fileID: 60555443553314442}
   m_Layer: 10
   m_Name: Half-Block-BR
   m_TagString: Untagged
@@ -54,8 +54,8 @@ Transform:
   m_PrefabInternal: {fileID: 100100000}
   m_GameObject: {fileID: 1042451700578056}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: -1.84684, y: 0.24873385, z: 0}
-  m_LocalScale: {x: 1.25, y: 1.25, z: 0}
+  m_LocalPosition: {x: -64.8, y: -135.9, z: 0}
+  m_LocalScale: {x: 0.9375, y: 0.9375, z: 0}
   m_Children:
   - {fileID: 4185497512265564}
   m_Father: {fileID: 0}
@@ -68,8 +68,8 @@ Transform:
   m_PrefabInternal: {fileID: 100100000}
   m_GameObject: {fileID: 1697572399085556}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0.164, y: -0.219, z: 0}
-  m_LocalScale: {x: 0.1, y: 0.1, z: 0}
+  m_LocalPosition: {x: 20, y: -30, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 0}
   m_Children: []
   m_Father: {fileID: 4043793929988728}
   m_RootOrder: 0
@@ -109,7 +109,7 @@ MeshRenderer:
   m_SortingLayerID: 0
   m_SortingLayer: 0
   m_SortingOrder: 0
---- !u!60 &60384755267123102
+--- !u!60 &60555443553314442
 PolygonCollider2D:
   m_ObjectHideFlags: 1
   m_CorrespondingSourceObject: {fileID: 0}
@@ -125,17 +125,17 @@ PolygonCollider2D:
   m_SpriteTilingProperty:
     border: {x: 0, y: 0, z: 0, w: 0}
     pivot: {x: 0.5, y: 0.5}
-    oldSize: {x: 1, y: 1}
-    newSize: {x: 1, y: 1.0026327}
+    oldSize: {x: 128, y: 128}
+    newSize: {x: 1, y: 1}
     adaptiveTilingThreshold: 0.5
-    drawMode: 1
+    drawMode: 0
     adaptiveTiling: 0
   m_AutoTiling: 1
   m_Points:
     m_Paths:
-    - - {x: 0.49803832, y: 0.50030553}
-      - {x: 0.49787557, y: -0.49930286}
-      - {x: -0.49580508, y: -0.4968661}
+    - - {x: 63.713142, y: 64.184494}
+      - {x: -64.19464, y: -64.018524}
+      - {x: 63.998238, y: -63.99884}
 --- !u!102 &102170947618959740
 TextMesh:
   serializedVersion: 3
@@ -143,14 +143,14 @@ TextMesh:
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInternal: {fileID: 100100000}
   m_GameObject: {fileID: 1697572399085556}
-  m_Text: 99
+  m_Text: 9999
   m_OffsetZ: 0
   m_CharacterSize: 1
   m_LineSpacing: 0
   m_Anchor: 4
   m_Alignment: 1
   m_TabSize: 4
-  m_FontSize: 30
+  m_FontSize: 333
   m_FontStyle: 0
   m_RichText: 1
   m_Font: {fileID: 12800000, guid: c9aa2863f6d5ed24faec0dcecb73992a, type: 3}
@@ -223,8 +223,8 @@ SpriteRenderer:
   m_Color: {r: 0.75294125, g: 0.75294125, b: 0.75294125, a: 1}
   m_FlipX: 1
   m_FlipY: 1
-  m_DrawMode: 1
-  m_Size: {x: 1, y: 1.0026327}
+  m_DrawMode: 0
+  m_Size: {x: 1, y: 1}
   m_AdaptiveModeThreshold: 0.5
   m_SpriteTileMode: 0
   m_WasSpriteAssigned: 1

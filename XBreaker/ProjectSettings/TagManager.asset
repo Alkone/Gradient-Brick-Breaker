@@ -42,14 +42,17 @@ TagManager:
   - name: Background
     uniqueID: 2059643311
     locked: 0
-  - name: Shadow
-    uniqueID: 2898216679
+  - name: Bonds
+    uniqueID: 2760284451
     locked: 0
   - name: Sprite
     uniqueID: 3071650545
     locked: 0
   - name: HP
     uniqueID: 1176279971
+    locked: 0
+  - name: Ball
+    uniqueID: 2176009629
     locked: 0
   - name: Default
     uniqueID: 0

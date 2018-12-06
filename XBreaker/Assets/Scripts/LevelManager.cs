@@ -63,7 +63,7 @@ public class LevelManager : MonoBehaviour
         m_AddBallPoint1.transform.localScale = new Vector3(cellLocalSize, cellLocalSize, 0);
 
         //setting start point of the blocks
-        spawnPos = new Vector3(-screenSize.x / 2 + cellSize / 2, screenSize.y / 2 - cellSize * 2, 0);
+        spawnPos = new Vector3(-screenSize.x / 2 + cellSize / 2, screenSize.y / 2 - cellSize * 2.6f, 0);
     }
 
     private void Start()
@@ -75,6 +75,11 @@ public class LevelManager : MonoBehaviour
     public float GetCellSize()
     {
         return cellSize;
+    }
+
+    public float GetLocalCellSize()
+    {
+        return cellLocalSize;
     }
 
     //Clean and start create new levels
