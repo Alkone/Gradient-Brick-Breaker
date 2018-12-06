@@ -4,7 +4,8 @@ using UnityEngine;
 using UnityEngine.UI;
 using Random = UnityEngine.Random;
 
-public class LevelManager : MonoBehaviour {
+public class LevelManager : MonoBehaviour
+{
 
     [SerializeField] private int m_BlocksInLine = 10;
     [SerializeField] private int currentLevel;
@@ -25,6 +26,7 @@ public class LevelManager : MonoBehaviour {
     [SerializeField] private Text textLevel;
 
     private float cellSize;
+    private float cellLocalSize;
     private Vector2 screenSize;
     private Vector3 spawnPos;
 
@@ -35,7 +37,8 @@ public class LevelManager : MonoBehaviour {
     //Status
     private bool permissionToGenBlockLine;
 
-    void Awake () {
+    void Awake()
+    {
         permissionToGenBlockLine = false;
 
         //Create Lists
@@ -43,27 +46,33 @@ public class LevelManager : MonoBehaviour {
         addBallsList = new List<GameObject>();
 
         // geting screen size in global cordinates
-        screenSize = Camera.main.ScreenToWorldPoint(new Vector2(Screen.width, Screen.height));
+        screenSize = new Vector2(Screen.width, Screen.height);
+        Debug.Log("screenSize = " + screenSize);
+
         //get optimal block size
-        cellSize = 2 * screenSize.x / m_BlocksInLine;
+        cellSize = screenSize.x / m_BlocksInLine;
+        cellLocalSize = cellSize / m_BlockPrefub1.GetComponent<SpriteRenderer>().sprite.bounds.size.x;
+
         //get block size = cellSize*cellSize
-        m_BlockPrefub1.transform.localScale = new Vector3(cellSize, cellSize, 0);
-        m_HalfBlock0.transform.localScale = new Vector3(cellSize, cellSize, 0);
-        m_HalfBlock90.transform.localScale = new Vector3(cellSize, cellSize, 0);
-        m_HalfBlock180.transform.localScale = new Vector3(cellSize, cellSize, 0);
-        m_HalfBlock270.transform.localScale = new Vector3(cellSize, cellSize, 0);
-        m_AddBallPoint1.transform.localScale = new Vector3(cellSize, cellSize, 0);
+        Debug.Log("cellSize = " + cellSize);
+        m_BlockPrefub1.transform.localScale = new Vector3(cellLocalSize, cellLocalSize, 0);
+        m_HalfBlock0.transform.localScale = new Vector3(cellLocalSize, cellLocalSize, 0);
+        m_HalfBlock90.transform.localScale = new Vector3(cellLocalSize, cellLocalSize, 0);
+        m_HalfBlock180.transform.localScale = new Vector3(cellLocalSize, cellLocalSize, 0);
+        m_HalfBlock270.transform.localScale = new Vector3(cellLocalSize, cellLocalSize, 0);
+        m_AddBallPoint1.transform.localScale = new Vector3(cellLocalSize, cellLocalSize, 0);
+
         //setting start point of the blocks
-        spawnPos = new Vector3 (-screenSize.x + cellSize / 2 , screenSize.y - cellSize*2f, 0);
+        spawnPos = new Vector3(-screenSize.x / 2 + cellSize / 2, screenSize.y / 2 - cellSize * 2, 0);
     }
 
     private void Start()
     {
-    colors = GameManager.instance.GetColorManager().GetBlockColors();  // ВРЕМЕННОЕ
+        colors = GameManager.instance.GetColorManager().GetBlockColors();  // ВРЕМЕННОЕ
 
-}
+    }
 
-public float GetCellSize()
+    public float GetCellSize()
     {
         return cellSize;
     }
@@ -135,25 +144,25 @@ public float GetCellSize()
                     }
                     break;
                 case 9:
-                        CreateGameObject(m_HalfBlock0, tempSpawnPos, blockLife / 2);
+                    CreateGameObject(m_HalfBlock0, tempSpawnPos, blockLife / 2);
                     break;
                 case 10:
-                        CreateGameObject(m_HalfBlock90, tempSpawnPos, blockLife / 2);
+                    CreateGameObject(m_HalfBlock90, tempSpawnPos, blockLife / 2);
                     break;
                 case 11:
-                        CreateGameObject(m_HalfBlock180, tempSpawnPos, blockLife / 2);
+                    CreateGameObject(m_HalfBlock180, tempSpawnPos, blockLife / 2);
                     break;
                 case 12:
-                        CreateGameObject(m_HalfBlock270, tempSpawnPos, blockLife / 2);
+                    CreateGameObject(m_HalfBlock270, tempSpawnPos, blockLife / 2);
                     break;
                 case 13:
                     CreateGameObject(m_BlockPrefub1, tempSpawnPos, blockLife);
                     break;
                 case 14:
-        
+
                     break;
                 case 15:
-       
+
                     break;
                 case 16:
                     CreateGameObject(m_BlockPrefub1, tempSpawnPos, blockLife);
@@ -190,12 +199,13 @@ public float GetCellSize()
             go.GetComponent<Block>().lifeCount = blockLife;
             blocksList.Add(go);
 
-        //if AddBall
-        } else if (prefub.GetComponent<AddBall>())
+            //if AddBall
+        }
+        else if (prefub.GetComponent<AddBall>())
         {
             addBallsList.Add(go);
         }
-       
+
     }
 
     //Delete all level GameObjects
@@ -206,7 +216,8 @@ public float GetCellSize()
         if (go.GetComponent<Block>())
         {
             blocksList.Remove(go);
-        }else if (go.GetComponent<AddBall>())
+        }
+        else if (go.GetComponent<AddBall>())
 
         //if AddBall
         {
@@ -255,6 +266,6 @@ public float GetCellSize()
             MoveLevelDownOnOneCell(parentObject);
             permissionToGenBlockLine = false;
         }
-        
+
     }
 }

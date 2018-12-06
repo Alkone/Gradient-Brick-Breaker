@@ -8,9 +8,15 @@ public class AdaptBounds : MonoBehaviour {
     [SerializeField] private GameObject rightBound;
     [SerializeField] private GameObject botBound;
     [SerializeField] private GameObject topBound;
+    public float boardWidth;
 
     public Vector2 m_TopMiddleGameZone;
     public Vector2 m_BotMiddleGameZone;
+
+    private void Awake()
+    {
+        Camera.main.orthographicSize = Screen.height / 2;
+    }
 
     // Use this for initialization
     void Start() {
@@ -18,41 +24,55 @@ public class AdaptBounds : MonoBehaviour {
         float calculatedCellSize = GameManager.instance.GetLevelManager().GetCellSize(); //Получаем размер ячейки из LevelManager-a
         float width = Camera.main.pixelWidth;
         float height = Camera.main.pixelHeight;
-        float cellDeltha = height * 2 % calculatedCellSize; // Остаток
-        Vector2 worldCameraSize = Camera.main.ScreenToWorldPoint(new Vector2(width, height));
-        m_TopMiddleGameZone = new Vector2(0, worldCameraSize.y - (calculatedCellSize * 1.5f + cellDeltha / 2));
-        m_BotMiddleGameZone = new Vector2(0, -worldCameraSize.y + (calculatedCellSize * 1.5f + cellDeltha / 2));
+        float cellDeltha = height % calculatedCellSize; // Остаток
+        m_TopMiddleGameZone = new Vector2(0, height - (calculatedCellSize * 1.5f + cellDeltha / 2));
+        m_BotMiddleGameZone = new Vector2(0, -height + (calculatedCellSize * 1.5f + cellDeltha / 2));
 
         //Задаем размеры коллайдеров и местоположение относительно геймобджекта
         leftBound.GetComponent<BoxCollider2D>().offset = new Vector2(0, 0); //положение коллайдера относительно объекта
         leftBound.GetComponent<BoxCollider2D>().autoTiling = true; // включаем авто растягивание коллайдера
         leftBound.GetComponent<BoxCollider2D>().size = new Vector2(1, 1); // размер коллайдера = размеру gameObject
-        leftBound.transform.localScale = new Vector2(calculatedCellSize, worldCameraSize.y * 2); // задаем размеры GameObject
+        leftBound.transform.localScale = new Vector2(boardWidth, height);
 
         rightBound.GetComponent<BoxCollider2D>().offset = new Vector2(0, 0); //положение коллайдера относительно объекта
         rightBound.GetComponent<BoxCollider2D>().autoTiling = true; // включаем авто растягивание коллайдера
         rightBound.GetComponent<BoxCollider2D>().size = new Vector2(1, 1); // размер коллайдера = размеру gameObject
-        rightBound.transform.localScale = new Vector2(calculatedCellSize, worldCameraSize.y * 2); // задаем размеры GameObject
+        rightBound.transform.localScale = new Vector2(boardWidth, height);
 
+        Vector2 topBoundSpriteSize = topBound.GetComponent<SpriteRenderer>().sprite.bounds.size;
+        Vector2 topBoundRatio = GetRatioSpriteToGlobal(topBound, width, calculatedCellSize * 2f + cellDeltha / 2);
         topBound.GetComponent<BoxCollider2D>().offset = new Vector2(0, 0); //положение коллайдера относительно объекта
         topBound.GetComponent<BoxCollider2D>().autoTiling = true; // включаем авто растягивание коллайдера
-        topBound.GetComponent<BoxCollider2D>().size = new Vector2(1, 1); // размер коллайдера = размеру gameObject
-        topBound.transform.localScale = new Vector2(worldCameraSize.x*2, calculatedCellSize * 1.5f + cellDeltha/2); // задаем размеры GameObject
+        topBound.GetComponent<BoxCollider2D>().size = topBoundSpriteSize; //размер коллайдера = размеру спрайта
+        topBound.transform.localScale = topBoundRatio; // задаем размеры GameObject
 
+        Vector2 botBoundSpriteSize = botBound.GetComponent<SpriteRenderer>().sprite.bounds.size;
+        Vector2 botBoundRatio = GetRatioSpriteToGlobal(botBound, width, calculatedCellSize * 2f + cellDeltha / 2);
         botBound.GetComponent<BoxCollider2D>().offset = new Vector2(0, 0); //положение коллайдера относительно объекта
         botBound.GetComponent<BoxCollider2D>().autoTiling = true; // включаем авто растягивание коллайдера
-        botBound.GetComponent<BoxCollider2D>().size = new Vector2(1, 1); // размер коллайдера = размеру gameObject
-        botBound.transform.localScale = new Vector2(worldCameraSize.x * 2, calculatedCellSize * 1.5f + cellDeltha/2); // задаем размеры GameObject
+        botBound.GetComponent<BoxCollider2D>().size = botBoundSpriteSize; //размер коллайдера = размеру спрайта
+        botBound.transform.localScale = botBoundRatio; // задаем размеры GameObject
 
         //Передвигаем коллайдеры в зависимости от размера камеры
-        Vector2 middleBot = new Vector2(0, -worldCameraSize.y + (calculatedCellSize * 1.5f + cellDeltha / 2) / 2);
-        Vector2 middleTop = new Vector2(0, worldCameraSize.y - (calculatedCellSize * 1.5f + cellDeltha / 2)/2);
-        Vector2 middleLeft = new Vector2(-worldCameraSize.x- calculatedCellSize / 2, 0);
-        Vector2 middleRight = new Vector2(worldCameraSize.x + calculatedCellSize / 2, 0);
+        leftBound.transform.position = new Vector2(-width / 2 - boardWidth/2 , 0);
+        rightBound.transform.position = new Vector2(width / 2 + boardWidth / 2, 0);
 
-        leftBound.transform.position = middleLeft;
-        rightBound.transform.position = middleRight;
-        topBound.transform.position = middleTop;
-        botBound.transform.position = middleBot;
+        topBound.transform.position = new Vector2(0, height / 2 - topBoundSpriteSize.y * topBoundRatio.y/2);
+        botBound.transform.position = new Vector2(0, -height / 2 + botBoundSpriteSize.y * botBoundRatio.y/2);
     }
+
+    public static Vector2 GetRatioSpriteToGlobal(GameObject gameObject, float x, float y)
+    {
+        float newX = x / gameObject.GetComponent<SpriteRenderer>().sprite.bounds.size.x;
+        float newY = y / gameObject.GetComponent<SpriteRenderer>().sprite.bounds.size.y;
+        return new Vector2(newX, newY);
+    }
+
+    public static Vector2 СonvertGlobalToLocalScale(GameObject gameObject, Vector2 localScale)
+    {
+        float newX = localScale.x / gameObject.GetComponent<SpriteRenderer>().sprite.bounds.size.x;
+        float newY = localScale.y / gameObject.GetComponent<SpriteRenderer>().sprite.bounds.size.y;
+        return new Vector2(newX, newY);
+    }
+
 }

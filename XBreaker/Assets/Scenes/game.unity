@@ -743,9 +743,9 @@ Camera:
     height: 1
   near clip plane: 0.3
   far clip plane: 50
-  field of view: 111
+  field of view: 177
   orthographic: 1
-  orthographic size: 6.128125
+  orthographic size: 960
   m_Depth: -1
   m_CullingMask:
     serializedVersion: 2
@@ -1023,19 +1023,19 @@ Prefab:
       objectReference: {fileID: 0}
     - target: {fileID: 4439010972911540, guid: 6daa7227cac79d74f92c1c78dd71734d, type: 2}
       propertyPath: m_LocalPosition.x
-      value: -0.05
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 4439010972911540, guid: 6daa7227cac79d74f92c1c78dd71734d, type: 2}
       propertyPath: m_LocalPosition.y
-      value: 5.3
+      value: 825
       objectReference: {fileID: 0}
     - target: {fileID: 4439010972911540, guid: 6daa7227cac79d74f92c1c78dd71734d, type: 2}
       propertyPath: m_LocalScale.x
-      value: 7.571848
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 4439010972911540, guid: 6daa7227cac79d74f92c1c78dd71734d, type: 2}
       propertyPath: m_LocalScale.y
-      value: 1.9743279
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 61035979785144554, guid: 6daa7227cac79d74f92c1c78dd71734d,
         type: 2}
@@ -1079,19 +1079,19 @@ Prefab:
       objectReference: {fileID: 0}
     - target: {fileID: 4506689350281998, guid: 6daa7227cac79d74f92c1c78dd71734d, type: 2}
       propertyPath: m_LocalPosition.x
-      value: -0.12
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 4506689350281998, guid: 6daa7227cac79d74f92c1c78dd71734d, type: 2}
       propertyPath: m_LocalPosition.y
-      value: -5.64
+      value: -825
       objectReference: {fileID: 0}
     - target: {fileID: 4506689350281998, guid: 6daa7227cac79d74f92c1c78dd71734d, type: 2}
       propertyPath: m_LocalScale.x
-      value: 8.492
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 4506689350281998, guid: 6daa7227cac79d74f92c1c78dd71734d, type: 2}
       propertyPath: m_LocalScale.y
-      value: 1.223
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 61035979785144554, guid: 6daa7227cac79d74f92c1c78dd71734d,
         type: 2}
@@ -1206,6 +1206,11 @@ Prefab:
         type: 2}
       propertyPath: m_IsTrigger
       value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 114341684778608628, guid: 6daa7227cac79d74f92c1c78dd71734d,
+        type: 2}
+      propertyPath: boardWidth
+      value: 100
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 6daa7227cac79d74f92c1c78dd71734d, type: 2}
@@ -2244,7 +2249,7 @@ Prefab:
     - target: {fileID: 114369899425536314, guid: 2d47c2b85c2384b3e9775fa3b75e27ef,
         type: 2}
       propertyPath: ballTouchPower
-      value: 10
+      value: 100
       objectReference: {fileID: 0}
     - target: {fileID: 114005096843525392, guid: 2d47c2b85c2384b3e9775fa3b75e27ef,
         type: 2}
