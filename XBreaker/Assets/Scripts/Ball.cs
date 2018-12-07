@@ -48,9 +48,12 @@ public class Ball : MonoBehaviour
                     isLaunched = false;
                     nextPoint = hit.centroid;
                 }
+                else if (hit.collider.gameObject.layer == 10 || hit.collider.gameObject.layer == 11)
+                {
                     Debug.Log("Hit!!!! " + hit.collider.ToString());
                     nextPoint = hit.centroid;
                     movingVector = Vector2.Reflect(movingVector, hit.normal);
+                }
             }
                 rb2D.MovePosition(nextPoint);
             Debug.Log("Переместил " + rb2D.position);

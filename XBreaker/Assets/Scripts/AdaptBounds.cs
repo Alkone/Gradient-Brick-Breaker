@@ -59,8 +59,12 @@ public class AdaptBounds : MonoBehaviour {
         topBound.transform.position = new Vector2(0, height / 2 - topBoundSpriteSize.y * topBoundRatio.y/2);
         botBound.transform.position = new Vector2(0, -height / 2 + botBoundSpriteSize.y * botBoundRatio.y/2);
 
-        m_TopMiddleGameZone = new Vector2(0, height - (topBoundSpriteSize.y * topBoundRatio.y));
-        m_BotMiddleGameZone = new Vector2(0, -height + (botBoundSpriteSize.y * botBoundRatio.y));
+        m_TopMiddleGameZone = new Vector2(0, height/2 - (topBoundSpriteSize.y * topBoundRatio.y));
+        m_BotMiddleGameZone = new Vector2(0, -height/2 + (botBoundSpriteSize.y * botBoundRatio.y));
+        Debug.Log(" botBoundSpriteSize.y " + botBoundSpriteSize.y);
+        Debug.Log(" botBoundRatio.y " + botBoundRatio.y);
+        Debug.Log(" m_TopMiddleGameZone " + m_TopMiddleGameZone);
+        Debug.Log(" m_BotMiddleGameZone " + m_BotMiddleGameZone);
     }
 
     public static Vector2 GetRatioSpriteToGlobal(GameObject gameObject, float x, float y)

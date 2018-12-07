@@ -174,7 +174,7 @@ public class GameManager : MonoBehaviour
                 levelManager.SetupScene(startLevel); //Очищает сцену 
                 DestroyAllBals(); //Уничтожает GameObject и чистит список
 
-                startPosition = new Vector2(0, -4);
+                startPosition = new Vector2 (0, adaptBounds.m_BotMiddleGameZone.y + ballPrefub1.transform.localScale.y * 128f);
                 gameLosed = false;
                 CreateBall(startPosition, ballPrefub1);
                 gameStatus = GameStatus.LAUNCHED;
@@ -183,7 +183,7 @@ public class GameManager : MonoBehaviour
             case "continue":
                 levelManager.CleanLevel(); //Очищает сцену 
 
-                startPosition = new Vector2(0, -4);
+                startPosition = adaptBounds.m_BotMiddleGameZone;
 
                 gameLosed = false;
                 loseScreen.SetActive(false); //убираем экран проигрыша
