@@ -4,33 +4,37 @@ using UnityEngine;
 using UnityEngine.UI;
 
 public class Block : MonoBehaviour {
-
+    //Характеристики блоков
+    public static float pixelSize = 0;
     //HP блока
     public int lifeCount;
-    private TextMesh hpText; // Ссылка на Text компонент дочернего объекта
-    private LevelManager levelManager; //Ссылка на контролер
+
+    private TextMesh hpTextMesh; // Ссылка на Text компонент дочернего объекта
     private SpriteRenderer spriteRenderer; //Ссылка на спрайтрендер
     private Color[] colors; //Массив возможных цветов
-    private Animation blockAnimation;
 
-	// Use this for initialization
-	void Start () {
-        hpText = GetComponentInChildren<TextMesh>();
+    // Use this for initialization
+    void Start () {
+        if (pixelSize < 0.01f)
+        {
+            pixelSize = GameManager.instance.GetLevelManager().GetOptimalCellPixelSize();
+        }
+        gameObject.transform.localScale = new Vector3(pixelSize, pixelSize, 0);
+        hpTextMesh = GetComponentInChildren<TextMesh>();
         spriteRenderer = GetComponent<SpriteRenderer>();
-        levelManager = GameManager.instance.GetLevelManager();
-        colors = GameManager.instance.GetColorManager().GetBlockColors();
+        colors = GameManager.instance.GetColorManager().generatedColors;
         UpdateBlock();
     }
 	
     private void UpdateBlock()
     {
-        hpText.text = lifeCount.ToString(); // обновляет Text в дочернем объекте
+        hpTextMesh.text = lifeCount.ToString(); // обновляет Text в дочернем объекте
         spriteRenderer.material.color = colors[lifeCount]; // Задает цвет в соответствии с hp
     }
 
     private void OnCollisionEnter2D(Collision2D collision)
     {
-        if (collision.gameObject.layer == 8)
+        if (collision.gameObject.GetComponent<Ball>())
         {
             GetComponent<Animation>().Play();
             if (lifeCount < 2)
@@ -53,7 +57,7 @@ public class Block : MonoBehaviour {
     private IEnumerator DestroyThisObject()
     {
         yield return new WaitForSeconds((float)0.01);
-        levelManager.RemoveGameObject(gameObject);
+       //levelManager.RemoveGameObject(gameObject);    ЗАМЕНИТЬ НА ЭВЕНТ
         Destroy(gameObject);
     }
 }

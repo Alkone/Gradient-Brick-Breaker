@@ -72,7 +72,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 4962610582621092}
-  - component: {fileID: 114341684778608628}
+  - component: {fileID: 114160229800130194}
   m_Layer: 0
   m_Name: LevelBounds
   m_TagString: Untagged
@@ -207,7 +207,7 @@ BoxCollider2D:
     adaptiveTilingThreshold: 0.5
     drawMode: 1
     adaptiveTiling: 0
-  m_AutoTiling: 1
+  m_AutoTiling: 0
   serializedVersion: 2
   m_Size: {x: 1, y: 1}
   m_EdgeRadius: 0
@@ -286,7 +286,7 @@ BoxCollider2D:
   serializedVersion: 2
   m_Size: {x: 1, y: 1}
   m_EdgeRadius: 0
---- !u!114 &114341684778608628
+--- !u!114 &114160229800130194
 MonoBehaviour:
   m_ObjectHideFlags: 1
   m_CorrespondingSourceObject: {fileID: 0}
@@ -294,7 +294,7 @@ MonoBehaviour:
   m_GameObject: {fileID: 1350802322291590}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: a79dca03656b34e48b2547f0fc888f6d, type: 3}
+  m_Script: {fileID: 11500000, guid: c9b3948ceb29a404d9b9a9e65c9a56e6, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
   leftBound: {fileID: 1307867211380878}

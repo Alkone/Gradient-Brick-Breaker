@@ -6,27 +6,28 @@ using Random = UnityEngine.Random;
 
 public class LevelManager : MonoBehaviour
 {
+    private GameManager GM;
 
     [SerializeField] private int m_BlocksInLine = 10;
-    [SerializeField] private int currentLevel;
+    [SerializeField] private int currentLevel = 0;
     [SerializeField] private int linesCount = 0;
-    [SerializeField] private GameObject m_BlockPrefub1;
-    [SerializeField] private GameObject m_HalfBlock0;
-    [SerializeField] private GameObject m_HalfBlock90;
-    [SerializeField] private GameObject m_HalfBlock180;
-    [SerializeField] private GameObject m_HalfBlock270;
-    [SerializeField] private GameObject m_AddBallPoint1;
-    [SerializeField] GameObject parentObject; //папка куда будем складывать все объекты
 
-    [SerializeField] private GameObject topBound; //ВРЕМЕННОЕ решение с цветом
-    [SerializeField] private GameObject botBound; //ВРЕМЕННОЕ решение с цветом
-    private Color[] colors; //Массив возможных цветов ВРЕМЕННОЕ
+    //
+    public GameObject m_BlockPrefub1;
+    public GameObject m_HalfBlock0;
+    public GameObject m_HalfBlock90;
+    public GameObject m_HalfBlock180;
+    public GameObject m_HalfBlock270;
+    public GameObject m_AddBallPoint1;
+    public GameObject parentObject; //папка куда будем складывать все объекты
 
     //UI
-    [SerializeField] private Text textLevel;
+    public Text textLevel;
 
-    private float cellSize;
+ 
     private float cellLocalSize;
+    private float cellPixelSize;
+    private float optimalCellPixelSize;
     private Vector2 screenSize;
     private Vector3 spawnPos;
 
@@ -39,47 +40,43 @@ public class LevelManager : MonoBehaviour
 
     void Awake()
     {
-        permissionToGenBlockLine = false;
-
-        //Create Lists
-        blocksList = new List<GameObject>();
-        addBallsList = new List<GameObject>();
+        GM = GameManager.instance; // Получаем ссылку на 
 
         // geting screen size in global cordinates
         screenSize = new Vector2(Screen.width, Screen.height);
         Debug.Log("screenSize = " + screenSize);
 
         //get optimal block size
-        cellSize = screenSize.x / m_BlocksInLine;
-        cellLocalSize = cellSize / m_BlockPrefub1.GetComponent<SpriteRenderer>().sprite.bounds.size.x;
-
-        //get block size = cellSize*cellSize
-        Debug.Log("cellSize = " + cellSize);
-        m_BlockPrefub1.transform.localScale = new Vector3(cellLocalSize, cellLocalSize, 0);
-        m_HalfBlock0.transform.localScale = new Vector3(cellLocalSize, cellLocalSize, 0);
-        m_HalfBlock90.transform.localScale = new Vector3(cellLocalSize, cellLocalSize, 0);
-        m_HalfBlock180.transform.localScale = new Vector3(cellLocalSize, cellLocalSize, 0);
-        m_HalfBlock270.transform.localScale = new Vector3(cellLocalSize, cellLocalSize, 0);
-        m_AddBallPoint1.transform.localScale = new Vector3(cellLocalSize, cellLocalSize, 0);
+        cellPixelSize = screenSize.x / m_BlocksInLine;
+        cellLocalSize = optimalCellPixelSize / m_BlockPrefub1.GetComponent<SpriteRenderer>().sprite.bounds.size.x;
+        optimalCellPixelSize = cellPixelSize * cellLocalSize;
 
         //setting start point of the blocks
-        spawnPos = new Vector3(-screenSize.x / 2 + cellSize / 2, screenSize.y / 2 - cellSize * 2.6f, 0);
+        spawnPos = new Vector3(-screenSize.x / 2 + optimalCellPixelSize / 2, screenSize.y / 2 - optimalCellPixelSize * 2.6f, 0);
     }
 
-    private void Start()
+    public void Start()
     {
-        colors = GameManager.instance.GetColorManager().GetBlockColors();  // ВРЕМЕННОЕ
+        //Create Lists
+        blocksList = new List<GameObject>();
+        addBallsList = new List<GameObject>();
 
+        permissionToGenBlockLine = false;
     }
 
-    public float GetCellSize()
+    public float GetCellPixelSize()
     {
-        return cellSize;
+        return cellPixelSize;
     }
 
-    public float GetLocalCellSize()
+    public float GetCellLocalSize()
     {
         return cellLocalSize;
+    }
+
+    public float GetOptimalCellPixelSize()
+    {
+        return optimalCellPixelSize;
     }
 
     //Clean and start create new levels
@@ -97,7 +94,7 @@ public class LevelManager : MonoBehaviour
     }
 
     //Stop
-    public void StopLevelEngine()
+    public void StopGenerateNextBlockLine()
     {
         permissionToGenBlockLine = false;
     }
@@ -186,7 +183,7 @@ public class LevelManager : MonoBehaviour
                     CreateGameObject(m_BlockPrefub1, tempSpawnPos, blockLife);
                     break;
             }
-            tempSpawnPos.x += cellSize;
+            tempSpawnPos.x += optimalCellPixelSize;
         }
     }
 
@@ -203,14 +200,12 @@ public class LevelManager : MonoBehaviour
         {
             go.GetComponent<Block>().lifeCount = blockLife;
             blocksList.Add(go);
-
             //if AddBall
         }
         else if (prefub.GetComponent<AddBall>())
         {
             addBallsList.Add(go);
         }
-
     }
 
     //Delete all level GameObjects
@@ -255,7 +250,7 @@ public class LevelManager : MonoBehaviour
     //Move level down on one cell size.
     private void MoveLevelDownOnOneCell(GameObject parent)
     {
-        parent.transform.position = new Vector2(parent.transform.position.x, parent.transform.position.y - cellSize);
+        parent.transform.position = new Vector2(parent.transform.position.x, parent.transform.position.y - optimalCellPixelSize);
     }
 
     private void FixedUpdate()
@@ -266,11 +261,9 @@ public class LevelManager : MonoBehaviour
             CreateLevel(currentLevel);
             linesCount++;
             currentLevel++;
-            topBound.GetComponent<SpriteRenderer>().material.color = colors[currentLevel];
-            botBound.GetComponent<SpriteRenderer>().material.color = colors[currentLevel];
+            GM.GetBoundManager().SetBoundsColor(GM.GetColorManager().generatedColors[currentLevel]);
             MoveLevelDownOnOneCell(parentObject);
             permissionToGenBlockLine = false;
         }
-
     }
 }

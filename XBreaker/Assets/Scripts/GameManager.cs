@@ -12,21 +12,17 @@ public class GameManager : MonoBehaviour
     //Singleton
     public static GameManager instance = null; //Static instance of GameManager which allows it to be accessed by any other script.
     //
-    private AdaptBounds adaptBounds;
     private GameStatus gameStatus; //Store a reference to our GameStatus which control level.
     private LevelManager levelManager; //Store a reference to our LevelManager which control level.
-    private TrajectorySimulation trajectorySimulator; // Store a reference to our LevelManager which simulate gameObeject path.
+    private BoundManager boundManager;
     private ColorManager colorManager; //
     private LineRenderer lineRenderer; // Store a reference to our LineRenderer.
-
-
-    //Lists
-    private List<GameObject> ballObjectsList;
+    private TrajectorySimulation trajectorySimulator; // Store a reference to our LevelManager which simulate gameObeject path.
 
     ////Inspector fields
-    [SerializeField] private GameObject loseScreen, pauseScreen, boundsParent, ballPrefub1;
-    [SerializeField] private float ballTouchPower;
-    [SerializeField] private float ballLaunchInterval;
+    public GameObject loseScreen, pauseScreen, boundsParent, ballPrefub1;
+    public float ballTouchPower;
+    public float ballLaunchInterval;
     [SerializeField] private Vector2 startPosition; // Start ball pos
     [SerializeField] private int segmentCount = 3; //Кол-во предсказанных скачков
     [SerializeField] private int startLevel = 1;  //Current level number
@@ -35,7 +31,10 @@ public class GameManager : MonoBehaviour
     //для  WaitTouchToLunch()
     private bool mouseDownIsDetected = false;
     private bool firstBallIsStoped = false;
-    float angle;
+    private float angle;
+
+    //Lists
+    private List<GameObject> ballObjectsList;
 
     //Переменные состояния игры
     private bool gameLosed = false;
@@ -70,8 +69,8 @@ public class GameManager : MonoBehaviour
         DontDestroyOnLoad(gameObject);
 
         //Get components
-        adaptBounds = boundsParent.GetComponent<AdaptBounds>();
         levelManager = GetComponent<LevelManager>();
+        boundManager = boundsParent.GetComponent<BoundManager>();
         lineRenderer = GetComponent<LineRenderer>();
         colorManager = GetComponent<ColorManager>();
 
@@ -98,7 +97,7 @@ public class GameManager : MonoBehaviour
         {
             Monetization.Initialize(gameId, true);
         }
-        ballPrefub1.transform.localScale = Vector2.one * levelManager.GetLocalCellSize()*0.4f;
+        ballPrefub1.transform.localScale = Vector2.one * levelManager.GetCellLocalSize()*0.4f;
         InitGame();
     }
 
@@ -174,7 +173,7 @@ public class GameManager : MonoBehaviour
                 levelManager.SetupScene(startLevel); //Очищает сцену 
                 DestroyAllBals(); //Уничтожает GameObject и чистит список
 
-                startPosition = new Vector2 (0, adaptBounds.m_BotMiddleGameZone.y + ballPrefub1.transform.localScale.y * 128f);
+                startPosition = new Vector2 (0, boundManager.m_BotMiddleGameZone.y + ballPrefub1.transform.localScale.y * 128f);
                 gameLosed = false;
                 CreateBall(startPosition, ballPrefub1);
                 gameStatus = GameStatus.LAUNCHED;
@@ -183,7 +182,7 @@ public class GameManager : MonoBehaviour
             case "continue":
                 levelManager.CleanLevel(); //Очищает сцену 
 
-                startPosition = adaptBounds.m_BotMiddleGameZone;
+                startPosition = boundManager.m_BotMiddleGameZone;
 
                 gameLosed = false;
                 loseScreen.SetActive(false); //убираем экран проигрыша
@@ -225,6 +224,9 @@ public class GameManager : MonoBehaviour
         return levelManager;
     }
 
+    public BoundManager GetBoundManager(){
+        return boundManager;
+    }
 
 
     //Создает шарик в заданной позиции с гравитацией
@@ -250,7 +252,7 @@ public class GameManager : MonoBehaviour
     //Ждет пока игрок прикоснется к экрану и начнет игру
     private void WaitTouchToLunch()
     {
-        if (GetCurrentGMousePos().y < adaptBounds.m_TopMiddleGameZone.y && GetCurrentGMousePos().y > adaptBounds.m_BotMiddleGameZone.y)
+        if (GetCurrentGMousePos().y < boundManager.m_TopMiddleGameZone.y && GetCurrentGMousePos().y > boundManager.m_BotMiddleGameZone.y)
         {
             Vector2 startVector;
             if (Input.GetMouseButtonDown(0) && !mouseDownIsDetected)
