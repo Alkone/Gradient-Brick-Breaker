@@ -64,7 +64,7 @@ public class BoundManager : MonoBehaviour {
         topBound.transform.position = new Vector2(0, height / 2 - topBoundSpriteSize.y * topBoundLocalScale.y/2);
         botBound.transform.position = new Vector2(0, -height / 2 + botBoundSpriteSize.y * botBoundLocalScale.y/2);
 
-        m_TopMiddleGameZone = new Vector2(0, height/2 - (topBoundSpriteSize.y * topBoundLocalScale.y));
+        m_TopMiddleGameZone = new Vector2(0, height/2 - topBoundSpriteSize.y * topBoundLocalScale.y);
         m_BotMiddleGameZone = new Vector2(0, -height/2 + botBoundSpriteSize.y * botBoundLocalScale.y);
         Debug.Log(" botBoundSpriteSize.y " + botBoundSpriteSize.y);
         Debug.Log(" botBoundRatio.y " + botBoundLocalScale.y);
