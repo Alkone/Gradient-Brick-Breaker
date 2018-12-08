@@ -3,8 +3,6 @@ using System.Collections.Generic;
 using UnityEngine;
 
 public class BoundManager : MonoBehaviour {
-    private GameManager GM;
-
     public GameObject leftBound;
     public GameObject rightBound;
     public GameObject botBound;
@@ -15,16 +13,16 @@ public class BoundManager : MonoBehaviour {
     public Vector2 m_BotMiddleGameZone;
     public float optimalCellPixelSize;
 
-    private void Awake()
+    void Awake()
     {
-        GM = GameManager.instance;
         Camera.main.orthographicSize = Screen.height / 2;
     }
 
     // Use this for initialization
     void Start() {
-
-        optimalCellPixelSize = GM.GetLevelManager().GetOptimalCellPixelSize(); //Получаем размер ячейки из LevelManager-a
+        Debug.Log("GM! " + GameManager.instance.gameObject);
+        Debug.Log("LevelManager( "+ GameManager.instance.GetLevelManager());
+        optimalCellPixelSize = GameManager.instance.GetLevelManager().GetCellPixelSize(); //Получаем размер ячейки из LevelManager-a
         float width = Camera.main.pixelWidth;
         float height = Camera.main.pixelHeight;
         float cellDeltha = height % optimalCellPixelSize; // Остаток
@@ -67,7 +65,7 @@ public class BoundManager : MonoBehaviour {
         botBound.transform.position = new Vector2(0, -height / 2 + botBoundSpriteSize.y * botBoundLocalScale.y/2);
 
         m_TopMiddleGameZone = new Vector2(0, height/2 - (topBoundSpriteSize.y * topBoundLocalScale.y));
-        m_BotMiddleGameZone = new Vector2(0, -height/2 + (botBoundSpriteSize.y * botBoundLocalScale.y));
+        m_BotMiddleGameZone = new Vector2(0, -height/2 + botBoundSpriteSize.y * botBoundLocalScale.y);
         Debug.Log(" botBoundSpriteSize.y " + botBoundSpriteSize.y);
         Debug.Log(" botBoundRatio.y " + botBoundLocalScale.y);
         Debug.Log(" m_TopMiddleGameZone " + m_TopMiddleGameZone);

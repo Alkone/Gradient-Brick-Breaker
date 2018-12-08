@@ -12,8 +12,6 @@ public class ColorManager : MonoBehaviour {
     //генерирует цвета с шагом 1/stepCount
     public void Awake()
     {
-        if (generatedColors == null)
-        {
             generatedColors = new Color[stepCount * peakColors.Length];
             int index = 0;
             float step = 1f / stepCount;
@@ -28,6 +26,5 @@ public class ColorManager : MonoBehaviour {
                     tempStep += step;
                 }
             }
-        }
     }
 }

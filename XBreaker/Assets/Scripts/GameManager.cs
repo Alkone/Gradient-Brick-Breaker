@@ -173,7 +173,7 @@ public class GameManager : MonoBehaviour
                 levelManager.SetupScene(startLevel); //Очищает сцену 
                 DestroyAllBals(); //Уничтожает GameObject и чистит список
 
-                startPosition = new Vector2 (0, boundManager.m_BotMiddleGameZone.y + ballPrefub1.transform.localScale.y * 128f);
+                startPosition = new Vector2 (0, boundManager.m_BotMiddleGameZone.y + levelManager.GetCellPixelSize()/4.8f);
                 gameLosed = false;
                 CreateBall(startPosition, ballPrefub1);
                 gameStatus = GameStatus.LAUNCHED;

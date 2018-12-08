@@ -6,8 +6,6 @@ using Random = UnityEngine.Random;
 
 public class LevelManager : MonoBehaviour
 {
-    private GameManager GM;
-
     [SerializeField] private int m_BlocksInLine = 10;
     [SerializeField] private int currentLevel = 0;
     [SerializeField] private int linesCount = 0;
@@ -24,10 +22,8 @@ public class LevelManager : MonoBehaviour
     //UI
     public Text textLevel;
 
- 
-    private float cellLocalSize;
     private float cellPixelSize;
-    private float optimalCellPixelSize;
+    private float cellLocalSize;
     private Vector2 screenSize;
     private Vector3 spawnPos;
 
@@ -40,19 +36,21 @@ public class LevelManager : MonoBehaviour
 
     void Awake()
     {
-        GM = GameManager.instance; // Получаем ссылку на 
-
         // geting screen size in global cordinates
         screenSize = new Vector2(Screen.width, Screen.height);
         Debug.Log("screenSize = " + screenSize);
 
         //get optimal block size
+        Debug.Log("screenSize.x / m_BlocksInLine = " + screenSize.x + " / " + m_BlocksInLine);
         cellPixelSize = screenSize.x / m_BlocksInLine;
-        cellLocalSize = optimalCellPixelSize / m_BlockPrefub1.GetComponent<SpriteRenderer>().sprite.bounds.size.x;
-        optimalCellPixelSize = cellPixelSize * cellLocalSize;
+        Debug.Log("cellPixelSize - " + cellPixelSize);
+        Debug.Log("m_BlockPrefub1.GetComponent<SpriteRenderer>().sprite.bounds.size.x - " + m_BlockPrefub1.GetComponent<SpriteRenderer>().sprite.bounds.size.x);
+        cellLocalSize = cellPixelSize / m_BlockPrefub1.GetComponent<SpriteRenderer>().sprite.bounds.size.x;
+        Debug.Log("cellLocalSize - " + cellLocalSize);
 
         //setting start point of the blocks
-        spawnPos = new Vector3(-screenSize.x / 2 + optimalCellPixelSize / 2, screenSize.y / 2 - optimalCellPixelSize * 2.6f, 0);
+        spawnPos = new Vector3(-screenSize.x / 2f + cellPixelSize / 2f, screenSize.y / 2f - cellPixelSize * 2.6f, 0f);
+        Debug.Log("spawnPos -  " + spawnPos);
     }
 
     public void Start()
@@ -60,7 +58,7 @@ public class LevelManager : MonoBehaviour
         //Create Lists
         blocksList = new List<GameObject>();
         addBallsList = new List<GameObject>();
-
+        m_BlockPrefub1.transform.localScale = new Vector3(cellLocalSize, cellLocalSize, 0);
         permissionToGenBlockLine = false;
     }
 
@@ -72,11 +70,6 @@ public class LevelManager : MonoBehaviour
     public float GetCellLocalSize()
     {
         return cellLocalSize;
-    }
-
-    public float GetOptimalCellPixelSize()
-    {
-        return optimalCellPixelSize;
     }
 
     //Clean and start create new levels
@@ -183,7 +176,7 @@ public class LevelManager : MonoBehaviour
                     CreateGameObject(m_BlockPrefub1, tempSpawnPos, blockLife);
                     break;
             }
-            tempSpawnPos.x += optimalCellPixelSize;
+            tempSpawnPos.x += cellPixelSize;
         }
     }
 
@@ -250,7 +243,7 @@ public class LevelManager : MonoBehaviour
     //Move level down on one cell size.
     private void MoveLevelDownOnOneCell(GameObject parent)
     {
-        parent.transform.position = new Vector2(parent.transform.position.x, parent.transform.position.y - optimalCellPixelSize);
+        parent.transform.position = new Vector2(parent.transform.position.x, parent.transform.position.y - cellPixelSize);
     }
 
     private void FixedUpdate()
@@ -261,7 +254,7 @@ public class LevelManager : MonoBehaviour
             CreateLevel(currentLevel);
             linesCount++;
             currentLevel++;
-            GM.GetBoundManager().SetBoundsColor(GM.GetColorManager().generatedColors[currentLevel]);
+            GameManager.instance.GetBoundManager().SetBoundsColor(GameManager.instance.GetColorManager().generatedColors[currentLevel]);
             MoveLevelDownOnOneCell(parentObject);
             permissionToGenBlockLine = false;
         }

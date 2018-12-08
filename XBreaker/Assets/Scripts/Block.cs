@@ -4,8 +4,6 @@ using UnityEngine;
 using UnityEngine.UI;
 
 public class Block : MonoBehaviour {
-    //Характеристики блоков
-    public static float pixelSize = 0;
     //HP блока
     public int lifeCount;
 
@@ -15,11 +13,6 @@ public class Block : MonoBehaviour {
 
     // Use this for initialization
     void Start () {
-        if (pixelSize < 0.01f)
-        {
-            pixelSize = GameManager.instance.GetLevelManager().GetOptimalCellPixelSize();
-        }
-        gameObject.transform.localScale = new Vector3(pixelSize, pixelSize, 0);
         hpTextMesh = GetComponentInChildren<TextMesh>();
         spriteRenderer = GetComponent<SpriteRenderer>();
         colors = GameManager.instance.GetColorManager().generatedColors;
