@@ -7,12 +7,14 @@ public class Ball : MonoBehaviour
     private Rigidbody2D rb2D;
     private CircleCollider2D cc2D;
     public bool isLaunched { get; set; } = false;
+    public bool isPrepairing { get; set; } = false;
     public bool isFalling { get; set; } = false;
     private RaycastHit2D hit;
 
     private float cirlceCastRadius;
 
     private Vector2 movingVector;
+    private Vector2 startPosition;
 
     private Vector2 velocity;
 
@@ -57,6 +59,13 @@ public class Ball : MonoBehaviour
             }
                 rb2D.MovePosition(nextPoint);
             Debug.Log("Переместил " + rb2D.position);
+        } else if(isPrepairing){
+            Vector2 nextPoint = rb2D.position + (startPosition-rb2D.position) * Time.fixedDeltaTime * 15;
+            if (nextPoint == startPosition){
+                isPrepairing = false;
+            }
+
+            rb2D.MovePosition(nextPoint);
         }
         //else if (GameManager.instance.gameStatus == GameStatus.PREPARING)
         //{
@@ -91,6 +100,11 @@ public class Ball : MonoBehaviour
         gameObject.layer = 8;
         isLaunched = true;
         Debug.Log("Ball " + gameObject.GetInstanceID() + " has launched!");
+    }
+
+    public void MoveToPosition(Vector2 position){
+        startPosition = position;
+        isPrepairing = true;
     }
 
     public void Stop()

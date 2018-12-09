@@ -12,7 +12,7 @@ public class GameManager : MonoBehaviour
     //Singleton
     public static GameManager instance = null; //Static instance of GameManager which allows it to be accessed by any other script.
     //
-    private GameStatus gameStatus; //Store a reference to our GameStatus which control level.
+    public GameStatus gameStatus; //Store a reference to our GameStatus which control level.
     private LevelManager levelManager; //Store a reference to our LevelManager which control level.
     private BoundManager boundManager;
     private ColorManager colorManager; //
@@ -157,9 +157,7 @@ public class GameManager : MonoBehaviour
             //Перебераем лист шариков и двигаем их в начальную позицию
             foreach (var go in ballObjectsList)
             {
-                Rigidbody2D rb2d = go.GetComponent<Rigidbody2D>();
-                rb2d.MovePosition(rb2d.position + (startPosition - rb2d.position));
-                Debug.Log(rb2d.GetRelativeVector(startPosition));
+                go.GetComponent<Ball>().MoveToPosition(startPosition);
             }
         }
     }

@@ -278,7 +278,7 @@ Prefab:
     - target: {fileID: 114034462087981752, guid: c6ff60f808fabd247b44e7f39020c59b,
         type: 2}
       propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_CallState
-      value: 2
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 114034462087981752, guid: c6ff60f808fabd247b44e7f39020c59b,
         type: 2}
@@ -861,7 +861,7 @@ Prefab:
     - target: {fileID: 212096063319652934, guid: 6daa7227cac79d74f92c1c78dd71734d,
         type: 2}
       propertyPath: m_DrawMode
-      value: 0
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 61035979785144554, guid: 6daa7227cac79d74f92c1c78dd71734d,
         type: 2}
