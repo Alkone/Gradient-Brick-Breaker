@@ -103,9 +103,9 @@ public class GameManager : MonoBehaviour
         StartGame("new");
     }
 
-    private void Update()
+    void Update()
     {
-        if (gameLosed)
+        if (gameLosed && !loseFlag)
         {
             loseScreen.SetActive(true);
             loseFlag = true;
@@ -116,7 +116,7 @@ public class GameManager : MonoBehaviour
             loseFlag = false;
         }
 
-        if (gamePaused)
+        if (gamePaused && !pauseFlag)
         {
             Time.timeScale = 0;
             pauseScreen.SetActive(true);
@@ -164,6 +164,7 @@ public class GameManager : MonoBehaviour
             case "new":
                 levelManager.SetupScene(startLevel); //Очищает сцену 
                 DestroyAllBals(); //Уничтожает GameObject и чистит список
+                boundManager.botBound.GetComponent<BotBound>().doOnce = false;
                 startPosition = new Vector2(0, 0);
                 Debug.Log("boundManager.m_BotMiddleGameZone.y  " + boundManager.GetBotMiddleGameZone().y);
                 gameLosed = false;
@@ -174,10 +175,12 @@ public class GameManager : MonoBehaviour
             case "continue":
                 gameStatus = GameStatus.PREPARING;
                 levelManager.CleanLevel(); //Очищает сцену 
+                boundManager.botBound.GetComponent<BotBound>().doOnce = false;
                 foreach (var go in ballObjectsList)
                 {
                     go.GetComponent<Ball>().MoveToPosition(startPosition);
                 }
+                levelManager.GenerateNextBlockLine();
                 gameLosed = false;
                 gameStatus = GameStatus.READY;
 
@@ -242,21 +245,22 @@ public class GameManager : MonoBehaviour
     //Ждет пока игрок прикоснется к экрану и начнет игру
     private void WaitTouchToLunch()
     {
-        if (GetCurrentGMousePos().y < boundManager.GetTopMiddleGameZone().y && GetCurrentGMousePos().y > boundManager.GetBotMiddleGameZone().y)
+        Vector2 currentMousePos = GetCurrentGMousePos();
+        if (currentMousePos.y < boundManager.GetTopMiddleGameZone().y && currentMousePos.y > boundManager.GetBotMiddleGameZone().y)
         {
             Vector2 startVector;
-            if (Input.GetMouseButtonDown(0) && !mouseDownIsDetected)
+            if (Input.GetMouseButton(0) && !mouseDownIsDetected)
             {
                 mouseDownIsDetected = true;
             }
             if (mouseDownIsDetected)
             {
-                angle = GetFixetAngle(Vector2.left, GetCurrentGMousePos() - startPosition);
+                angle = GetFixetAngle(Vector2.left, currentMousePos - startPosition);
                 Debug.Log("Angle - " + angle);
                 startVector = RotateVector(Vector2.left, angle) + startPosition;
                 Debug.Log("Start vector - " + startVector);
                 trajectorySimulator.SimulatePath(ballObjectsList[0], GetVectorByPoints(startPosition, startVector), segmentCount);
-                if (Input.GetMouseButtonUp(0))
+                if (!Input.GetMouseButton(0))
                 {
                     //Запускает шарик
                     firstBallIsStoped = false;
@@ -265,7 +269,7 @@ public class GameManager : MonoBehaviour
                 }
             }
         }
-        else if (mouseDownIsDetected && Input.GetMouseButtonUp(0))
+        else if (mouseDownIsDetected && !Input.GetMouseButton(0))
         {
             lineRenderer.positionCount = 0;
             mouseDownIsDetected = false;

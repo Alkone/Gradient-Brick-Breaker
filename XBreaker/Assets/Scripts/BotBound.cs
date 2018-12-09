@@ -4,17 +4,21 @@ using UnityEngine;
 
 public class BotBound : MonoBehaviour
 {
-    private void OnCollisionEnter2D(Collision2D collision)
+    public bool doOnce = false;
+    void OnCollisionEnter2D(Collision2D collision)
     {
-        if (collision.gameObject.layer == 10)
+        if (collision.gameObject.layer == 10 && !doOnce)
         {
             GameManager.instance.LoseGame();
-        }
-        else if (collision.gameObject.layer == 12)
-        {
-            collision.gameObject.GetComponent<AddBall>().AddBallAndDestroyThis();
+            doOnce = true;
         }
     }
 
+    private void OnTriggerEnter(Collider other)
+    {
+        if (other.gameObject.GetComponent<AddBall>())
+        {
+            other.gameObject.GetComponent<AddBall>().AddBallAndDestroyThis();
+        }
+    }
 }
-

@@ -337,6 +337,11 @@ Prefab:
       propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_Arguments.m_StringArgument
       value: new
       objectReference: {fileID: 0}
+    - target: {fileID: 114333588786258118, guid: c6ff60f808fabd247b44e7f39020c59b,
+        type: 2}
+      propertyPath: m_Color.a
+      value: 0.8
+      objectReference: {fileID: 0}
     m_RemovedComponents:
     - {fileID: 95752981011162308, guid: c6ff60f808fabd247b44e7f39020c59b, type: 2}
   m_SourcePrefab: {fileID: 100100000, guid: c6ff60f808fabd247b44e7f39020c59b, type: 2}
@@ -963,7 +968,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_Material: {fileID: 0}
-  m_Color: {r: 0, g: 0, b: 0, a: 0.8039216}
+  m_Color: {r: 0, g: 0, b: 0, a: 0.8}
   m_RaycastTarget: 1
   m_OnCullStateChanged:
     m_PersistentCalls:
@@ -1096,7 +1101,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   m_BlocksInLine: 9
   currentLevel: 1
-  linesCount: 3
   m_BlockPrefub1: {fileID: 1042451700578056, guid: 5353684e2a36d41d5a6683bcc4a2f7c2,
     type: 2}
   m_HalfBlock0: {fileID: 1042451700578056, guid: 5353684e2a36d41d5a6683bcc4a2f7c2,

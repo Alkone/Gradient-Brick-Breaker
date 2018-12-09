@@ -7,8 +7,7 @@ using Random = UnityEngine.Random;
 public class LevelManager : MonoBehaviour
 {
     [SerializeField] private int m_BlocksInLine = 10;
-    [SerializeField] private int currentLevel = 0;
-    [SerializeField] private int linesCount = 0;
+    [SerializeField] private int currentLevel;
 
     //
     public GameObject m_BlockPrefub1;
@@ -76,7 +75,7 @@ public class LevelManager : MonoBehaviour
     public void SetupScene(int startLevel)
     {
         CleanLevel();
-        currentLevel = startLevel;
+        currentLevel = startLevel-1;
         GenerateNextBlockLine();
     }
 
@@ -250,10 +249,9 @@ public class LevelManager : MonoBehaviour
     {
         if (permissionToGenBlockLine)
         {
+            currentLevel++;
             textLevel.text = currentLevel.ToString();
             CreateLevel(currentLevel);
-            linesCount++;
-            currentLevel++;
             GameManager.instance.GetBoundManager().SetBoundsColor(GameManager.instance.GetColorManager().generatedColors[currentLevel]);
             MoveLevelDownOnOneCell(parentObject);
             permissionToGenBlockLine = false;
