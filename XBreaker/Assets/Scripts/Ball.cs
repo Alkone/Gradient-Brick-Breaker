@@ -23,13 +23,14 @@ public class Ball : MonoBehaviour
 
     private void Start()
     {
+        gameObject.layer = 8;
         rb2D = gameObject.GetComponent<Rigidbody2D>();
         cc2D = gameObject.GetComponent<CircleCollider2D>();
         layerMask = (1 << 10) | (1 << 11) | (1 << 13);
         cirlceCastRadius = cc2D.radius * gameObject.transform.localScale.x;
         Debug.Log(cirlceCastRadius);
-        gameObject.layer = 8;
         movingVector = Vector2.down * 150;
+        isFalling = true;
         isLaunched = true;
     }
 
@@ -49,7 +50,7 @@ public class Ball : MonoBehaviour
                     nextPoint = hit.centroid;
                     Stop(nextPoint);
                 }
-                else if (hit.collider.gameObject.layer == 10 || hit.collider.gameObject.layer == 11)
+                else if (!isFalling && hit.collider.gameObject.layer == 10 || hit.collider.gameObject.layer == 11)
                 {
                     nextPoint = hit.centroid;
                     if(hit.collider.gameObject.GetComponent<Block>()){
@@ -105,6 +106,7 @@ public class Ball : MonoBehaviour
     public void Stop(Vector2 stopPosition)
     {
         isLaunched = false;
+        isFalling = false;
         gameObject.layer = 9;
         GameManager.instance.SetNewStartPosition(stopPosition);
         Debug.Log("Ball " + gameObject.GetInstanceID() + " has stopped!");

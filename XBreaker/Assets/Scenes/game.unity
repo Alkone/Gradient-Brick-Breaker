@@ -535,7 +535,7 @@ MonoBehaviour:
   ballPrefub1: {fileID: 1110083101469618, guid: 2ed73163596883148bb2ca843db3072c,
     type: 2}
   ballTouchPower: 130
-  ballLaunchInterval: 0.02
+  ballLaunchInterval: 0.01
   startPosition: {x: 0, y: -4}
   segmentCount: 2
   startLevel: 1

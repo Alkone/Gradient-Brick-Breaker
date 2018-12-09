@@ -93,7 +93,7 @@ public class GameManager : MonoBehaviour
         {
             Monetization.Initialize(gameId, true);
         }
-        ballPrefub1.transform.localScale = Vector2.one * levelManager.GetCellLocalSize() * 0.4f;
+        ballPrefub1.transform.localScale = Vector2.one * levelManager.GetCellLocalSize() * 0.33f;
         InitGame();
     }
 
