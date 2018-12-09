@@ -132,26 +132,29 @@ public class GameManager : MonoBehaviour
 
     void FixedUpdate()
     {
-        if (gameStatus == GameStatus.READY)
+        if (!gameLosed)
         {
-            WaitTouchToLunch();
-        }
-        else if (gameStatus == GameStatus.LAUNCHED)
-        {
-                lineRenderer.positionCount = 0;
-        }
-        else if (gameStatus == GameStatus.ENDED)
-        {
-            Time.timeScale = 1;
-            levelManager.GenerateNextBlockLine();
-            gameStatus = GameStatus.PREPARING;
-        }
-        else if (gameStatus == GameStatus.PREPARING)
-        {
-            //Перебераем лист шариков и двигаем их в начальную позицию
-            foreach (var go in ballObjectsList)
+            if (gameStatus == GameStatus.READY)
             {
-                go.GetComponent<Ball>().MoveToPosition(startPosition);
+                WaitTouchToLunch();
+            }
+            else if (gameStatus == GameStatus.LAUNCHED)
+            {
+                lineRenderer.positionCount = 0;
+            }
+            else if (gameStatus == GameStatus.ENDED)
+            {
+                Time.timeScale = 1;
+                levelManager.GenerateNextBlockLine();
+                gameStatus = GameStatus.PREPARING;
+            }
+            else if (gameStatus == GameStatus.PREPARING)
+            {
+                //Перебераем лист шариков и двигаем их в начальную позицию
+                foreach (var go in ballObjectsList)
+                {
+                    go.GetComponent<Ball>().MoveToPosition(startPosition);
+                }
             }
         }
     }

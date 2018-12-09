@@ -12,7 +12,7 @@ public class Ball : MonoBehaviour
     public bool isPrepairing { get; set; } = false;
     public bool isFalling { get; set; } = false;
     public float speed;
-
+    public int damage;
 
     private float cirlceCastRadius;
 
@@ -38,6 +38,7 @@ public class Ball : MonoBehaviour
         Vector2 nextPoint;
         if (isLaunched)
         {
+            bool giveDamage = false;
             nextPoint = rb2D.position + movingVector * Time.fixedDeltaTime * speed;
             hit = Physics2D.CircleCast(rb2D.position, cirlceCastRadius, movingVector, Vector2.Distance(rb2D.position, nextPoint), layerMask);
             Debug.Log("Distance = " + Vector2.Distance(rb2D.position, nextPoint));
@@ -50,12 +51,23 @@ public class Ball : MonoBehaviour
                 }
                 else if (hit.collider.gameObject.layer == 10 || hit.collider.gameObject.layer == 11)
                 {
-                    Debug.Log("Hit!!!! " + hit.collider);
                     nextPoint = hit.centroid;
-                    movingVector = Vector2.Reflect(movingVector, hit.normal);
+                    if(hit.collider.gameObject.GetComponent<Block>()){
+                        giveDamage = true;
+                    } else{
+                        movingVector = Vector2.Reflect(movingVector, hit.normal);
+                    }
                 }
             }
             rb2D.MovePosition(nextPoint);
+            if (giveDamage)
+            {
+                int blockHP = hit.collider.gameObject.GetComponent<Block>().TakeDamage(damage);
+                if (blockHP > 0)
+                {
+                    movingVector = Vector2.Reflect(movingVector, hit.normal);
+                }
+            }
             Debug.Log("Переместил " + rb2D.position);
         }
         else if (isPrepairing)

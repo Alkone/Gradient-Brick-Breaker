@@ -535,7 +535,7 @@ MonoBehaviour:
   ballPrefub1: {fileID: 1110083101469618, guid: 2ed73163596883148bb2ca843db3072c,
     type: 2}
   ballTouchPower: 130
-  ballLaunchInterval: 0.03
+  ballLaunchInterval: 0.02
   startPosition: {x: 0, y: -4}
   segmentCount: 2
   startLevel: 1
@@ -1128,15 +1128,21 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   peakColors:
-  - {r: 0.9686275, g: 0.8980393, b: 0.41176474, a: 0}
+  - {r: 0.78823537, g: 0.9333334, b: 0.5882353, a: 0}
   - {r: 0.97647065, g: 0.90196085, b: 0.3019608, a: 0}
-  - {r: 0.94117653, g: 0.56078434, b: 0.21176472, a: 0}
-  - {r: 0.9176471, g: 0.3529412, b: 0.3254902, a: 0}
-  - {r: 0.7490196, g: 0.94117653, b: 0.5411765, a: 0}
-  - {r: 0.18823531, g: 0.46274513, b: 0.6901961, a: 0}
-  - {r: 0.6, g: 0.36862746, b: 0.5372549, a: 0}
+  - {r: 0.9686275, g: 0.8980393, b: 0.41176474, a: 0}
+  - {r: 0.89019614, g: 0.5764706, b: 0.2901961, a: 0}
+  - {r: 0.89019614, g: 0.5764706, b: 0.2901961, a: 0}
+  - {r: 0.8470589, g: 0.5882353, b: 0.34509805, a: 0}
+  - {r: 0.8867924, g: 0.2718939, b: 0.1966002, a: 0}
+  - {r: 0.8235295, g: 0.31764707, b: 0.2392157, a: 0}
+  - {r: 0.8018868, g: 0.06333686, b: 0, a: 0}
+  - {r: 0.8773585, g: 0.32694018, b: 0.53467536, a: 0}
+  - {r: 0.81568635, g: 0.3647059, b: 0.5294118, a: 0}
+  - {r: 0.81568635, g: 0.3647059, b: 0.5294118, a: 0}
   generatedColors: []
   stepCount: 100
+  darkTheme: 0
 --- !u!120 &668034212
 LineRenderer:
   m_ObjectHideFlags: 0
@@ -1750,8 +1756,8 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 491243436}
-        m_MethodName: NewGame
+      - m_Target: {fileID: 668034211}
+        m_MethodName: ChangeTheme
         m_Mode: 1
         m_Arguments:
           m_ObjectArgument: {fileID: 0}

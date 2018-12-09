@@ -137,18 +137,6 @@ public class LevelManager : MonoBehaviour
                         CreateGameObject(m_BlockPrefub1, tempSpawnPos, blockLife * 2);
                     }
                     break;
-                case 9:
-                    CreateGameObject(m_HalfBlock0, tempSpawnPos, blockLife / 2);
-                    break;
-                case 10:
-                    CreateGameObject(m_HalfBlock90, tempSpawnPos, blockLife / 2);
-                    break;
-                case 11:
-                    CreateGameObject(m_HalfBlock180, tempSpawnPos, blockLife / 2);
-                    break;
-                case 12:
-                    CreateGameObject(m_HalfBlock270, tempSpawnPos, blockLife / 2);
-                    break;
                 case 13:
                     CreateGameObject(m_BlockPrefub1, tempSpawnPos, blockLife);
                     break;
@@ -250,9 +238,9 @@ public class LevelManager : MonoBehaviour
         if (permissionToGenBlockLine)
         {
             currentLevel++;
+            GameManager.instance.GetBoundManager().SetBoundsColor(GameManager.instance.GetColorManager().generatedColors[currentLevel]);
             textLevel.text = currentLevel.ToString();
             CreateLevel(currentLevel);
-            GameManager.instance.GetBoundManager().SetBoundsColor(GameManager.instance.GetColorManager().generatedColors[currentLevel]);
             MoveLevelDownOnOneCell(parentObject);
             permissionToGenBlockLine = false;
         }

@@ -27,21 +27,37 @@ public class Block : MonoBehaviour {
         spriteRenderer.material.color = colors[lifeCount]; // Задает цвет в соответствии с hp
     }
 
-    private void OnCollisionEnter2D(Collision2D collision)
+    //private void OnCollisionEnter2D(Collision2D collision)
+    //{
+    //    if (collision.gameObject.GetComponent<Ball>())
+    //    {
+    //        GetComponent<Animation>().Play();
+    //        if (lifeCount < 2)
+    //        {
+    //            SelfDestroy();
+    //        }
+    //        else
+    //        {
+    //            lifeCount--;
+    //            UpdateBlock();
+    //        }
+    //    }
+    //}
+
+    public int TakeDamage(int damdge)
     {
-        if (collision.gameObject.GetComponent<Ball>())
+
+        GetComponent<Animation>().Play();
+        if (lifeCount < 2)
         {
-            GetComponent<Animation>().Play();
-            if (lifeCount < 2)
-            {
-                SelfDestroy();
-            }
-            else
-            {
-                lifeCount--;
-                UpdateBlock();
-            }
+            SelfDestroy();
         }
+        else
+        {
+            lifeCount-=damdge;
+            UpdateBlock();
+        }
+        return lifeCount;
     }
 
     public void SelfDestroy()
