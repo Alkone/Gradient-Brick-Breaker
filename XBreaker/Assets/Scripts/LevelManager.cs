@@ -49,7 +49,7 @@ public class LevelManager : MonoBehaviour
         Debug.Log("cellLocalSize - " + cellLocalSize);
 
         //setting start point of the blocks
-        spawnPos = new Vector3(-screenSize.x / 2f + cellPixelSize / 2f, screenSize.y / 2f - cellPixelSize * 2.6f, 0f);
+        spawnPos = new Vector3(-screenSize.x / 2f + cellPixelSize / 2f, screenSize.y / 2f - cellPixelSize * 2.5f, 0f);
         Debug.Log("spawnPos -  " + spawnPos);
     }
 

@@ -10,11 +10,13 @@ public class Block : MonoBehaviour {
     private TextMesh hpTextMesh; // Ссылка на Text компонент дочернего объекта
     private SpriteRenderer spriteRenderer; //Ссылка на спрайтрендер
     private Color[] colors; //Массив возможных цветов
+    private LevelManager levelManager;
 
     // Use this for initialization
     void Start () {
         hpTextMesh = GetComponentInChildren<TextMesh>();
         spriteRenderer = GetComponent<SpriteRenderer>();
+        levelManager = GameManager.instance.GetLevelManager();
         colors = GameManager.instance.GetColorManager().generatedColors;
         UpdateBlock();
     }
@@ -50,7 +52,7 @@ public class Block : MonoBehaviour {
     private IEnumerator DestroyThisObject()
     {
         yield return new WaitForSeconds((float)0.01);
-       //levelManager.RemoveGameObject(gameObject);    ЗАМЕНИТЬ НА ЭВЕНТ
+        levelManager.RemoveGameObject(gameObject);   // ЗАМЕНИТЬ НА ЭВЕНТ
         Destroy(gameObject);
     }
 }

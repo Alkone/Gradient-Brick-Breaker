@@ -410,6 +410,11 @@ RectTransform:
   m_CorrespondingSourceObject: {fileID: 224429529138169630, guid: c6ff60f808fabd247b44e7f39020c59b,
     type: 2}
   m_PrefabInternal: {fileID: 65645447}
+--- !u!1 &321734567 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 1043518783842484, guid: 6daa7227cac79d74f92c1c78dd71734d,
+    type: 2}
+  m_PrefabInternal: {fileID: 567965761}
 --- !u!1 &432288443
 GameObject:
   m_ObjectHideFlags: 0
@@ -519,13 +524,13 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 8494cc8c404755c4793fc7f96bf1be22, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  gameStatus: 0
   loseScreen: {fileID: 278113867}
   pauseScreen: {fileID: 129031257}
-  boundsParent: {fileID: 1805516420}
   ballPrefub1: {fileID: 1110083101469618, guid: 2ed73163596883148bb2ca843db3072c,
     type: 2}
   ballTouchPower: 130
-  ballLaunchInterval: 0.05
+  ballLaunchInterval: 0.03
   startPosition: {x: 0, y: -4}
   segmentCount: 2
   startLevel: 1
@@ -879,9 +884,33 @@ Prefab:
       value: 
       objectReference: {fileID: 21300000, guid: d6104f963be33dd439e448cfeded26c3,
         type: 3}
+    - target: {fileID: 4439010972911540, guid: 6daa7227cac79d74f92c1c78dd71734d, type: 2}
+      propertyPath: m_LocalScale.x
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 4439010972911540, guid: 6daa7227cac79d74f92c1c78dd71734d, type: 2}
+      propertyPath: m_LocalScale.y
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 212852710874818378, guid: 6daa7227cac79d74f92c1c78dd71734d,
+        type: 2}
+      propertyPath: m_DrawMode
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 212852710874818378, guid: 6daa7227cac79d74f92c1c78dd71734d,
+        type: 2}
+      propertyPath: m_Size.x
+      value: 1080
+      objectReference: {fileID: 0}
+    - target: {fileID: 212852710874818378, guid: 6daa7227cac79d74f92c1c78dd71734d,
+        type: 2}
+      propertyPath: m_Size.y
+      value: 270
+      objectReference: {fileID: 0}
     m_RemovedComponents:
     - {fileID: 212842354300377112, guid: 6daa7227cac79d74f92c1c78dd71734d, type: 2}
     - {fileID: 212134355122248564, guid: 6daa7227cac79d74f92c1c78dd71734d, type: 2}
+    - {fileID: 114160229800130194, guid: 6daa7227cac79d74f92c1c78dd71734d, type: 2}
   m_SourcePrefab: {fileID: 100100000, guid: 6daa7227cac79d74f92c1c78dd71734d, type: 2}
   m_IsPrefabAsset: 0
 --- !u!1 &614451772
@@ -1043,6 +1072,7 @@ GameObject:
   - component: {fileID: 668034213}
   - component: {fileID: 491243436}
   - component: {fileID: 668034210}
+  - component: {fileID: 668034214}
   - component: {fileID: 668034212}
   - component: {fileID: 668034211}
   m_Layer: 0
@@ -1208,6 +1238,23 @@ Transform:
   m_Father: {fileID: 0}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &668034214
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 668034209}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: c9b3948ceb29a404d9b9a9e65c9a56e6, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  leftBound: {fileID: 1592332877}
+  rightBound: {fileID: 2112066707}
+  botBound: {fileID: 321734567}
+  topBound: {fileID: 1773330494}
+  boardWidth: 100
+  optimalCellPixelSize: 0
 --- !u!1 &1390243229
 GameObject:
   m_ObjectHideFlags: 0
@@ -1748,6 +1795,16 @@ CanvasRenderer:
   m_PrefabInternal: {fileID: 0}
   m_GameObject: {fileID: 1587321792}
   m_CullTransparentMesh: 0
+--- !u!1 &1592332877 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 1307867211380878, guid: 6daa7227cac79d74f92c1c78dd71734d,
+    type: 2}
+  m_PrefabInternal: {fileID: 567965761}
+--- !u!1 &1773330494 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 1417481110424124, guid: 6daa7227cac79d74f92c1c78dd71734d,
+    type: 2}
+  m_PrefabInternal: {fileID: 567965761}
 --- !u!1 &1794167953
 GameObject:
   m_ObjectHideFlags: 0
@@ -1776,11 +1833,6 @@ Transform:
   m_Father: {fileID: 0}
   m_RootOrder: 4
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!1 &1805516420 stripped
-GameObject:
-  m_CorrespondingSourceObject: {fileID: 1350802322291590, guid: 6daa7227cac79d74f92c1c78dd71734d,
-    type: 2}
-  m_PrefabInternal: {fileID: 567965761}
 --- !u!1 &1828526938
 GameObject:
   m_ObjectHideFlags: 0
@@ -1937,3 +1989,8 @@ CanvasRenderer:
   m_PrefabInternal: {fileID: 0}
   m_GameObject: {fileID: 2078014123}
   m_CullTransparentMesh: 0
+--- !u!1 &2112066707 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 1316815703722022, guid: 6daa7227cac79d74f92c1c78dd71734d,
+    type: 2}
+  m_PrefabInternal: {fileID: 567965761}

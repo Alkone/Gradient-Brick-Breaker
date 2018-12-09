@@ -20,10 +20,10 @@ public class GameManager : MonoBehaviour
     private TrajectorySimulation trajectorySimulator; // Store a reference to our LevelManager which simulate gameObeject path.
 
     ////Inspector fields
-    public GameObject loseScreen, pauseScreen, boundsParent, ballPrefub1;
+    public GameObject loseScreen, pauseScreen, ballPrefub1;
     public float ballTouchPower;
     public float ballLaunchInterval;
-    [SerializeField] private Vector2 startPosition; // Start ball pos
+    public Vector2 startPosition; // Start ball pos
     [SerializeField] private int segmentCount = 3; //Кол-во предсказанных скачков
     [SerializeField] private int startLevel = 1;  //Current level number
 
@@ -70,17 +70,13 @@ public class GameManager : MonoBehaviour
 
         //Get components
         levelManager = GetComponent<LevelManager>();
-        boundManager = boundsParent.GetComponent<BoundManager>();
+        boundManager = GetComponent<BoundManager>();
         lineRenderer = GetComponent<LineRenderer>();
         colorManager = GetComponent<ColorManager>();
 
         //Init objects
         trajectorySimulator = new TrajectorySimulation(lineRenderer);
         ballObjectsList = new List<GameObject>();
-
-        gameStatus = GameStatus.PREPARING; //Instance of GameStatus.
-
-        //Call the InitGame function to initialize the first level 
 
     }
     //
@@ -97,14 +93,13 @@ public class GameManager : MonoBehaviour
         {
             Monetization.Initialize(gameId, true);
         }
-        ballPrefub1.transform.localScale = Vector2.one * levelManager.GetCellLocalSize()*0.4f;
+        ballPrefub1.transform.localScale = Vector2.one * levelManager.GetCellLocalSize() * 0.4f;
         InitGame();
     }
 
     void InitGame()
     {
         StartCoroutine(GameStateObserver());
-        levelManager.SetupScene(startLevel);
         StartGame("new");
     }
 
@@ -143,7 +138,6 @@ public class GameManager : MonoBehaviour
         }
         else if (gameStatus == GameStatus.LAUNCHED)
         {
-            if (lineRenderer.positionCount != 0)
                 lineRenderer.positionCount = 0;
         }
         else if (gameStatus == GameStatus.ENDED)
@@ -170,23 +164,24 @@ public class GameManager : MonoBehaviour
             case "new":
                 levelManager.SetupScene(startLevel); //Очищает сцену 
                 DestroyAllBals(); //Уничтожает GameObject и чистит список
-
-                startPosition = new Vector2 (0, boundManager.m_BotMiddleGameZone.y + levelManager.GetCellPixelSize()/4.8f);
+                startPosition = new Vector2(0, 0);
+                Debug.Log("boundManager.m_BotMiddleGameZone.y  " + boundManager.GetBotMiddleGameZone().y);
                 gameLosed = false;
                 CreateBall(startPosition, ballPrefub1);
                 gameStatus = GameStatus.LAUNCHED;
                 break;
 
             case "continue":
+                gameStatus = GameStatus.PREPARING;
                 levelManager.CleanLevel(); //Очищает сцену 
-
-                startPosition = boundManager.m_BotMiddleGameZone;
-
+                foreach (var go in ballObjectsList)
+                {
+                    go.GetComponent<Ball>().MoveToPosition(startPosition);
+                }
                 gameLosed = false;
-                loseScreen.SetActive(false); //убираем экран проигрыша
+                gameStatus = GameStatus.READY;
 
-                CreateBall(startPosition, ballPrefub1);
-                gameStatus = GameStatus.LAUNCHED;
+
                 break;
             default:
                 break;
@@ -208,9 +203,6 @@ public class GameManager : MonoBehaviour
         gamePaused = false;
     }
 
-
-
-
     //Getters private field link
     public ColorManager GetColorManager()
     {
@@ -222,7 +214,8 @@ public class GameManager : MonoBehaviour
         return levelManager;
     }
 
-    public BoundManager GetBoundManager(){
+    public BoundManager GetBoundManager()
+    {
         return boundManager;
     }
 
@@ -230,18 +223,17 @@ public class GameManager : MonoBehaviour
     //Создает шарик в заданной позиции с гравитацией
     public bool CreateBall(Vector2 position, GameObject ballPrefub)
     {
-        GameObject go = Instantiate<GameObject>(ballPrefub, position, Quaternion.identity);
+        GameObject go = Instantiate(ballPrefub, position, Quaternion.identity);
         ballObjectsList.Add(go);
         return true;
     }
 
     //Останавливает шарик
-    public void StopBall(GameObject ballObject)
+    public void SetNewStartPosition(Vector2 stopPosition)
     {
-        ballObject.GetComponent<Ball>().Stop();
         if (!firstBallIsStoped)
         {
-            startPosition = ballObject.transform.position;
+            startPosition = stopPosition;
             Debug.Log(startPosition);
             firstBallIsStoped = true;
         }
@@ -250,7 +242,7 @@ public class GameManager : MonoBehaviour
     //Ждет пока игрок прикоснется к экрану и начнет игру
     private void WaitTouchToLunch()
     {
-        if (GetCurrentGMousePos().y < boundManager.m_TopMiddleGameZone.y && GetCurrentGMousePos().y > boundManager.m_BotMiddleGameZone.y)
+        if (GetCurrentGMousePos().y < boundManager.GetTopMiddleGameZone().y && GetCurrentGMousePos().y > boundManager.GetBotMiddleGameZone().y)
         {
             Vector2 startVector;
             if (Input.GetMouseButtonDown(0) && !mouseDownIsDetected)
@@ -272,7 +264,8 @@ public class GameManager : MonoBehaviour
                     mouseDownIsDetected = false;
                 }
             }
-        } else if(mouseDownIsDetected && Input.GetMouseButtonUp(0))
+        }
+        else if (mouseDownIsDetected && Input.GetMouseButtonUp(0))
         {
             lineRenderer.positionCount = 0;
             mouseDownIsDetected = false;
@@ -350,8 +343,7 @@ public class GameManager : MonoBehaviour
         {
             if (gameStatus == GameStatus.PREPARING)
             {
-                //if (AllBallsInSomePos(startPosition))
-                gameStatus = GameStatus.READY;
+                if (AllBallsPrepeared()) gameStatus = GameStatus.READY;
             }
             else if (gameStatus == GameStatus.READY)
             {
@@ -363,8 +355,7 @@ public class GameManager : MonoBehaviour
             }
             else if (gameStatus == GameStatus.ENDED)
             {
-                if (AllBallsInSomePos(startPosition)) gameStatus = GameStatus.READY;
-                else gameStatus = GameStatus.PREPARING;
+                gameStatus = GameStatus.PREPARING;
             }
             Debug.Log(gameStatus.ToString());
             yield return new WaitForSeconds(.1f);
@@ -386,17 +377,16 @@ public class GameManager : MonoBehaviour
     }
 
     //Проверяет все ли шарики в стартовой позиции
-    public bool AllBallsInSomePos(Vector2 pos)
+    public bool AllBallsPrepeared()
     {
         bool status = true;
         foreach (var ballObject in ballObjectsList)
         {
-            if (!pos.Equals(ballObject.transform.position))
+            if (ballObject.GetComponent<Ball>().isPrepairing)
             {
                 status = false;
             }
         }
-        Debug.Log(status.ToString());
         return status;
     }
 

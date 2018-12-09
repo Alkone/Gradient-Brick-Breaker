@@ -6,111 +6,95 @@ public class Ball : MonoBehaviour
 {
     private Rigidbody2D rb2D;
     private CircleCollider2D cc2D;
+    private RaycastHit2D hit;
+
     public bool isLaunched { get; set; } = false;
     public bool isPrepairing { get; set; } = false;
     public bool isFalling { get; set; } = false;
-    private RaycastHit2D hit;
+    public float speed;
+
 
     private float cirlceCastRadius;
 
     private Vector2 movingVector;
     private Vector2 startPosition;
 
-    private Vector2 velocity;
-
-    private LayerMask layerMask;
+    private int layerMask;
 
     private void Start()
     {
         rb2D = gameObject.GetComponent<Rigidbody2D>();
         cc2D = gameObject.GetComponent<CircleCollider2D>();
+        layerMask = (1 << 10) | (1 << 11) | (1 << 13);
         cirlceCastRadius = cc2D.radius * gameObject.transform.localScale.x;
         Debug.Log(cirlceCastRadius);
-
-        layerMask = LayerMask.GetMask("Bound", "Block");
-
         gameObject.layer = 8;
-        movingVector = Vector2.down * 100;
+        movingVector = Vector2.down * 150;
         isLaunched = true;
     }
 
     private void FixedUpdate()
     {
-
-       
+        Vector2 nextPoint;
         if (isLaunched)
         {
-            Vector2 nextPoint = rb2D.position + movingVector * Time.fixedDeltaTime * 15;
-            hit = Physics2D.CircleCast(rb2D.position, cirlceCastRadius, movingVector, Vector2.Distance(rb2D.position, nextPoint));
+            nextPoint = rb2D.position + movingVector * Time.fixedDeltaTime * speed;
+            hit = Physics2D.CircleCast(rb2D.position, cirlceCastRadius, movingVector, Vector2.Distance(rb2D.position, nextPoint), layerMask);
             Debug.Log("Distance = " + Vector2.Distance(rb2D.position, nextPoint));
             if (hit)
             {
                 if (hit.collider.gameObject.layer == 13)
                 {
-                    isLaunched = false;
                     nextPoint = hit.centroid;
+                    Stop(nextPoint);
                 }
                 else if (hit.collider.gameObject.layer == 10 || hit.collider.gameObject.layer == 11)
                 {
-                    Debug.Log("Hit!!!! " + hit.collider.ToString());
+                    Debug.Log("Hit!!!! " + hit.collider);
                     nextPoint = hit.centroid;
                     movingVector = Vector2.Reflect(movingVector, hit.normal);
                 }
             }
-                rb2D.MovePosition(nextPoint);
+            rb2D.MovePosition(nextPoint);
             Debug.Log("Переместил " + rb2D.position);
-        } else if(isPrepairing){
-            Vector2 nextPoint = rb2D.position + (startPosition-rb2D.position) * Time.fixedDeltaTime * 15;
-            if (nextPoint == startPosition){
+        }
+        else if (isPrepairing)
+        {
+            if (Vector2.Distance(rb2D.position, startPosition) < 10)
+            {
+                nextPoint = startPosition;
                 isPrepairing = false;
+            }
+            else
+            {
+                nextPoint = rb2D.position + (startPosition - rb2D.position) * Time.fixedDeltaTime * speed;
             }
 
             rb2D.MovePosition(nextPoint);
         }
-        //else if (GameManager.instance.gameStatus == GameStatus.PREPARING)
-        //{
-        //    Vector2 startPosition = GameManager.instance.startPosition;
-        //    if (rb2D.position == startPosition)
-        //    {
-        //        inLaunchPosition = true;
-        //    }
-        //    else
-        //    {
-        //        Debug.Log("ball pos " + rb2D.position.x + " " + rb2D.position.y);
-        //        Debug.Log("startpos " + startPosition.x + " " + startPosition.y);
-        //        if (rb2D.position != startPosition)
-        //        {
-        //            if (Mathf.Abs(rb2D.position.x - startPosition.x) < 0.05 && Mathf.Abs(rb2D.position.y - startPosition.y) < 0.05)
-        //            {
-        //                rb2D.MovePosition(startPosition);
-        //            }
-        //            else
-        //            {
-
-        //                rb2D.MovePosition(rb2D.position + (startPosition - rb2D.position).normalized * Time.fixedDeltaTime * 5);
-        //            }
-        //        }
-        //    }
-        //}
     }
 
     public void Launch(Vector2 movingVector)
     {
+        isPrepairing = false;
         this.movingVector = movingVector;
         gameObject.layer = 8;
         isLaunched = true;
         Debug.Log("Ball " + gameObject.GetInstanceID() + " has launched!");
     }
 
-    public void MoveToPosition(Vector2 position){
+    public void MoveToPosition(Vector2 position)
+    {
+        isLaunched = false;
         startPosition = position;
         isPrepairing = true;
     }
 
-    public void Stop()
+    public void Stop(Vector2 stopPosition)
     {
         isLaunched = false;
         gameObject.layer = 9;
+        GameManager.instance.SetNewStartPosition(stopPosition);
         Debug.Log("Ball " + gameObject.GetInstanceID() + " has stopped!");
     }
 
