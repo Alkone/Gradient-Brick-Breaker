@@ -31,17 +31,17 @@ public class LevelManager : MonoBehaviour
     void Awake()
     {
         //get optimal block size
-        cellPixelSize = (Screen.width-50) / m_BlocksInLine;
+        cellPixelSize = (Screen.width-60) / m_BlocksInLine;
         cellLocalSize = cellPixelSize / m_BlockPrefub1.GetComponent<SpriteRenderer>().sprite.bounds.size.x;
         //setting start point of the blocks
-        float delta = (Screen.height - (Screen.height / (1920 / 255) * 2)) % cellPixelSize;
+        float delta = (Screen.height - (Screen.height / (1920 / 243) * 2)) % cellPixelSize;
         if (delta > cellPixelSize / 2)
         {
-            spawnPos = new Vector3(-Screen.width / 2f + cellPixelSize / 2f + 25f, Screen.height / 2 - (Screen.height / (1920 / 255)) - delta + cellPixelSize * 0.4f, 0f);
+            spawnPos = new Vector3(-Screen.width / 2f + cellPixelSize / 2f + 30f, Screen.height / 2 - (Screen.height / (1920 / 243)) - delta + cellPixelSize * 0.4f, 0f);
         }
         else
         {
-            spawnPos = new Vector3(-Screen.width / 2f + cellPixelSize / 2f + 25f, Screen.height / 2 - (Screen.height / (1920 / 255)) - delta - cellPixelSize * 0.6f, 0f);
+            spawnPos = new Vector3(-Screen.width / 2f + cellPixelSize / 2f + 30f, Screen.height / 2 - (Screen.height / (1920 / 243)) - delta - cellPixelSize * 0.6f, 0f);
         }
     }
 

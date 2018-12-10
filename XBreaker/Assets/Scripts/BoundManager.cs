@@ -42,17 +42,17 @@ public class BoundManager : MonoBehaviour {
         BaseSettings(rightBC2D);
         rightBound.transform.localScale = new Vector2(boardWidth, height);
 
-        topScale = new Vector2(width, height / (1920 / 255));
+        topScale = new Vector2(width, height / (1920 / 243));
         BaseSettings(topBC2D);
         topBound.transform.localScale = topScale;
 
-        botScale = new Vector2(width, height / (1920/255));
+        botScale = new Vector2(width, height / (1920/243));
         BaseSettings(botBC2D);
         botBound.transform.localScale = botScale;
 
         //Передвигаем коллайдеры в зависимости от размера камеры
-        leftBound.transform.position = new Vector2(-width / 2 - boardWidth / 2 + 25, 0);
-        rightBound.transform.position = new Vector2(width / 2 + boardWidth / 2 - 25, 0);
+        leftBound.transform.position = new Vector2(-width / 2 - boardWidth / 2 + 30, 0);
+        rightBound.transform.position = new Vector2(width / 2 + boardWidth / 2 - 30, 0);
 
         topBound.transform.position = new Vector2(0, height / 2 - topScale.y/2);
         botBound.transform.position = new Vector2(0, -height / 2 + botScale.y/2);
