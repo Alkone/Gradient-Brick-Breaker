@@ -96,6 +96,8 @@ public class TrajectorySimulation
         sightLine.positionCount = tempSegmentCount;
         for (int i = 0; i < tempSegmentCount; i++)
         {
+            sightLine.material.SetTextureOffset("_MainTex", new Vector2(-Time.timeSinceLevelLoad * 4f, 0f));
+            sightLine.material.SetTextureScale("_MainTex", new Vector2(segments[i].magnitude/26, 1f));
             //Debug.Log("Segment " + segments[i]);
             sightLine.SetPosition(i, segments[i]);
         }

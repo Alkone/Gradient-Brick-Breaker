@@ -206,6 +206,36 @@ Prefab:
       propertyPath: topBound
       value: 
       objectReference: {fileID: 1773330494}
+    - target: {fileID: 120413812691033494, guid: 2d47c2b85c2384b3e9775fa3b75e27ef,
+        type: 2}
+      propertyPath: m_Materials.Array.data[0]
+      value: 
+      objectReference: {fileID: 2100000, guid: 15d6a0ee6eddf45e9943aba0af7f353d, type: 2}
+    - target: {fileID: 120413812691033494, guid: 2d47c2b85c2384b3e9775fa3b75e27ef,
+        type: 2}
+      propertyPath: m_Loop
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 120413812691033494, guid: 2d47c2b85c2384b3e9775fa3b75e27ef,
+        type: 2}
+      propertyPath: m_SortingLayerID
+      value: -860411507
+      objectReference: {fileID: 0}
+    - target: {fileID: 120413812691033494, guid: 2d47c2b85c2384b3e9775fa3b75e27ef,
+        type: 2}
+      propertyPath: m_SortingLayer
+      value: -4
+      objectReference: {fileID: 0}
+    - target: {fileID: 120413812691033494, guid: 2d47c2b85c2384b3e9775fa3b75e27ef,
+        type: 2}
+      propertyPath: m_Parameters.widthMultiplier
+      value: 32
+      objectReference: {fileID: 0}
+    - target: {fileID: 120413812691033494, guid: 2d47c2b85c2384b3e9775fa3b75e27ef,
+        type: 2}
+      propertyPath: m_Parameters.textureMode
+      value: 3
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 2d47c2b85c2384b3e9775fa3b75e27ef, type: 2}
   m_IsPrefabAsset: 0
