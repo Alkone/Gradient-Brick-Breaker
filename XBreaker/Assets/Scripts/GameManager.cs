@@ -20,7 +20,7 @@ public class GameManager : MonoBehaviour
     private TrajectorySimulation trajectorySimulator; // Store a reference to our LevelManager which simulate gameObeject path.
 
     ////Inspector fields
-    public GameObject loseScreen, pauseScreen, ballPrefub1;
+    public GameObject loseScreen, pauseScreen, ballPrefub1, backGround;
     public float ballTouchPower;
     public float ballLaunchInterval;
     public Vector2 startPosition; // Start ball pos
@@ -84,6 +84,7 @@ public class GameManager : MonoBehaviour
     //
     void Start()
     {
+        backGround.GetComponent<SpriteRenderer>().size = new Vector2 (Screen.width, Screen.height);
         if (Advertisement.isSupported)
         {
             Advertisement.Initialize(gameId, true);
@@ -169,7 +170,6 @@ public class GameManager : MonoBehaviour
                 DestroyAllBals(); //Уничтожает GameObject и чистит список
                 boundManager.botBound.GetComponent<BotBound>().doOnce = false;
                 startPosition = new Vector2(0, 0);
-                Debug.Log("boundManager.m_BotMiddleGameZone.y  " + boundManager.GetBotMiddleGameZone().y);
                 gameLosed = false;
                 CreateBall(startPosition, ballPrefub1);
                 gameStatus = GameStatus.LAUNCHED;
@@ -240,7 +240,6 @@ public class GameManager : MonoBehaviour
         if (!firstBallIsStoped)
         {
             startPosition = stopPosition;
-            Debug.Log(startPosition);
             firstBallIsStoped = true;
         }
     }
@@ -259,9 +258,7 @@ public class GameManager : MonoBehaviour
             if (mouseDownIsDetected)
             {
                 angle = GetFixetAngle(Vector2.left, currentMousePos - startPosition);
-                Debug.Log("Angle - " + angle);
                 startVector = RotateVector(Vector2.left, angle) + startPosition;
-                Debug.Log("Start vector - " + startVector);
                 trajectorySimulator.SimulatePath(ballObjectsList[0], GetVectorByPoints(startPosition, startVector), segmentCount);
                 if (!Input.GetMouseButton(0))
                 {
@@ -333,12 +330,16 @@ public class GameManager : MonoBehaviour
     //Корутин на зпуск шариков с интервалом
     public IEnumerator StartBall(List<GameObject> ballObjectsList, Vector2 startingVector, float delay)
     {
-        List<GameObject> currentStateObjectsList = new List<GameObject>(ballObjectsList);
+        Ball[] balls = new Ball[ballObjectsList.Count];
+        for (int i = 0; i< balls.Length; i++)
+        {
+            balls[i] = ballObjectsList[i].GetComponent<Ball>();
+        }
 
-        for (int i = 0; i < ballObjectsList.Count; i++)
+        for (int i = 0; i < balls.Length; i++)
         {
             yield return new WaitForSeconds(delay);
-            currentStateObjectsList[i].GetComponent<Ball>().Launch(startingVector * ballTouchPower);
+            balls[i].Launch(startingVector * ballTouchPower);
         }
 
     }
@@ -364,7 +365,6 @@ public class GameManager : MonoBehaviour
             {
                 gameStatus = GameStatus.PREPARING;
             }
-            Debug.Log(gameStatus.ToString());
             yield return new WaitForSeconds(.1f);
         }
     }

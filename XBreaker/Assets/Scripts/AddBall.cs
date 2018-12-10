@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class AddBall : MonoBehaviour {
+public class AddBall : MonoBehaviour, Destroyable {
 
     [SerializeField] private GameObject addablePrefab;
 
@@ -33,10 +33,10 @@ public class AddBall : MonoBehaviour {
     public void AddBallAndDestroyThis()
     {
         Add();
-        StartCoroutine("DestroyThisObject");
+        SelfDestroy();
     }
 
-    public void DestroyOnly()
+    public void SelfDestroy()
     {
         StartCoroutine("DestroyThisObject");
     }

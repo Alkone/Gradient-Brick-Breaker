@@ -28,7 +28,6 @@ public class Ball : MonoBehaviour
         cc2D = gameObject.GetComponent<CircleCollider2D>();
         layerMask = (1 << 10) | (1 << 11) | (1 << 13);
         cirlceCastRadius = cc2D.radius * gameObject.transform.localScale.x;
-        Debug.Log(cirlceCastRadius);
         movingVector = Vector2.down * 150;
         isFalling = true;
         isLaunched = true;
@@ -42,7 +41,6 @@ public class Ball : MonoBehaviour
             bool giveDamage = false;
             nextPoint = rb2D.position + movingVector * Time.fixedDeltaTime * speed;
             hit = Physics2D.CircleCast(rb2D.position, cirlceCastRadius, movingVector, Vector2.Distance(rb2D.position, nextPoint), layerMask);
-            Debug.Log("Distance = " + Vector2.Distance(rb2D.position, nextPoint));
             if (hit)
             {
                 if (hit.collider.gameObject.layer == 13)
@@ -69,7 +67,6 @@ public class Ball : MonoBehaviour
                     movingVector = Vector2.Reflect(movingVector, hit.normal);
                 }
             }
-            Debug.Log("Переместил " + rb2D.position);
         }
         else if (isPrepairing)
         {
@@ -92,12 +89,14 @@ public class Ball : MonoBehaviour
         isPrepairing = false;
         this.movingVector = movingVector;
         gameObject.layer = 8;
+        rb2D.WakeUp();
         isLaunched = true;
-        Debug.Log("Ball " + gameObject.GetInstanceID() + " has launched!");
+
     }
 
     public void MoveToPosition(Vector2 position)
     {
+        rb2D.WakeUp();
         isLaunched = false;
         startPosition = position;
         isPrepairing = true;
@@ -109,7 +108,7 @@ public class Ball : MonoBehaviour
         isFalling = false;
         gameObject.layer = 9;
         GameManager.instance.SetNewStartPosition(stopPosition);
-        Debug.Log("Ball " + gameObject.GetInstanceID() + " has stopped!");
+        rb2D.Sleep();
     }
 
     //private void OnCollisionEnter2D(Collision2D collision)

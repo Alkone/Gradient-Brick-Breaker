@@ -9,15 +9,13 @@ public class BoundManager : MonoBehaviour {
     public GameObject topBound;
     public float boardWidth;
 
-    private Vector2 topBoundSpriteSize;
-    private Vector2 botBoundSpriteSize;
-    private Vector2 botBoundLocalScale;
-    private Vector2 topBoundLocalScale;
-
     public float optimalCellPixelSize;
 
     private float width;
     private float height;
+
+    private Vector2 topScale;
+    private Vector2 botScale;
 
     private void Awake()
     {
@@ -38,46 +36,43 @@ public class BoundManager : MonoBehaviour {
         BoxCollider2D botBC2D = botBound.GetComponent<BoxCollider2D>();
 
         //Задаем размеры коллайдеров и местоположение относительно геймобджекта
-        leftBC2D.offset = new Vector2(0, 0); //положение коллайдера относительно объекта
-        leftBC2D.autoTiling = true; // включаем авто растягивание коллайдера
-        leftBC2D.size = new Vector2(1, 1); // размер коллайдера = размеру gameObject
+        BaseSettings(leftBC2D);
         leftBound.transform.localScale = new Vector2(boardWidth, height);
 
-        rightBC2D.offset = new Vector2(0, 0); //положение коллайдера относительно объекта
-        rightBC2D.autoTiling = true; // включаем авто растягивание коллайдера
-        rightBC2D.size = new Vector2(1, 1); // размер коллайдера = размеру gameObject
+        BaseSettings(rightBC2D);
         rightBound.transform.localScale = new Vector2(boardWidth, height);
 
-        topBoundSpriteSize = topBound.GetComponent<SpriteRenderer>().sprite.bounds.size;
-        topBoundLocalScale = GetRatioSpriteToGlobal(topBound, width, optimalCellPixelSize * 2f + cellDeltha / 2);
-        topBC2D.offset = new Vector2(0, 0); //положение коллайдера относительно объекта
-        topBC2D.autoTiling = true; // включаем авто растягивание коллайдера
-        topBC2D.size = topBoundSpriteSize; //размер коллайдера = размеру спрайта
-        topBound.transform.localScale = topBoundLocalScale; // задаем размеры GameObject
+        topScale = new Vector2(width, height / (1920 / 255));
+        BaseSettings(topBC2D);
+        topBound.transform.localScale = topScale;
 
-        botBoundSpriteSize = botBound.GetComponent<SpriteRenderer>().sprite.bounds.size;
-        botBoundLocalScale = GetRatioSpriteToGlobal(botBound, width, optimalCellPixelSize * 2.3f + cellDeltha / 2);
-        botBC2D.offset = new Vector2(0, 0); //положение коллайдера относительно объекта
-        botBC2D.autoTiling = true; // включаем авто растягивание коллайдера
-        botBC2D.size = botBoundSpriteSize; //размер коллайдера = размеру спрайта
-        botBound.transform.localScale = botBoundLocalScale; // задаем размеры GameObject
+        botScale = new Vector2(width, height / (1920/255));
+        BaseSettings(botBC2D);
+        botBound.transform.localScale = botScale;
 
         //Передвигаем коллайдеры в зависимости от размера камеры
-        leftBound.transform.position = new Vector2(-width / 2 - boardWidth / 2, 0);
-        rightBound.transform.position = new Vector2(width / 2 + boardWidth / 2, 0);
+        leftBound.transform.position = new Vector2(-width / 2 - boardWidth / 2 + 25, 0);
+        rightBound.transform.position = new Vector2(width / 2 + boardWidth / 2 - 25, 0);
 
-        topBound.transform.position = new Vector2(0, height / 2 - topBoundSpriteSize.y * topBoundLocalScale.y / 2);
-        botBound.transform.position = new Vector2(0, -height / 2 + botBoundSpriteSize.y * botBoundLocalScale.y / 2);
+        topBound.transform.position = new Vector2(0, height / 2 - topScale.y/2);
+        botBound.transform.position = new Vector2(0, -height / 2 + botScale.y/2);
+    }
+
+    private void BaseSettings(BoxCollider2D bc2D)
+    {
+        bc2D.offset = new Vector2(0, 0); //положение коллайдера относительно объекта
+        bc2D.autoTiling = true; // включаем авто растягивание коллайдера
+        bc2D.size = new Vector2(1, 1); // размер коллайдера = размеру gameObject
     }
 
     public Vector2 GetTopMiddleGameZone()
     {
-        return new Vector2(0, height / 2 - topBoundSpriteSize.y * topBoundLocalScale.y);
+        return new Vector2(0, height / 2 - topScale.y);
     }
 
     public Vector2 GetBotMiddleGameZone()
     {
-        return new Vector2(0, -height / 2 + botBoundSpriteSize.y * botBoundLocalScale.y);
+        return new Vector2(0, -height / 2 + botScale.y);
     }
 
 

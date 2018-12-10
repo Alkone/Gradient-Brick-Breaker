@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 
-public class Block : MonoBehaviour {
+public class Block : MonoBehaviour, Destroyable {
     //HP блока
     public int lifeCount;
 
@@ -26,23 +26,6 @@ public class Block : MonoBehaviour {
         hpTextMesh.text = lifeCount.ToString(); // обновляет Text в дочернем объекте
         spriteRenderer.material.color = colors[lifeCount]; // Задает цвет в соответствии с hp
     }
-
-    //private void OnCollisionEnter2D(Collision2D collision)
-    //{
-    //    if (collision.gameObject.GetComponent<Ball>())
-    //    {
-    //        GetComponent<Animation>().Play();
-    //        if (lifeCount < 2)
-    //        {
-    //            SelfDestroy();
-    //        }
-    //        else
-    //        {
-    //            lifeCount--;
-    //            UpdateBlock();
-    //        }
-    //    }
-    //}
 
     public int TakeDamage(int damdge)
     {

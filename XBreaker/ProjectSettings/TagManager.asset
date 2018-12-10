@@ -21,7 +21,7 @@ TagManager:
   - AddPoint
   - BotBound
   - CircleCastDetected
-  - 
+  - Background
   - 
   - 
   - 
@@ -44,6 +44,9 @@ TagManager:
     locked: 0
   - name: Bonds
     uniqueID: 2760284451
+    locked: 0
+  - name: Shadow
+    uniqueID: 3434555789
     locked: 0
   - name: Sprite
     uniqueID: 3071650545

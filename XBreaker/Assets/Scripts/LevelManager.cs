@@ -8,13 +8,10 @@ public class LevelManager : MonoBehaviour
 {
     [SerializeField] private int m_BlocksInLine = 10;
     [SerializeField] private int currentLevel;
+    [SerializeField] private int gameObjectsCount;
 
     //
     public GameObject m_BlockPrefub1;
-    public GameObject m_HalfBlock0;
-    public GameObject m_HalfBlock90;
-    public GameObject m_HalfBlock180;
-    public GameObject m_HalfBlock270;
     public GameObject m_AddBallPoint1;
     public GameObject parentObject; //папка куда будем складывать все объекты
 
@@ -23,41 +20,38 @@ public class LevelManager : MonoBehaviour
 
     private float cellPixelSize;
     private float cellLocalSize;
-    private Vector2 screenSize;
     private Vector3 spawnPos;
 
     //Листы хранящие игровые объекты
-    private List<GameObject> blocksList;
-    private List<GameObject> addBallsList;
+    private List<GameObject> gameObjects;
 
     //Status
     private bool permissionToGenBlockLine;
 
     void Awake()
     {
-        // geting screen size in global cordinates
-        screenSize = new Vector2(Screen.width, Screen.height);
-        Debug.Log("screenSize = " + screenSize);
-
         //get optimal block size
-        Debug.Log("screenSize.x / m_BlocksInLine = " + screenSize.x + " / " + m_BlocksInLine);
-        cellPixelSize = screenSize.x / m_BlocksInLine;
-        Debug.Log("cellPixelSize - " + cellPixelSize);
-        Debug.Log("m_BlockPrefub1.GetComponent<SpriteRenderer>().sprite.bounds.size.x - " + m_BlockPrefub1.GetComponent<SpriteRenderer>().sprite.bounds.size.x);
+        cellPixelSize = (Screen.width-50) / m_BlocksInLine;
         cellLocalSize = cellPixelSize / m_BlockPrefub1.GetComponent<SpriteRenderer>().sprite.bounds.size.x;
-        Debug.Log("cellLocalSize - " + cellLocalSize);
-
         //setting start point of the blocks
-        spawnPos = new Vector3(-screenSize.x / 2f + cellPixelSize / 2f, screenSize.y / 2f - cellPixelSize * 2.5f, 0f);
-        Debug.Log("spawnPos -  " + spawnPos);
+        float delta = (Screen.height - (Screen.height / (1920 / 255) * 2)) % cellPixelSize;
+        if (delta > cellPixelSize / 2)
+        {
+            spawnPos = new Vector3(-Screen.width / 2f + cellPixelSize / 2f + 25f, Screen.height / 2 - (Screen.height / (1920 / 255)) - delta + cellPixelSize * 0.4f, 0f);
+        }
+        else
+        {
+            spawnPos = new Vector3(-Screen.width / 2f + cellPixelSize / 2f + 25f, Screen.height / 2 - (Screen.height / (1920 / 255)) - delta - cellPixelSize * 0.6f, 0f);
+        }
     }
 
     public void Start()
     {
         //Create Lists
-        blocksList = new List<GameObject>();
-        addBallsList = new List<GameObject>();
+        gameObjects = new List<GameObject>();
+
         m_BlockPrefub1.transform.localScale = new Vector3(cellLocalSize, cellLocalSize, 0);
+        m_AddBallPoint1.transform.localScale = new Vector3(cellLocalSize/2, cellLocalSize/2, 0);
         permissionToGenBlockLine = false;
     }
 
@@ -77,6 +71,11 @@ public class LevelManager : MonoBehaviour
         CleanLevel();
         currentLevel = startLevel-1;
         GenerateNextBlockLine();
+    }
+
+    private void OptimazeScene()
+    {
+
     }
 
     //Start
@@ -179,49 +178,24 @@ public class LevelManager : MonoBehaviour
         if (prefub.GetComponent<Block>())
         {
             go.GetComponent<Block>().lifeCount = blockLife;
-            blocksList.Add(go);
-            //if AddBall
         }
-        else if (prefub.GetComponent<AddBall>())
-        {
-            addBallsList.Add(go);
-        }
+            gameObjects.Add(go);
     }
 
     //Delete all level GameObjects
     public void RemoveGameObject(GameObject go)
     {
-
-        //if Block
-        if (go.GetComponent<Block>())
-        {
-            blocksList.Remove(go);
-        }
-        else if (go.GetComponent<AddBall>())
-
-        //if AddBall
-        {
-            addBallsList.Remove(go);
-        }
+            gameObjects.Remove(go);
     }
 
     //Clean level
     public void CleanLevel()
     {
-        //if Block exists
-        if (blocksList != null)
+        if (gameObjects != null)
         {
-            foreach (var block in blocksList)
+            foreach (var go in gameObjects)
             {
-                block.GetComponent<Block>().SelfDestroy();
-            }
-        }
-        //if AddBall exists
-        if (addBallsList != null)
-        {
-            foreach (var addBall in addBallsList)
-            {
-                addBall.GetComponent<AddBall>().DestroyOnly();
+                    go.GetComponent<Destroyable>().SelfDestroy();
             }
         }
     }
@@ -241,8 +215,14 @@ public class LevelManager : MonoBehaviour
             GameManager.instance.GetBoundManager().SetBoundsColor(GameManager.instance.GetColorManager().generatedColors[currentLevel]);
             textLevel.text = currentLevel.ToString();
             CreateLevel(currentLevel);
+
             MoveLevelDownOnOneCell(parentObject);
             permissionToGenBlockLine = false;
         }
+    }
+
+    private void Update()
+    {
+        gameObjectsCount = gameObjects.Count;
     }
 }
