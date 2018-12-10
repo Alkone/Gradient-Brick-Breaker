@@ -19,10 +19,11 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 4715305579582584}
+  - component: {fileID: 114369899425536314}
+  - component: {fileID: 114005096843525392}
+  - component: {fileID: 114661515838076128}
   - component: {fileID: 120413812691033494}
   - component: {fileID: 114448863305164002}
-  - component: {fileID: 114005096843525392}
-  - component: {fileID: 114369899425536314}
   m_Layer: 0
   m_Name: GameController
   m_TagString: Untagged
@@ -54,12 +55,15 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: fecf39584a6fc7a4cbadf25ec4032f4a, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  m_BlocksInLine: 6
+  m_BlocksInLine: 10
   currentLevel: 1
-  m_BlockPrefub1: {fileID: 1042451700578056, guid: 5353684e2a36d41d5a6683bcc4a2f7c2,
+  gameObjectsCount: 0
+  m_BlockPrefub1: {fileID: 1340698301632706, guid: 5353684e2a36d41d5a6683bcc4a2f7c2,
     type: 2}
   m_AddBallPoint1: {fileID: 1347444772971126, guid: 92935eea348aa6a4393c796db6b5d63f,
     type: 2}
+  parentObject: {fileID: 0}
+  textLevel: {fileID: 0}
 --- !u!114 &114369899425536314
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -71,13 +75,19 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 8494cc8c404755c4793fc7f96bf1be22, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  gameStatus: 0
+  loseScreen: {fileID: 0}
+  pauseScreen: {fileID: 0}
   ballPrefub1: {fileID: 1110083101469618, guid: 2ed73163596883148bb2ca843db3072c,
     type: 2}
-  ballTouchPower: 12
-  ballLaunchInterval: 0.02
-  startPosition: {x: 0, y: 0}
-  segmentCount: 3
-  startLevel: 1000
+  backGround: {fileID: 0}
+  ballTouchPower: 120
+  ballLaunchInterval: 0.021
+  startPosition: {x: 0, y: -4}
+  segmentCount: 2
+  startLevel: 1
+  placementIdRewardedVideo: rewardedVideo
+  placementIdBanner: banner
 --- !u!114 &114448863305164002
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -89,29 +99,39 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 5714e415d05e07b418e385ba95d0fe3a, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  mainBlockColors:
-  - {r: 0.9960785, g: 0.8431373, b: 0.854902, a: 0}
-  - {r: 0.7372549, g: 0.17254902, b: 0.27058825, a: 0}
-  - {r: 0.7294118, g: 0.17254902, b: 0.078431375, a: 0}
-  - {r: 0.7372549, g: 0.29803923, b: 0.10980393, a: 0}
-  - {r: 0.7686275, g: 0.454902, b: 0.1137255, a: 0}
-  - {r: 0.8000001, g: 0.7411765, b: 0.10980393, a: 0}
-  - {r: 0.48627454, g: 0.6117647, b: 0.1137255, a: 0}
-  - {r: 0.015686275, g: 0.5176471, b: 0.1764706, a: 0}
-  - {r: 0.078431375, g: 0.5529412, b: 0.5254902, a: 0}
-  - {r: 0.015686275, g: 0.454902, b: 0.6117647, a: 0}
-  - {r: 0.23529413, g: 0.17254902, b: 0.45098042, a: 0}
-  - {r: 0.30980393, g: 0.14509805, b: 0.43529415, a: 0}
-  - {r: 0.3773585, g: 0.3773585, b: 0.3773585, a: 0}
-  - {r: 0.18867922, g: 0.18867922, b: 0.18867922, a: 0}
-  - {r: 0.18823531, g: 0.18823531, b: 0.18823531, a: 0}
-  - {r: 0.18823531, g: 0.18823531, b: 0.18823531, a: 0}
-  - {r: 0.18823531, g: 0.18823531, b: 0.18823531, a: 0}
-  - {r: 0.18823531, g: 0.18823531, b: 0.18823531, a: 0}
-  - {r: 0.18823531, g: 0.18823531, b: 0.18823531, a: 0}
-  - {r: 0.18823531, g: 0.18823531, b: 0.18823531, a: 0}
-  - {r: 0.18823531, g: 0.18823531, b: 0.18823531, a: 0}
+  peakColors:
+  - {r: 0.78823537, g: 0.9333334, b: 0.5882353, a: 0}
+  - {r: 0.97647065, g: 0.90196085, b: 0.3019608, a: 0}
+  - {r: 0.9686275, g: 0.8980393, b: 0.41176474, a: 0}
+  - {r: 0.89019614, g: 0.5764706, b: 0.2901961, a: 0}
+  - {r: 0.89019614, g: 0.5764706, b: 0.2901961, a: 0}
+  - {r: 0.8470589, g: 0.5882353, b: 0.34509805, a: 0}
+  - {r: 0.8867924, g: 0.2718939, b: 0.1966002, a: 0}
+  - {r: 0.8235295, g: 0.31764707, b: 0.2392157, a: 0}
+  - {r: 0.8018868, g: 0.06333686, b: 0, a: 0}
+  - {r: 0.8773585, g: 0.32694018, b: 0.53467536, a: 0}
+  - {r: 0.81568635, g: 0.3647059, b: 0.5294118, a: 0}
+  - {r: 0.81568635, g: 0.3647059, b: 0.5294118, a: 0}
+  generatedColors: []
   stepCount: 100
+  darkTheme: 0
+--- !u!114 &114661515838076128
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 1643568200496766}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: c9b3948ceb29a404d9b9a9e65c9a56e6, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  leftBound: {fileID: 0}
+  rightBound: {fileID: 0}
+  botBound: {fileID: 0}
+  topBound: {fileID: 0}
+  boardWidth: 100
+  optimalCellPixelSize: 0
 --- !u!120 &120413812691033494
 LineRenderer:
   m_ObjectHideFlags: 1
@@ -147,18 +167,16 @@ LineRenderer:
   m_SortingLayerID: 0
   m_SortingLayer: 0
   m_SortingOrder: 0
-  m_Positions:
-  - {x: 0, y: 0, z: 0}
-  - {x: 0, y: 0, z: 1}
+  m_Positions: []
   m_Parameters:
     serializedVersion: 2
-    widthMultiplier: 1
+    widthMultiplier: 4
     widthCurve:
       serializedVersion: 2
       m_Curve:
       - serializedVersion: 3
         time: 0
-        value: 0.053580813
+        value: 1
         inSlope: 0
         outSlope: 0
         tangentMode: 0
@@ -170,8 +188,8 @@ LineRenderer:
       m_RotationOrder: 0
     colorGradient:
       serializedVersion: 2
-      key0: {r: 1, g: 0.88116616, b: 0.8066038, a: 1}
-      key1: {r: 1, g: 0.76470596, b: 0.61960787, a: 1}
+      key0: {r: 0.43516377, g: 0.64629984, b: 0.7264151, a: 1}
+      key1: {r: 0, g: 0, b: 0, a: 1}
       key2: {r: 0, g: 0, b: 0, a: 0}
       key3: {r: 0, g: 0, b: 0, a: 0}
       key4: {r: 0, g: 0, b: 0, a: 0}
@@ -198,7 +216,7 @@ LineRenderer:
       m_NumColorKeys: 2
       m_NumAlphaKeys: 2
     numCornerVertices: 90
-    numCapVertices: 0
+    numCapVertices: 90
     alignment: 0
     textureMode: 1
     generateLightingData: 0
