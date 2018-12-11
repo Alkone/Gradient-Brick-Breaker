@@ -11,13 +11,13 @@ public class TrajectorySimulation
 
     // Максимальная длина сегмента
     private float segmentScale = Mathf.Infinity;
-
+    private float circleRadius;
     private LayerMask layerMask;
 
     public TrajectorySimulation(LineRenderer sightLine)
     {
         this.sightLine = sightLine;
-        layerMask = LayerMask.GetMask("Bound", "Block");
+        layerMask = LayerMask.GetMask("Bound", "Block", "BotBound");
     }
 
 
@@ -25,16 +25,17 @@ public class TrajectorySimulation
     /// Simulate the path of a launched ball.
     /// Slight errors are inherent in the numerical method used.
     /// </summary>
-    public void SimulatePath(GameObject go, Vector2 launchVector, int segmentCount)
+    public void SimulatePath(GameObject go, Vector2 launchVector, float segmentCount)
     {
-        int tempSegmentCount = segmentCount;
+        int tempSegmentCount = (int)segmentCount;
+        float tempSegmentRemaind = segmentCount - tempSegmentCount;
+        if (tempSegmentRemaind > 0.0f) tempSegmentCount++;
 
-        Vector2[] segments = new Vector2[segmentCount];
-
-        float circleRadius = go.GetComponent<CircleCollider2D>().radius * go.transform.localScale.x;
+        Vector2[] segments = new Vector2[tempSegmentCount];
+        circleRadius = go.GetComponent<CircleCollider2D>().radius * go.transform.localScale.x;
 
         // Инициализация скорости
-        Vector2 segVelocity = launchVector.normalized * 500 * Time.deltaTime;
+        Vector2 segVelocity = launchVector.normalized;
 
         RaycastHit2D hit;
 
@@ -45,7 +46,7 @@ public class TrajectorySimulation
         GameObject tempGo = null;
         int oldLayer = 0;
 
-        for (int i = 1; i < segmentCount; i++)
+        for (int i = 1; i < tempSegmentCount; i++)
         {
 
 
@@ -67,7 +68,12 @@ public class TrajectorySimulation
                     tempSegmentCount = i;
                     break;
                 }
-                segments[i] = hit.centroid;
+
+                if (tempSegmentRemaind > 0.0f && i == tempSegmentCount - 1)
+                {
+                    segments[i] = ReflectCutVector(segments[i - 1], segments[i], hit, tempSegmentRemaind);
+                }
+                else segments[i] = hit.centroid;
                 // flip the velocity to simulate a bounce
                 segVelocity = Vector2.Reflect(segVelocity, hit.normal);
 
@@ -84,6 +90,8 @@ public class TrajectorySimulation
             }
         }
 
+
+
         //Вовзращаем исходные значения
         if (tempGo != null)
         {
@@ -94,18 +102,32 @@ public class TrajectorySimulation
         }
 
 
+        //Конфигурирование LineRenderer
         sightLine.positionCount = tempSegmentCount;
-        sightLine.widthMultiplier = circleRadius*2;
+        sightLine.widthMultiplier = circleRadius * 2;
+        float magnitudeSum = 0;
+        for (int i = 1; i < tempSegmentCount; i++)
+        {
+            magnitudeSum += (segments[i] - segments[i - 1]).magnitude;
+        }
+        sightLine.material.SetTextureOffset("_MainTex", new Vector2(-Time.timeSinceLevelLoad * 4f, 0f));
+        sightLine.material.SetTextureScale("_MainTex", new Vector2(magnitudeSum / sightLine.widthMultiplier, 1f));
+
+        //LineRenderer
         for (int i = 0; i < tempSegmentCount; i++)
         {
-       
-            if (i > 0)
-            {
-                sightLine.material.SetTextureOffset("_MainTex", new Vector2(-Time.timeSinceLevelLoad * 4f, 0f));
-                sightLine.material.SetTextureScale("_MainTex", new Vector2((segments[i] - segments[i-1]).magnitude / sightLine.widthMultiplier, 1f));
-            }
-              Debug.Log("segments[" + i + "] " + segments[i]);
             sightLine.SetPosition(i, segments[i]);
         }
+    }
+
+    public Vector2 ReflectCutVector(Vector2 startPos, Vector2 endPos, RaycastHit2D hit, float tempSegmentRemaind)
+    {
+        Vector2 vector = hit.centroid - startPos;
+        endPos = Vector2.Reflect(hit.centroid, hit.normal);
+        Vector2 vectorNormalize = vector.normalized * tempSegmentRemaind * circleRadius * 10;
+        Debug.Log("vector = " + vector);
+        Debug.Log("vectorNormalize = " + vectorNormalize);
+        if (vectorNormalize.magnitude > vector.magnitude) return startPos + vector;
+        else return startPos + vectorNormalize;
     }
 }

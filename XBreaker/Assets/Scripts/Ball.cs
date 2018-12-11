@@ -39,7 +39,7 @@ public class Ball : MonoBehaviour
         if (isLaunched)
         {
             bool giveDamage = false;
-            nextPoint = rb2D.position + movingVector * Time.fixedDeltaTime * speed;
+            nextPoint = rb2D.position + movingVector * Time.fixedDeltaTime * speed * gameObject.transform.localScale.y;
             hit = Physics2D.CircleCast(rb2D.position, cirlceCastRadius, movingVector, Vector2.Distance(rb2D.position, nextPoint), layerMask);
             if (hit)
             {

@@ -24,7 +24,7 @@ public class GameManager : MonoBehaviour
     public float ballTouchPower;
     public float ballLaunchInterval;
     public Vector2 startPosition; // Start ball pos
-    [SerializeField] private int segmentCount = 3; //Кол-во предсказанных скачков
+    [SerializeField] private float segmentCount = 2.2f; //Кол-во предсказанных скачков
     [SerializeField] private int startLevel = 1;  //Current level number
 
 

@@ -149,7 +149,7 @@ MonoBehaviour:
   ballTouchPower: 120
   ballLaunchInterval: 0.021
   startPosition: {x: 0, y: -4}
-  segmentCount: 2
+  segmentCount: 2.5
   startLevel: 1
   placementIdRewardedVideo: rewardedVideo
   placementIdBanner: banner
@@ -750,7 +750,7 @@ LineRenderer:
     numCornerVertices: 90
     numCapVertices: 90
     alignment: 0
-    textureMode: 3
+    textureMode: 0
     generateLightingData: 0
   m_UseWorldSpace: 1
   m_Loop: 0
