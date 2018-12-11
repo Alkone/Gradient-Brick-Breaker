@@ -9,6 +9,7 @@ public class BoundManager : MonoBehaviour {
     public GameObject topBound;
     public float boardWidth;
 
+
     public float optimalCellPixelSize;
 
     private float width;
@@ -29,6 +30,8 @@ public class BoundManager : MonoBehaviour {
         width = Camera.main.pixelWidth;
         height = Camera.main.pixelHeight;
         float cellDeltha = height % optimalCellPixelSize; // Остаток
+        float pixelMarginLRBounds = GameManager.instance.GetLevelManager().pixelMarginLRBounds;
+        float pixelMarginTBBounds = GameManager.instance.GetLevelManager().pixelMarginTBBounds;
 
         BoxCollider2D leftBC2D = leftBound.GetComponent<BoxCollider2D>();
         BoxCollider2D rightBC2D = rightBound.GetComponent<BoxCollider2D>();
@@ -42,17 +45,17 @@ public class BoundManager : MonoBehaviour {
         BaseSettings(rightBC2D);
         rightBound.transform.localScale = new Vector2(boardWidth, height);
 
-        topScale = new Vector2(width, height / (1920 / 243));
+        topScale = new Vector2(width, height / (1920 / pixelMarginTBBounds));
         BaseSettings(topBC2D);
         topBound.transform.localScale = topScale;
 
-        botScale = new Vector2(width, height / (1920/243));
+        botScale = new Vector2(width, height / (1920/ pixelMarginTBBounds));
         BaseSettings(botBC2D);
         botBound.transform.localScale = botScale;
 
         //Передвигаем коллайдеры в зависимости от размера камеры
-        leftBound.transform.position = new Vector2(-width / 2 - boardWidth / 2 + 30, 0);
-        rightBound.transform.position = new Vector2(width / 2 + boardWidth / 2 - 30, 0);
+        leftBound.transform.position = new Vector2(-width / 2 - boardWidth / 2 + pixelMarginLRBounds, 0);
+        rightBound.transform.position = new Vector2(width / 2 + boardWidth / 2 - pixelMarginLRBounds, 0);
 
         topBound.transform.position = new Vector2(0, height / 2 - topScale.y/2);
         botBound.transform.position = new Vector2(0, -height / 2 + botScale.y/2);

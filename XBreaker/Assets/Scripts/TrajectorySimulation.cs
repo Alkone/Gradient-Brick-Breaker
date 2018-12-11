@@ -1,5 +1,5 @@
 ﻿using UnityEngine;
- 
+
 /// <summary>
 /// Controls the Laser Sight for the player's aim
 /// </summary>
@@ -25,7 +25,7 @@ public class TrajectorySimulation
     /// Simulate the path of a launched ball.
     /// Slight errors are inherent in the numerical method used.
     /// </summary>
-    public void SimulatePath(GameObject go,  Vector2 launchVector, int segmentCount)
+    public void SimulatePath(GameObject go, Vector2 launchVector, int segmentCount)
     {
         int tempSegmentCount = segmentCount;
 
@@ -47,7 +47,7 @@ public class TrajectorySimulation
 
         for (int i = 1; i < segmentCount; i++)
         {
-            
+
 
             // Check to see if we're going to hit a physics object
             hit = Physics2D.CircleCast(segments[i - 1], circleRadius, segVelocity, segmentScale, layerMask);
@@ -62,7 +62,8 @@ public class TrajectorySimulation
                     }
                 }
                 // Если след. точка == нижней границе (BotBound), то сворачиваемся
-                if(hit.collider.gameObject.layer == 13){
+                if (hit.collider.gameObject.layer == 13)
+                {
                     tempSegmentCount = i;
                     break;
                 }
@@ -94,11 +95,16 @@ public class TrajectorySimulation
 
 
         sightLine.positionCount = tempSegmentCount;
+        sightLine.widthMultiplier = circleRadius*2;
         for (int i = 0; i < tempSegmentCount; i++)
         {
-            sightLine.material.SetTextureOffset("_MainTex", new Vector2(-Time.timeSinceLevelLoad * 4f, 0f));
-            sightLine.material.SetTextureScale("_MainTex", new Vector2(segments[i].magnitude/26, 1f));
-            //Debug.Log("Segment " + segments[i]);
+       
+            if (i > 0)
+            {
+                sightLine.material.SetTextureOffset("_MainTex", new Vector2(-Time.timeSinceLevelLoad * 4f, 0f));
+                sightLine.material.SetTextureScale("_MainTex", new Vector2((segments[i] - segments[i-1]).magnitude / sightLine.widthMultiplier, 1f));
+            }
+              Debug.Log("segments[" + i + "] " + segments[i]);
             sightLine.SetPosition(i, segments[i]);
         }
     }
