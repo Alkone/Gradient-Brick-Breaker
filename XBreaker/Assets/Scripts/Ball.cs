@@ -19,7 +19,17 @@ public class Ball : MonoBehaviour
     private Vector2 movingVector;
     private Vector2 startPosition;
 
+
+
+    // Launch
     private int layerMask;
+    Vector2 nextPoint;
+    float movePerFixedUpdate;
+    int stepCountBeforeCollision;
+    private enum NextCollision { BLOCK, BOUND, BOTBOUND }
+    private NextCollision nextCollision;
+    bool giveDamage;
+
 
     private void Start()
     {
@@ -27,38 +37,111 @@ public class Ball : MonoBehaviour
         rb2D = gameObject.GetComponent<Rigidbody2D>();
         cc2D = gameObject.GetComponent<CircleCollider2D>();
         layerMask = (1 << 10) | (1 << 11) | (1 << 13);
+        stepCountBeforeCollision = 0;
         cirlceCastRadius = cc2D.radius * gameObject.transform.localScale.x;
         movingVector = Vector2.down * 150;
         isFalling = true;
         isLaunched = true;
+        giveDamage = false;
     }
 
     private void FixedUpdate()
     {
-        Vector2 nextPoint;
+
         if (isLaunched)
         {
-            bool giveDamage = false;
+
             nextPoint = rb2D.position + movingVector * Time.fixedDeltaTime * speed * gameObject.transform.localScale.y;
-            hit = Physics2D.CircleCast(rb2D.position, cirlceCastRadius, movingVector, Vector2.Distance(rb2D.position, nextPoint), layerMask);
-            if (hit)
+
+            if (stepCountBeforeCollision == 0)
             {
-                if (hit.collider.gameObject.layer == 13)
+                movePerFixedUpdate = (nextPoint - rb2D.position).magnitude;
+                hit = Physics2D.CircleCast(rb2D.position, cirlceCastRadius, movingVector, 2000, layerMask);
+                if (hit)
                 {
-                    nextPoint = hit.centroid;
-                    Stop(nextPoint);
-                }
-                else if (!isFalling && hit.collider.gameObject.layer == 10 || hit.collider.gameObject.layer == 11)
-                {
-                    nextPoint = hit.centroid;
-                    if(hit.collider.gameObject.GetComponent<Block>()){
-                        giveDamage = true;
-                    } else{
-                        movingVector = Vector2.Reflect(movingVector, hit.normal);
+                    stepCountBeforeCollision = (int)((hit.centroid - rb2D.position).magnitude / movePerFixedUpdate);
+                    switch (hit.collider.gameObject.layer)
+                    {
+                        case 10:
+                            {
+                                nextCollision = NextCollision.BLOCK;
+                                break;
+                            }
+                        case 11:  // Hit Bound
+                            {
+                                nextCollision = NextCollision.BOUND;
+                            }
+                            break;
+                        case 13:  // Hit BotBound
+                            {
+                                nextCollision = NextCollision.BOTBOUND;
+                            }
+                            break;
+
                     }
                 }
             }
+            if (stepCountBeforeCollision <= 1)
+            {
+                switch (nextCollision)
+                {
+                    case NextCollision.BLOCK:
+                        {
+                            hit = Physics2D.CircleCast(rb2D.position, cirlceCastRadius, movingVector, Vector2.Distance(rb2D.position, nextPoint*2f), layerMask);
+
+                            if (hit)
+                            {
+                               //Debug.Log("ID: " + gameObject.GetInstanceID() + " BLOOOOCK!!!");
+                                nextPoint = hit.centroid;
+                                if (hit.collider.gameObject.GetComponent<Block>())
+                                {
+                                    giveDamage = true;
+                                }
+                            }
+                        }
+                        break;
+                    case NextCollision.BOUND:
+                        {
+                            nextPoint = hit.centroid;
+                            movingVector = Vector2.Reflect(movingVector, hit.normal);
+                        }
+                        break;
+                    case NextCollision.BOTBOUND:
+                        {
+                            nextPoint = hit.centroid;
+                            Stop(nextPoint);
+                        }
+                        break;
+                }
+            }
+
+            //bool giveDamage = false;
+            //nextPoint = rb2D.position + movingVector * Time.fixedDeltaTime * speed * gameObject.transform.localScale.y;
+            //hit = Physics2D.CircleCast(rb2D.position, cirlceCastRadius, movingVector, Vector2.Distance(rb2D.position, nextPoint), layerMask);
+            //if (hit)
+            //{
+            //    if (hit.collider.gameObject.layer == 13)
+            //    {
+            //        nextPoint = hit.centroid;
+            //        Stop(nextPoint);
+            //    }
+            //    else if (!isFalling && hit.collider.gameObject.layer == 10 || hit.collider.gameObject.layer == 11)
+            //    {
+            //        nextPoint = hit.centroid;
+            //        if(hit.collider.gameObject.GetComponent<Block>()){
+            //            giveDamage = true;
+            //        } else{
+            //            movingVector = Vector2.Reflect(movingVector, hit.normal);
+            //        }
+            //    }
+            //}
+
             rb2D.MovePosition(nextPoint);
+
+            //Debug.Log("ID: " + gameObject.GetInstanceID() + " nextColission - " + nextCollision);
+            //Debug.Log("ID: " + gameObject.GetInstanceID() + " stepCountBeforeCollision - " + stepCountBeforeCollision);
+            if(stepCountBeforeCollision > 0) stepCountBeforeCollision--;
+
             if (giveDamage)
             {
                 int blockHP = hit.collider.gameObject.GetComponent<Block>().TakeDamage(damage);
@@ -66,6 +149,7 @@ public class Ball : MonoBehaviour
                 {
                     movingVector = Vector2.Reflect(movingVector, hit.normal);
                 }
+                giveDamage = false;
             }
         }
         else if (isPrepairing)

@@ -20,10 +20,11 @@ GameObject:
   m_Component:
   - component: {fileID: 4715305579582584}
   - component: {fileID: 114369899425536314}
-  - component: {fileID: 114005096843525392}
   - component: {fileID: 114661515838076128}
+  - component: {fileID: 114005096843525392}
   - component: {fileID: 120413812691033494}
   - component: {fileID: 114448863305164002}
+  - component: {fileID: 114629486941892270}
   m_Layer: 0
   m_Name: GameController
   m_TagString: Untagged
@@ -58,6 +59,8 @@ MonoBehaviour:
   m_BlocksInLine: 10
   currentLevel: 1
   gameObjectsCount: 0
+  pixelMarginLRBounds: 40
+  pixelMarginTBBounds: 260
   m_BlockPrefub1: {fileID: 1340698301632706, guid: 5353684e2a36d41d5a6683bcc4a2f7c2,
     type: 2}
   m_AddBallPoint1: {fileID: 1347444772971126, guid: 92935eea348aa6a4393c796db6b5d63f,
@@ -78,13 +81,13 @@ MonoBehaviour:
   gameStatus: 0
   loseScreen: {fileID: 0}
   pauseScreen: {fileID: 0}
-  ballPrefub1: {fileID: 1110083101469618, guid: 2ed73163596883148bb2ca843db3072c,
+  ballPrefub1: {fileID: 1110083101469618, guid: 26dc11318d9e0eb40a30ffc96b94e546,
     type: 2}
   backGround: {fileID: 0}
   ballTouchPower: 120
-  ballLaunchInterval: 0.021
+  ballLaunchInterval: 0.07
   startPosition: {x: 0, y: -4}
-  segmentCount: 2
+  segmentCount: 2.5
   startLevel: 1
   placementIdRewardedVideo: rewardedVideo
   placementIdBanner: banner
@@ -109,12 +112,61 @@ MonoBehaviour:
   - {r: 0.8867924, g: 0.2718939, b: 0.1966002, a: 0}
   - {r: 0.8235295, g: 0.31764707, b: 0.2392157, a: 0}
   - {r: 0.8018868, g: 0.06333686, b: 0, a: 0}
-  - {r: 0.8773585, g: 0.32694018, b: 0.53467536, a: 0}
-  - {r: 0.81568635, g: 0.3647059, b: 0.5294118, a: 0}
-  - {r: 0.81568635, g: 0.3647059, b: 0.5294118, a: 0}
+  - {r: 0.62352943, g: 0.21568629, b: 0.027450982, a: 0}
+  - {r: 0.42352945, g: 0.13333334, b: 0, a: 0}
+  - {r: 0.3490566, g: 0.109888196, b: 0, a: 0}
+  - {r: 0.254717, g: 0.08018869, b: 0, a: 0}
+  - {r: 0.103773594, g: 0.032669466, b: 0, a: 0}
+  - {r: 0.103773594, g: 0.032669466, b: 0, a: 0}
+  - {r: 0.103773594, g: 0.032669466, b: 0, a: 0}
+  - {r: 0.103773594, g: 0.032669466, b: 0, a: 0}
+  - {r: 0.103773594, g: 0.032669466, b: 0, a: 0}
+  - {r: 0.103773594, g: 0.032669466, b: 0, a: 0}
+  - {r: 0.103773594, g: 0.032669466, b: 0, a: 0}
+  - {r: 0.103773594, g: 0.032669466, b: 0, a: 0}
+  - {r: 0.103773594, g: 0.032669466, b: 0, a: 0}
+  - {r: 0.103773594, g: 0.032669466, b: 0, a: 0}
+  - {r: 0.103773594, g: 0.032669466, b: 0, a: 0}
+  - {r: 0.103773594, g: 0.032669466, b: 0, a: 0}
+  - {r: 0.103773594, g: 0.032669466, b: 0, a: 0}
+  - {r: 0.103773594, g: 0.032669466, b: 0, a: 0}
+  - {r: 0.103773594, g: 0.032669466, b: 0, a: 0}
+  - {r: 0.103773594, g: 0.032669466, b: 0, a: 0}
+  - {r: 0.103773594, g: 0.032669466, b: 0, a: 0}
+  - {r: 0.103773594, g: 0.032669466, b: 0, a: 0}
+  - {r: 0.103773594, g: 0.032669466, b: 0, a: 0}
+  - {r: 0.103773594, g: 0.032669466, b: 0, a: 0}
+  - {r: 0.103773594, g: 0.032669466, b: 0, a: 0}
+  - {r: 0.103773594, g: 0.032669466, b: 0, a: 0}
+  - {r: 0.103773594, g: 0.032669466, b: 0, a: 0}
+  - {r: 0.103773594, g: 0.032669466, b: 0, a: 0}
+  - {r: 0.103773594, g: 0.032669466, b: 0, a: 0}
+  - {r: 0.103773594, g: 0.032669466, b: 0, a: 0}
+  - {r: 0.103773594, g: 0.032669466, b: 0, a: 0}
+  - {r: 0.103773594, g: 0.032669466, b: 0, a: 0}
+  - {r: 0.103773594, g: 0.032669466, b: 0, a: 0}
+  - {r: 0.103773594, g: 0.032669466, b: 0, a: 0}
+  - {r: 0.103773594, g: 0.032669466, b: 0, a: 0}
+  - {r: 0.103773594, g: 0.032669466, b: 0, a: 0}
+  - {r: 0.103773594, g: 0.032669466, b: 0, a: 0}
+  - {r: 0.103773594, g: 0.032669466, b: 0, a: 0}
+  - {r: 0.103773594, g: 0.032669466, b: 0, a: 0}
+  - {r: 0.103773594, g: 0.032669466, b: 0, a: 0}
+  - {r: 0.103773594, g: 0.032669466, b: 0, a: 0}
   generatedColors: []
-  stepCount: 100
+  stepCount: 200
   darkTheme: 0
+--- !u!114 &114629486941892270
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 1643568200496766}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ea689cd45c5520d4991720950d276b18, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!114 &114661515838076128
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -147,7 +199,7 @@ LineRenderer:
   m_ReflectionProbeUsage: 0
   m_RenderingLayerMask: 4294967295
   m_Materials:
-  - {fileID: 10301, guid: 0000000000000000f000000000000000, type: 0}
+  - {fileID: 2100000, guid: 15d6a0ee6eddf45e9943aba0af7f353d, type: 2}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
@@ -164,13 +216,13 @@ LineRenderer:
   m_AutoUVMaxDistance: 0.5
   m_AutoUVMaxAngle: 89
   m_LightmapParameters: {fileID: 0}
-  m_SortingLayerID: 0
-  m_SortingLayer: 0
+  m_SortingLayerID: -860411507
+  m_SortingLayer: -4
   m_SortingOrder: 0
   m_Positions: []
   m_Parameters:
     serializedVersion: 2
-    widthMultiplier: 4
+    widthMultiplier: 32
     widthCurve:
       serializedVersion: 2
       m_Curve:
@@ -215,10 +267,10 @@ LineRenderer:
       m_Mode: 1
       m_NumColorKeys: 2
       m_NumAlphaKeys: 2
-    numCornerVertices: 90
+    numCornerVertices: 30
     numCapVertices: 90
     alignment: 0
-    textureMode: 1
+    textureMode: 0
     generateLightingData: 0
   m_UseWorldSpace: 1
   m_Loop: 0
