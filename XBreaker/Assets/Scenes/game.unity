@@ -887,7 +887,18 @@ MonoBehaviour:
   m_TargetGraphic: {fileID: 575719721}
   m_OnClick:
     m_PersistentCalls:
-      m_Calls: []
+      m_Calls:
+      - m_Target: {fileID: 2036019008}
+        m_MethodName: BuyNonConsumable
+        m_Mode: 1
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
     m_TypeName: UnityEngine.UI.Button+ButtonClickedEvent, UnityEngine.UI, Version=1.0.0.0,
       Culture=neutral, PublicKeyToken=null
 --- !u!114 &575719721
@@ -1180,11 +1191,49 @@ MonoBehaviour:
   - {r: 0.8867924, g: 0.2718939, b: 0.1966002, a: 0}
   - {r: 0.8235295, g: 0.31764707, b: 0.2392157, a: 0}
   - {r: 0.8018868, g: 0.06333686, b: 0, a: 0}
-  - {r: 0.8773585, g: 0.32694018, b: 0.53467536, a: 0}
-  - {r: 0.81568635, g: 0.3647059, b: 0.5294118, a: 0}
-  - {r: 0.81568635, g: 0.3647059, b: 0.5294118, a: 0}
+  - {r: 0.62352943, g: 0.21568629, b: 0.027450982, a: 0}
+  - {r: 0.42352945, g: 0.13333334, b: 0, a: 0}
+  - {r: 0.3490566, g: 0.109888196, b: 0, a: 0}
+  - {r: 0.254717, g: 0.08018869, b: 0, a: 0}
+  - {r: 0.103773594, g: 0.032669466, b: 0, a: 0}
+  - {r: 0.103773594, g: 0.032669466, b: 0, a: 0}
+  - {r: 0.103773594, g: 0.032669466, b: 0, a: 0}
+  - {r: 0.103773594, g: 0.032669466, b: 0, a: 0}
+  - {r: 0.103773594, g: 0.032669466, b: 0, a: 0}
+  - {r: 0.103773594, g: 0.032669466, b: 0, a: 0}
+  - {r: 0.103773594, g: 0.032669466, b: 0, a: 0}
+  - {r: 0.103773594, g: 0.032669466, b: 0, a: 0}
+  - {r: 0.103773594, g: 0.032669466, b: 0, a: 0}
+  - {r: 0.103773594, g: 0.032669466, b: 0, a: 0}
+  - {r: 0.103773594, g: 0.032669466, b: 0, a: 0}
+  - {r: 0.103773594, g: 0.032669466, b: 0, a: 0}
+  - {r: 0.103773594, g: 0.032669466, b: 0, a: 0}
+  - {r: 0.103773594, g: 0.032669466, b: 0, a: 0}
+  - {r: 0.103773594, g: 0.032669466, b: 0, a: 0}
+  - {r: 0.103773594, g: 0.032669466, b: 0, a: 0}
+  - {r: 0.103773594, g: 0.032669466, b: 0, a: 0}
+  - {r: 0.103773594, g: 0.032669466, b: 0, a: 0}
+  - {r: 0.103773594, g: 0.032669466, b: 0, a: 0}
+  - {r: 0.103773594, g: 0.032669466, b: 0, a: 0}
+  - {r: 0.103773594, g: 0.032669466, b: 0, a: 0}
+  - {r: 0.103773594, g: 0.032669466, b: 0, a: 0}
+  - {r: 0.103773594, g: 0.032669466, b: 0, a: 0}
+  - {r: 0.103773594, g: 0.032669466, b: 0, a: 0}
+  - {r: 0.103773594, g: 0.032669466, b: 0, a: 0}
+  - {r: 0.103773594, g: 0.032669466, b: 0, a: 0}
+  - {r: 0.103773594, g: 0.032669466, b: 0, a: 0}
+  - {r: 0.103773594, g: 0.032669466, b: 0, a: 0}
+  - {r: 0.103773594, g: 0.032669466, b: 0, a: 0}
+  - {r: 0.103773594, g: 0.032669466, b: 0, a: 0}
+  - {r: 0.103773594, g: 0.032669466, b: 0, a: 0}
+  - {r: 0.103773594, g: 0.032669466, b: 0, a: 0}
+  - {r: 0.103773594, g: 0.032669466, b: 0, a: 0}
+  - {r: 0.103773594, g: 0.032669466, b: 0, a: 0}
+  - {r: 0.103773594, g: 0.032669466, b: 0, a: 0}
+  - {r: 0.103773594, g: 0.032669466, b: 0, a: 0}
+  - {r: 0.103773594, g: 0.032669466, b: 0, a: 0}
   generatedColors: []
-  stepCount: 100
+  stepCount: 200
   darkTheme: 0
 --- !u!1 &1117847203
 GameObject:
@@ -2478,6 +2527,7 @@ GameObject:
   - component: {fileID: 2036019006}
   - component: {fileID: 2036019004}
   - component: {fileID: 668034211}
+  - component: {fileID: 2036019008}
   m_Layer: 0
   m_Name: GameManager
   m_TagString: Untagged
@@ -2631,6 +2681,17 @@ Transform:
   m_Father: {fileID: 0}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &2036019008
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 2036019003}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ea689cd45c5520d4991720950d276b18, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &2112066707 stripped
 GameObject:
   m_CorrespondingSourceObject: {fileID: 1906231565650346, guid: 6daa7227cac79d74f92c1c78dd71734d,

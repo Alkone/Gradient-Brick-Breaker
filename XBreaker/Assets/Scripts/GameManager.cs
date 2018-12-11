@@ -43,7 +43,10 @@ public class GameManager : MonoBehaviour
     private bool gamePaused = false;
     private bool pauseFlag = false; // вспомогательная переменная
 
+
+    //
     //ADS
+    private bool enable_Ads = true;
     private string gameId = "2949663";
     public string placementIdRewardedVideo = "rewardedVideo";
     public string placementIdBanner = "banner";
@@ -85,15 +88,20 @@ public class GameManager : MonoBehaviour
     void Start()
     {
         backGround.GetComponent<SpriteRenderer>().size = new Vector2 (Screen.width, Screen.height);
-        if (Advertisement.isSupported)
+
+        if (enable_Ads)
         {
-            Advertisement.Initialize(gameId, true);
-            StartCoroutine(ShowBannerWhenReady());
+            if (Advertisement.isSupported)
+            {
+                Advertisement.Initialize(gameId, true);
+                StartCoroutine(ShowBannerWhenReady());
+            }
+            if (Monetization.isSupported)
+            {
+                Monetization.Initialize(gameId, true);
+            }
         }
-        if (Monetization.isSupported)
-        {
-            Monetization.Initialize(gameId, true);
-        }
+
         ballPrefub1.transform.localScale = Vector2.one * levelManager.GetCellLocalSize() * 0.33f;
         InitGame();
     }
@@ -369,6 +377,12 @@ public class GameManager : MonoBehaviour
         }
     }
 
+    public void DisableAds()
+    {
+        enable_Ads = false;
+        StopCoroutine(ShowBannerWhenReady());
+    }
+
     //Проверяем остались ли запущенные шарики
     public bool AllBallsIsStoped()
     {
@@ -400,10 +414,13 @@ public class GameManager : MonoBehaviour
     //ADS
     void ShowAd()
     {
-        ShowAdCallbacks options = new ShowAdCallbacks();
-        options.finishCallback = HandleShowResult;
-        ShowAdPlacementContent ad = Monetization.GetPlacementContent(placementIdRewardedVideo) as ShowAdPlacementContent;
-        ad.Show(options);
+        if (enable_Ads)
+        {
+            ShowAdCallbacks options = new ShowAdCallbacks();
+            options.finishCallback = HandleShowResult;
+            ShowAdPlacementContent ad = Monetization.GetPlacementContent(placementIdRewardedVideo) as ShowAdPlacementContent;
+            ad.Show(options);
+        }else StartGame("continue");
     }
 
     void HandleShowResult(UnityEngine.Monetization.ShowResult result)
