@@ -661,14 +661,14 @@ MonoBehaviour:
   gameStatus: 0
   loseScreen: {fileID: 278113867}
   pauseScreen: {fileID: 129031257}
-  ballPrefub1: {fileID: 1110083101469618, guid: 2ed73163596883148bb2ca843db3072c,
+  ballPrefub1: {fileID: 1110083101469618, guid: 26dc11318d9e0eb40a30ffc96b94e546,
     type: 2}
   backGround: {fileID: 1625676579}
   ballTouchPower: 120
-  ballLaunchInterval: 0.021
+  ballLaunchInterval: 0.07
   startPosition: {x: 0, y: -4}
   segmentCount: 2.5
-  startLevel: 1
+  startLevel: 300
   placementIdRewardedVideo: rewardedVideo
   placementIdBanner: banner
 --- !u!1 &519420028
@@ -2619,7 +2619,7 @@ LineRenderer:
       m_Mode: 1
       m_NumColorKeys: 2
       m_NumAlphaKeys: 2
-    numCornerVertices: 90
+    numCornerVertices: 30
     numCapVertices: 90
     alignment: 0
     textureMode: 0

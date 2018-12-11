@@ -149,7 +149,7 @@ public class GameManager : MonoBehaviour
             }
             else if (gameStatus == GameStatus.LAUNCHED)
             {
-                lineRenderer.positionCount = 0;
+
             }
             else if (gameStatus == GameStatus.ENDED)
             {
@@ -270,6 +270,7 @@ public class GameManager : MonoBehaviour
                 trajectorySimulator.SimulatePath(ballObjectsList[0], GetVectorByPoints(startPosition, startVector), segmentCount);
                 if (!Input.GetMouseButton(0))
                 {
+                    lineRenderer.positionCount = 0;
                     //Запускает шарик
                     firstBallIsStoped = false;
                     StartCoroutine(StartBall(ballObjectsList, GetVectorByPoints(startPosition, startVector), ballLaunchInterval));
