@@ -35,18 +35,15 @@ public class Ball : MonoBehaviour
     private void Start()
     {
         line = GetComponent<LineRenderer>();
-        line.positionCount = 2;
-
-        gameObject.layer = 8;
         rb2D = gameObject.GetComponent<Rigidbody2D>();
         cc2D = gameObject.GetComponent<CircleCollider2D>();
+
+        line.positionCount = 2;
+        gameObject.layer = 8;
         layerMask = (1 << 10) | (1 << 11) | (1 << 13);
-        stepCountBeforeCollision = 0;
         cirlceCastRadius = cc2D.radius * gameObject.transform.localScale.x;
-        movingVector = Vector2.down;
-        isFalling = true;
-        isLaunched = true;
-        giveDamage = false;
+
+        Fall(Vector2.down);
     }
 
     private void FixedUpdate()
@@ -90,7 +87,7 @@ public class Ball : MonoBehaviour
                     }
                 }
             }
-            if (stepCountBeforeCollision < 1)
+            if (stepCountBeforeCollision < 1f)
             {
                 switch (nextCollision)
                 {
@@ -120,7 +117,12 @@ public class Ball : MonoBehaviour
                         }
                         break;
                 }
-
+                stepCountBeforeCollision = 0;
+            }
+            else
+            {
+                stepCountBeforeCollision--;
+               // Debug.Log("stepCountBeforeCollision" + stepCountBeforeCollision);
             }
 
             //bool giveDamage = false;
@@ -145,12 +147,6 @@ public class Ball : MonoBehaviour
             //}
 
             rb2D.MovePosition(nextPoint);
-
-            //Debug.Log("ID: " + gameObject.GetInstanceID() + " nextColission - " + nextCollision);
-            //Debug.Log("ID: " + gameObject.GetInstanceID() + " stepCountBeforeCollision - " + stepCountBeforeCollision);
-            if (stepCountBeforeCollision > 1) stepCountBeforeCollision--;
-            else stepCountBeforeCollision = 0; 
-
             if (giveDamage)
             {
                 int blockHP = hit.collider.gameObject.GetComponent<Block>().TakeDamage(damage);
@@ -166,7 +162,7 @@ public class Ball : MonoBehaviour
             if (Vector2.Distance(rb2D.position, startPosition) < 100)
             {
                 nextPoint = startPosition;
-                isPrepairing = false;
+                Stop();
             }
             else
             {
@@ -191,7 +187,14 @@ public class Ball : MonoBehaviour
     {
         if (rb2D.position != position)
         {
-            rb2D.WakeUp();
+            if (rb2D.IsSleeping())
+            {
+                rb2D.WakeUp();
+            }
+            if(gameObject.layer != 9)
+            {
+                gameObject.layer = 9;
+            }
             isLaunched = false;
             startPosition = position;
             isPrepairing = true;
@@ -202,9 +205,33 @@ public class Ball : MonoBehaviour
     {
         isLaunched = false;
         isFalling = false;
+        isPrepairing = false;
         gameObject.layer = 9;
         GameManager.instance.SetNewStartPosition(stopPosition);
         rb2D.Sleep();
+    }
+
+    public void Stop()
+    {
+        isLaunched = false;
+        isFalling = false;
+        isPrepairing = false;
+        gameObject.layer = 9;
+        rb2D.Sleep();
+    }
+
+    public void Return(Vector2 startPosition)
+    {
+        MoveToPosition(startPosition);
+    }
+
+    private void Fall(Vector2 movingVector)
+    {
+            stepCountBeforeCollision = 0;
+            this.movingVector = movingVector;
+            isFalling = true;
+            isLaunched = true;
+            giveDamage = false;
     }
 
     //private void OnCollisionEnter2D(Collision2D collision)

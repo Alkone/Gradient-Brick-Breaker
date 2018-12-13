@@ -20,7 +20,6 @@ public class GameManager : MonoBehaviour
 
     ////Inspector fields
     public GameObject loseScreen, pauseScreen, ballPrefub1, backGround;
-    public float ballLaunchInterval;
     public Vector2 startPosition; // Start ball pos
     [SerializeField] private float segmentCount = 2.2f; //Кол-во предсказанных скачков
     [SerializeField] private int startLevel = 1;  //Current level number
@@ -149,7 +148,6 @@ public class GameManager : MonoBehaviour
             }
             else if (gameStatus == GameStatus.ENDED)
             {
-                Time.timeScale = 1;
                 levelManager.GenerateNextBlockLine();
                 gameStatus = GameStatus.PREPARING;
             }
@@ -269,7 +267,7 @@ public class GameManager : MonoBehaviour
                     lineRenderer.positionCount = 0;
                     //Запускает шарик
                     firstBallIsStoped = false;
-                    StartCoroutine(StartBall(ballObjectsList, GetVectorByPoints(startPosition, startVector), ballLaunchInterval));
+                    StartCoroutine(StartBall(ballObjectsList, GetVectorByPoints(startPosition, startVector)));
                     mouseDownIsDetected = false;
                 }
             }
@@ -287,6 +285,16 @@ public class GameManager : MonoBehaviour
         foreach (var ball in ballObjectsList)
         {
             ball.GetComponent<Ball>().DestroyBall();
+        }
+        ballObjectsList.Clear();
+    }
+
+    //Уничтожает все шарики и очищает лист
+    public void ReturnAllBalsToStartPos()
+    {
+        foreach (var ball in ballObjectsList)
+        {
+            ball.GetComponent<Ball>().Return(startPosition);
         }
         ballObjectsList.Clear();
     }
@@ -333,7 +341,7 @@ public class GameManager : MonoBehaviour
     }
 
     //Корутин на зпуск шариков с интервалом
-    public IEnumerator StartBall(List<GameObject> ballObjectsList, Vector2 startingVector, float delay)
+    public IEnumerator StartBall(List<GameObject> ballObjectsList, Vector2 startingVector)
     {
         Ball[] balls = new Ball[ballObjectsList.Count];
         for (int i = 0; i< balls.Length; i++)
@@ -343,6 +351,7 @@ public class GameManager : MonoBehaviour
 
         for (int i = 0; i < balls.Length; i++)
         {
+            yield return new WaitForFixedUpdate();
             yield return new WaitForFixedUpdate();
             balls[i].Launch(startingVector);
         }
