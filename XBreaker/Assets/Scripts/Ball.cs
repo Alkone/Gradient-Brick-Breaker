@@ -175,6 +175,7 @@ public class Ball : MonoBehaviour
 
     public void Launch(Vector2 movingVector)
     {
+        stepCountBeforeCollision = 0;
         isPrepairing = false;
         this.movingVector = movingVector;
         gameObject.layer = 8;

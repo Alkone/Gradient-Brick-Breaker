@@ -41,6 +41,8 @@ public class GameManager : MonoBehaviour
     private bool pauseFlag = false; // вспомогательная переменная
 
 
+    Coroutine coroutine;
+
     //
     //ADS
     private bool enable_Ads = true;
@@ -84,17 +86,17 @@ public class GameManager : MonoBehaviour
     //
     void Start()
     {
-        backGround.GetComponent<SpriteRenderer>().size = new Vector2 (Screen.width, Screen.height);
-//#if UNITY_ANDROID
-//        if (enable_Ads)
-//        {
-//            if (Advertisement.isSupported)
-//            {
-//                Advertisement.Initialize(gameId, true);
-//                StartCoroutine(ShowBannerWhenReady());
-//            }
-//        }
-//#endif
+        backGround.GetComponent<SpriteRenderer>().size = new Vector2(Screen.width, Screen.height);
+        //#if UNITY_ANDROID
+        //        if (enable_Ads)
+        //        {
+        //            if (Advertisement.isSupported)
+        //            {
+        //                Advertisement.Initialize(gameId, true);
+        //                StartCoroutine(ShowBannerWhenReady());
+        //            }
+        //        }
+        //#endif
         ballPrefub1.transform.localScale = Vector2.one * levelManager.GetCellLocalSize() * 0.33f;
         InitGame();
     }
@@ -267,7 +269,7 @@ public class GameManager : MonoBehaviour
                     lineRenderer.positionCount = 0;
                     //Запускает шарик
                     firstBallIsStoped = false;
-                    StartCoroutine(StartBall(ballObjectsList, GetVectorByPoints(startPosition, startVector)));
+                    coroutine = StartCoroutine(StartBall(ballObjectsList, GetVectorByPoints(startPosition, startVector)));
                     mouseDownIsDetected = false;
                 }
             }
@@ -292,11 +294,14 @@ public class GameManager : MonoBehaviour
     //Уничтожает все шарики и очищает лист
     public void ReturnAllBalsToStartPos()
     {
+        if (coroutine != null)
+        {
+            StopCoroutine(coroutine);
+        }
         foreach (var ball in ballObjectsList)
         {
             ball.GetComponent<Ball>().Return(startPosition);
         }
-        ballObjectsList.Clear();
     }
 
     //Возвращает угол между 10 и 170
@@ -344,16 +349,17 @@ public class GameManager : MonoBehaviour
     public IEnumerator StartBall(List<GameObject> ballObjectsList, Vector2 startingVector)
     {
         Ball[] balls = new Ball[ballObjectsList.Count];
-        for (int i = 0; i< balls.Length; i++)
+        for (int i = 0; i < balls.Length; i++)
         {
             balls[i] = ballObjectsList[i].GetComponent<Ball>();
         }
 
         for (int i = 0; i < balls.Length; i++)
         {
-            yield return new WaitForFixedUpdate();
-            yield return new WaitForFixedUpdate();
             balls[i].Launch(startingVector);
+            yield return new WaitForFixedUpdate();
+            yield return new WaitForFixedUpdate();
+
         }
 
     }
