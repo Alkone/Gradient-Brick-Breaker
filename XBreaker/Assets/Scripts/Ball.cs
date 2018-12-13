@@ -8,9 +8,9 @@ public class Ball : MonoBehaviour
     private CircleCollider2D cc2D;
     private RaycastHit2D hit;
 
-    public bool isLaunched { get; set; } = false;
-    public bool isPrepairing { get; set; } = false;
-    public bool isFalling { get; set; } = false;
+    public bool isLaunched = false;
+    public bool isPrepairing = false;
+    public bool isFalling = false;
     public float speed;
     public int damage;
 
@@ -25,21 +25,25 @@ public class Ball : MonoBehaviour
     private int layerMask;
     Vector2 nextPoint;
     float movePerFixedUpdate;
-    int stepCountBeforeCollision;
+    float stepCountBeforeCollision;
     private enum NextCollision { BLOCK, BOUND, BOTBOUND }
     private NextCollision nextCollision;
     bool giveDamage;
 
+    LineRenderer line;
 
     private void Start()
     {
+        line = GetComponent<LineRenderer>();
+        line.positionCount = 2;
+
         gameObject.layer = 8;
         rb2D = gameObject.GetComponent<Rigidbody2D>();
         cc2D = gameObject.GetComponent<CircleCollider2D>();
         layerMask = (1 << 10) | (1 << 11) | (1 << 13);
         stepCountBeforeCollision = 0;
         cirlceCastRadius = cc2D.radius * gameObject.transform.localScale.x;
-        movingVector = Vector2.down * 150;
+        movingVector = Vector2.down;
         isFalling = true;
         isLaunched = true;
         giveDamage = false;
@@ -52,46 +56,49 @@ public class Ball : MonoBehaviour
         {
 
             nextPoint = rb2D.position + movingVector * Time.fixedDeltaTime * speed * gameObject.transform.localScale.y;
-
+            // Debug.Log(" Time.fixedDeltaTime " + Time.fixedDeltaTime);
+            // Debug.Log(" nextPoint " + nextPoint.magnitude);
+            // Debug.Log(" nextPoint - rb2D.position " + (nextPoint - rb2D.position).magnitude);
             if (stepCountBeforeCollision == 0)
             {
                 movePerFixedUpdate = (nextPoint - rb2D.position).magnitude;
-                hit = Physics2D.CircleCast(rb2D.position, cirlceCastRadius, movingVector, 2000, layerMask);
+                if (isFalling)
+                {
+                    hit = Physics2D.CircleCast(rb2D.position, cirlceCastRadius, movingVector, Mathf.Infinity, 1 << 13);
+                }
+                else
+                {
+                    hit = Physics2D.CircleCast(rb2D.position, cirlceCastRadius, movingVector, Mathf.Infinity, layerMask);
+                }
                 if (hit)
                 {
-                    stepCountBeforeCollision = (int)((hit.centroid - rb2D.position).magnitude / movePerFixedUpdate);
+                    line.SetPosition(0, rb2D.position);
+                    line.SetPosition(1, hit.centroid);
+                    stepCountBeforeCollision = ((hit.centroid - rb2D.position).magnitude / movePerFixedUpdate);
                     switch (hit.collider.gameObject.layer)
                     {
                         case 10:
-                            {
-                                nextCollision = NextCollision.BLOCK;
-                                break;
-                            }
+                            nextCollision = NextCollision.BLOCK;
+                            break;
                         case 11:  // Hit Bound
-                            {
-                                nextCollision = NextCollision.BOUND;
-                            }
+                            nextCollision = NextCollision.BOUND;
                             break;
                         case 13:  // Hit BotBound
-                            {
-                                nextCollision = NextCollision.BOTBOUND;
-                            }
+                            nextCollision = NextCollision.BOTBOUND;
                             break;
 
                     }
                 }
             }
-            if (stepCountBeforeCollision <= 1)
+            if (stepCountBeforeCollision < 1)
             {
                 switch (nextCollision)
                 {
                     case NextCollision.BLOCK:
                         {
-                            hit = Physics2D.CircleCast(rb2D.position, cirlceCastRadius, movingVector, Vector2.Distance(rb2D.position, nextPoint*2f), layerMask);
-
-                            if (hit)
+                            if (hit.collider != null)
                             {
-                               //Debug.Log("ID: " + gameObject.GetInstanceID() + " BLOOOOCK!!!");
+                                //Debug.Log("ID: " + gameObject.GetInstanceID() + " BLOOOOCK!!!");
                                 nextPoint = hit.centroid;
                                 if (hit.collider.gameObject.GetComponent<Block>())
                                 {
@@ -113,6 +120,7 @@ public class Ball : MonoBehaviour
                         }
                         break;
                 }
+
             }
 
             //bool giveDamage = false;
@@ -140,7 +148,8 @@ public class Ball : MonoBehaviour
 
             //Debug.Log("ID: " + gameObject.GetInstanceID() + " nextColission - " + nextCollision);
             //Debug.Log("ID: " + gameObject.GetInstanceID() + " stepCountBeforeCollision - " + stepCountBeforeCollision);
-            if(stepCountBeforeCollision > 0) stepCountBeforeCollision--;
+            if (stepCountBeforeCollision > 1) stepCountBeforeCollision--;
+            else stepCountBeforeCollision = 0; 
 
             if (giveDamage)
             {
@@ -154,14 +163,14 @@ public class Ball : MonoBehaviour
         }
         else if (isPrepairing)
         {
-            if (Vector2.Distance(rb2D.position, startPosition) < 10)
+            if (Vector2.Distance(rb2D.position, startPosition) < 100)
             {
                 nextPoint = startPosition;
                 isPrepairing = false;
             }
             else
             {
-                nextPoint = rb2D.position + (startPosition - rb2D.position) * Time.fixedDeltaTime * speed;
+                nextPoint = rb2D.position + (startPosition - rb2D.position) * Time.fixedDeltaTime * speed / 2;
             }
 
             rb2D.MovePosition(nextPoint);
@@ -180,10 +189,13 @@ public class Ball : MonoBehaviour
 
     public void MoveToPosition(Vector2 position)
     {
-        rb2D.WakeUp();
-        isLaunched = false;
-        startPosition = position;
-        isPrepairing = true;
+        if (rb2D.position != position)
+        {
+            rb2D.WakeUp();
+            isLaunched = false;
+            startPosition = position;
+            isPrepairing = true;
+        }
     }
 
     public void Stop(Vector2 stopPosition)

@@ -125,8 +125,6 @@ public class TrajectorySimulation
         Vector2 vector = hit.centroid - startPos;
         endPos = Vector2.Reflect(hit.centroid, hit.normal);
         Vector2 vectorNormalize = vector.normalized * tempSegmentRemaind * circleRadius * 10;
-        Debug.Log("vector = " + vector);
-        Debug.Log("vectorNormalize = " + vectorNormalize);
         if (vectorNormalize.magnitude > vector.magnitude) return startPos + vector;
         else return startPos + vectorNormalize;
     }

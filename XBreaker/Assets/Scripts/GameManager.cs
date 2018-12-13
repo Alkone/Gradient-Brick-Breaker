@@ -2,7 +2,6 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-using UnityEngine.Monetization;
 using UnityEngine.Advertisements;
 using UnityEngine.UI;
 
@@ -21,7 +20,6 @@ public class GameManager : MonoBehaviour
 
     ////Inspector fields
     public GameObject loseScreen, pauseScreen, ballPrefub1, backGround;
-    public float ballTouchPower;
     public float ballLaunchInterval;
     public Vector2 startPosition; // Start ball pos
     [SerializeField] private float segmentCount = 2.2f; //Кол-во предсказанных скачков
@@ -88,20 +86,16 @@ public class GameManager : MonoBehaviour
     void Start()
     {
         backGround.GetComponent<SpriteRenderer>().size = new Vector2 (Screen.width, Screen.height);
-
-        if (enable_Ads)
-        {
-            if (Advertisement.isSupported)
-            {
-                Advertisement.Initialize(gameId, true);
-                StartCoroutine(ShowBannerWhenReady());
-            }
-            if (Monetization.isSupported)
-            {
-                Monetization.Initialize(gameId, true);
-            }
-        }
-
+//#if UNITY_ANDROID
+//        if (enable_Ads)
+//        {
+//            if (Advertisement.isSupported)
+//            {
+//                Advertisement.Initialize(gameId, true);
+//                StartCoroutine(ShowBannerWhenReady());
+//            }
+//        }
+//#endif
         ballPrefub1.transform.localScale = Vector2.one * levelManager.GetCellLocalSize() * 0.33f;
         InitGame();
     }
@@ -110,10 +104,12 @@ public class GameManager : MonoBehaviour
     {
         StartCoroutine(GameStateObserver());
         StartGame("new");
+
     }
 
     void Update()
     {
+
         if (gameLosed && !loseFlag)
         {
             loseScreen.SetActive(true);
@@ -347,8 +343,8 @@ public class GameManager : MonoBehaviour
 
         for (int i = 0; i < balls.Length; i++)
         {
-            yield return new WaitForSeconds(delay);
-            balls[i].Launch(startingVector * ballTouchPower);
+            yield return new WaitForFixedUpdate();
+            balls[i].Launch(startingVector);
         }
 
     }
@@ -381,7 +377,6 @@ public class GameManager : MonoBehaviour
     public void DisableAds()
     {
         enable_Ads = false;
-        StopCoroutine(ShowBannerWhenReady());
     }
 
     //Проверяем остались ли запущенные шарики
@@ -413,35 +408,49 @@ public class GameManager : MonoBehaviour
     }
 
     //ADS
-    void ShowAd()
+    public void ShowAd(string zone = "")
     {
-        if (enable_Ads)
-        {
-            ShowAdCallbacks options = new ShowAdCallbacks();
-            options.finishCallback = HandleShowResult;
-            ShowAdPlacementContent ad = Monetization.GetPlacementContent(placementIdRewardedVideo) as ShowAdPlacementContent;
-            ad.Show(options);
-        }else StartGame("continue");
+#if UNITY_EDITOR
+        StartCoroutine(WaitForAd());
+#endif
+
+        if (string.Equals(zone, ""))
+            zone = null;
+
+        ShowOptions options = new ShowOptions();
+        options.resultCallback = AdCallbackhandler;
+
+        if (Advertisement.IsReady(zone))
+            Advertisement.Show(zone, options);
     }
 
-    void HandleShowResult(UnityEngine.Monetization.ShowResult result)
+    void AdCallbackhandler(ShowResult result)
     {
-        if (result == UnityEngine.Monetization.ShowResult.Finished)
+        switch (result)
         {
-            StartGame("continue");
-        }
-        else if (result == UnityEngine.Monetization.ShowResult.Skipped)
-        {
-            StartGame("new");
-            Debug.LogWarning("The player skipped the video - DO NOT REWARD!");
-        }
-        else if (result == UnityEngine.Monetization.ShowResult.Failed)
-        {
-            StartGame("new");
-            Debug.LogError("Video failed to show");
+            case ShowResult.Finished:
+                StartGame("continue");
+                break;
+            case ShowResult.Skipped:
+                StartGame("new");
+                break;
+            case ShowResult.Failed:
+                StartGame("continue");
+                break;
         }
     }
 
+    IEnumerator WaitForAd()
+    {
+        float currentTimeScale = Time.timeScale;
+        Time.timeScale = 0f;
+        yield return null;
+
+        while (Advertisement.isShowing)
+            yield return null;
+
+        Time.timeScale = currentTimeScale;
+    }
 
     IEnumerator ShowBannerWhenReady()
     {
