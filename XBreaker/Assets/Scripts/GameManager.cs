@@ -269,8 +269,9 @@ public class GameManager : MonoBehaviour
                     lineRenderer.positionCount = 0;
                     //Запускает шарик
                     firstBallIsStoped = false;
-                    coroutine = StartCoroutine(StartBall(ballObjectsList, GetVectorByPoints(startPosition, startVector)));
                     mouseDownIsDetected = false;
+                    gameStatus = GameStatus.LAUNCHED;
+                    coroutine = StartCoroutine(StartBall(ballObjectsList, GetVectorByPoints(startPosition, startVector)));
                 }
             }
         }
