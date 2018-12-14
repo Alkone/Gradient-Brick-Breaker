@@ -218,7 +218,6 @@ public class LevelManager : MonoBehaviour
         if (permissionToGenBlockLine)
         {
             currentLevel++;
-            GameManager.instance.GetBoundManager().SetBoundsColor(GameManager.instance.GetColorManager().generatedColors[currentLevel]);
             textLevel.text = currentLevel.ToString();
             CreateLevel(currentLevel);
 

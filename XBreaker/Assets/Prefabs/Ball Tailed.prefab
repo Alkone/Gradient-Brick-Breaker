@@ -195,7 +195,7 @@ MonoBehaviour:
   isLaunched: 0
   isPrepairing: 0
   isFalling: 0
-  speed: 4000
+  speed: 4400
   damage: 1
 --- !u!120 &120840795148653840
 LineRenderer:

@@ -59,6 +59,18 @@ public class BoundManager : MonoBehaviour {
 
         topBound.transform.position = new Vector2(0, height / 2 - topScale.y/2);
         botBound.transform.position = new Vector2(0, -height / 2 + botScale.y/2);
+
+        //настраиваем line renders
+        LineRenderer topLine = topBound.GetComponent<LineRenderer>();
+        topLine.widthMultiplier = width * 0.01f;
+        topLine.SetPosition(0, new Vector2(-width * 0.7f, topBound.transform.position.y - topScale.y/2));
+        topLine.SetPosition(1, new Vector2(width * 0.7f, topBound.transform.position.y - topScale.y/2));
+
+        LineRenderer botLine = botBound.GetComponent<LineRenderer>();
+        botLine.widthMultiplier = width * 0.01f;
+        botLine.SetPosition(0, new Vector2(-width * 0.7f, botBound.transform.position.y + topScale.y/2));
+        botLine.SetPosition(1, new Vector2(width * 0.7f, botBound.transform.position.y + topScale.y/2));
+
     }
 
     private void BaseSettings(BoxCollider2D bc2D)
@@ -92,10 +104,4 @@ public class BoundManager : MonoBehaviour {
         float newY = localScale.y / gameObject.GetComponent<SpriteRenderer>().sprite.bounds.size.y;
         return new Vector2(newX, newY);
     }
-
-    public void SetBoundsColor(Color color){
-        topBound.GetComponent<SpriteRenderer>().material.color = color;
-        botBound.GetComponent<SpriteRenderer>().material.color = color;
-    }
-
 }
