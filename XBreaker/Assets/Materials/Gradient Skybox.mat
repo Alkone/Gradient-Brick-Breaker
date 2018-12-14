@@ -24,7 +24,7 @@ Material:
         m_Offset: {x: 0, y: 0}
     m_Floats:
     - _Exponent: 2
-    - _Intensity: 4
+    - _Intensity: 5
     - _Power: 5
     - _UpVectorPitch: -50
     - _UpVectorYaw: 0
