@@ -87,7 +87,7 @@ public class Ball : MonoBehaviour
                     }
                 }
             }
-            if (stepCountBeforeCollision < 1f)
+            if (stepCountBeforeCollision <= 1f)
             {
                 switch (nextCollision)
                 {

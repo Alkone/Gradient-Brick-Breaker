@@ -2,7 +2,6 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-using UnityEngine.Advertisements;
 using UnityEngine.UI;
 
 //Singleton
@@ -45,10 +44,6 @@ public class GameManager : MonoBehaviour
 
     //
     //ADS
-    private bool enable_Ads = true;
-    private string gameId = "2949663";
-    public string placementIdRewardedVideo = "rewardedVideo";
-    public string placementIdBanner = "banner";
 
 
     //Awake is always called before any Start functions
@@ -86,17 +81,6 @@ public class GameManager : MonoBehaviour
     //
     void Start()
     {
-        backGround.GetComponent<SpriteRenderer>().size = new Vector2(Screen.width, Screen.height);
-        //#if UNITY_ANDROID
-        //        if (enable_Ads)
-        //        {
-        //            if (Advertisement.isSupported)
-        //            {
-        //                Advertisement.Initialize(gameId, true);
-        //                StartCoroutine(ShowBannerWhenReady());
-        //            }
-        //        }
-        //#endif
         ballPrefub1.transform.localScale = Vector2.one * levelManager.GetCellLocalSize() * 0.33f;
         InitGame();
     }
@@ -390,11 +374,6 @@ public class GameManager : MonoBehaviour
         }
     }
 
-    public void DisableAds()
-    {
-        enable_Ads = false;
-    }
-
     //Проверяем остались ли запущенные шарики
     public bool AllBallsIsStoped()
     {
@@ -421,59 +400,5 @@ public class GameManager : MonoBehaviour
             }
         }
         return status;
-    }
-
-    //ADS
-    public void ShowAd(string zone = "")
-    {
-#if UNITY_EDITOR
-        StartCoroutine(WaitForAd());
-#endif
-
-        if (string.Equals(zone, ""))
-            zone = null;
-
-        ShowOptions options = new ShowOptions();
-        options.resultCallback = AdCallbackhandler;
-
-        if (Advertisement.IsReady(zone))
-            Advertisement.Show(zone, options);
-    }
-
-    void AdCallbackhandler(ShowResult result)
-    {
-        switch (result)
-        {
-            case ShowResult.Finished:
-                StartGame("continue");
-                break;
-            case ShowResult.Skipped:
-                StartGame("new");
-                break;
-            case ShowResult.Failed:
-                StartGame("continue");
-                break;
-        }
-    }
-
-    IEnumerator WaitForAd()
-    {
-        float currentTimeScale = Time.timeScale;
-        Time.timeScale = 0f;
-        yield return null;
-
-        while (Advertisement.isShowing)
-            yield return null;
-
-        Time.timeScale = currentTimeScale;
-    }
-
-    IEnumerator ShowBannerWhenReady()
-    {
-        while (!Advertisement.IsReady("banner"))
-        {
-            yield return new WaitForSeconds(0.5f);
-        }
-        Advertisement.Banner.Show(placementIdBanner);
     }
 }
