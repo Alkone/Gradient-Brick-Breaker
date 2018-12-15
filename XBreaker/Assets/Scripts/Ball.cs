@@ -68,7 +68,7 @@ public class Ball : MonoBehaviour
                 {
                     line.SetPosition(0, rb2D.position);
                     line.SetPosition(1, hit.centroid);
-                    stepCountBeforeCollision = ((hit.centroid - rb2D.position).magnitude / movePerFixedUpdate);
+                    stepCountBeforeCollision = (hit.centroid - rb2D.position).magnitude / movePerFixedUpdate;
                     switch (hit.collider.gameObject.layer)
                     {
                         case 10:
@@ -93,10 +93,7 @@ public class Ball : MonoBehaviour
                             nextPoint = hit.centroid;
                             if (hit.collider != null)
                             {
-                                if (hit.collider.gameObject.GetComponent<Block>())
-                                {
-                                    giveDamage = true;
-                                }
+                                giveDamage = true;
                             }
                         }
                         break;
@@ -118,7 +115,7 @@ public class Ball : MonoBehaviour
             else
             {
                 stepCountBeforeCollision--;
-               // Debug.Log("stepCountBeforeCollision" + stepCountBeforeCollision);
+                // Debug.Log("stepCountBeforeCollision" + stepCountBeforeCollision);
             }
 
             //bool giveDamage = false;
@@ -188,7 +185,7 @@ public class Ball : MonoBehaviour
             {
                 rb2D.WakeUp();
             }
-            if(gameObject.layer != 9)
+            if (gameObject.layer != 9)
             {
                 gameObject.layer = 9;
             }
@@ -224,11 +221,11 @@ public class Ball : MonoBehaviour
 
     private void Fall(Vector2 movingVector)
     {
-            stepCountBeforeCollision = 0;
-            this.movingVector = movingVector;
-            isFalling = true;
-            isLaunched = true;
-            giveDamage = false;
+        stepCountBeforeCollision = 0;
+        this.movingVector = movingVector;
+        isFalling = true;
+        isLaunched = true;
+        giveDamage = false;
     }
 
     //private void OnCollisionEnter2D(Collision2D collision)

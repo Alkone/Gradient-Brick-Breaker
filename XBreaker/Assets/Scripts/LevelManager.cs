@@ -75,7 +75,6 @@ public class LevelManager : MonoBehaviour
     {
         CleanLevel();
         currentLevel = startLevel-1;
-        GenerateNextBlockLine();
     }
 
     private void OptimazeScene()
@@ -218,16 +217,13 @@ public class LevelManager : MonoBehaviour
         if (permissionToGenBlockLine)
         {
             currentLevel++;
+            GameManager.instance.GetColorManager().SetGradientColor(currentLevel);
             textLevel.text = currentLevel.ToString();
             CreateLevel(currentLevel);
+            gameObjectsCount = gameObjects.Count;
 
             MoveLevelDownOnOneCell(parentObject);
             permissionToGenBlockLine = false;
         }
-    }
-
-    private void Update()
-    {
-        gameObjectsCount = gameObjects.Count;
     }
 }

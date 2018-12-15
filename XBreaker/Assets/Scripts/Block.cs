@@ -7,6 +7,7 @@ public class Block : MonoBehaviour, Destroyable {
     //HP блока
     public int lifeCount;
 
+    private BoxCollider2D boxCollider2D;
     private TextMesh hpTextMesh; // Ссылка на Text компонент дочернего объекта
     private SpriteRenderer spriteRenderer; //Ссылка на спрайтрендер
     private Color[] colors; //Массив возможных цветов
@@ -14,10 +15,11 @@ public class Block : MonoBehaviour, Destroyable {
 
     // Use this for initialization
     void Start () {
+        boxCollider2D = GetComponent<BoxCollider2D>();
         hpTextMesh = GetComponentInChildren<TextMesh>();
         spriteRenderer = GetComponent<SpriteRenderer>();
         levelManager = GameManager.instance.GetLevelManager();
-        colors = GameManager.instance.GetColorManager().generatedColors;
+        colors = GameManager.instance.GetColorManager().generatedTopColors;
         UpdateBlock();
     }
 	
@@ -45,12 +47,13 @@ public class Block : MonoBehaviour, Destroyable {
 
     public void SelfDestroy()
     {
-        StartCoroutine("DestroyThisObject");
+        boxCollider2D.enabled = false;
+        StartCoroutine(DestroyThisObject());
     }
 
     private IEnumerator DestroyThisObject()
     {
-        yield return new WaitForSeconds((float)0.01);
+        yield return new WaitForSeconds((float)0.02);
         levelManager.RemoveGameObject(gameObject);   // ЗАМЕНИТЬ НА ЭВЕНТ
         Destroy(gameObject);
     }

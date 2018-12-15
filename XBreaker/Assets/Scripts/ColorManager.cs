@@ -4,46 +4,45 @@ using UnityEngine;
 
 // Генерирует массив цветов с n-шагом
 public class ColorManager : MonoBehaviour {
+    public Material skyboxGradient;
 
-    public Color[] peakColors;  //массив промежуточных цветов
-    public Color[] generatedColors;  //массив готовых цветов
+    public Color[] peakTopColors;  //массив промежуточных цветов
+    public Color[] peakBotColors;  //массив промежуточных цветов
+
+    public Color[] generatedTopColors;  //массив готовых цветов
+    public Color[] generatedBotColors;  //массив готовых цветов
     public int stepCount = 200;    //шаг
 
-    public bool darkTheme = false;
-    private bool help_darkTheme = false;
 
     //генерирует цвета с шагом 1/stepCount
     public void Awake()
     {
-            generatedColors = new Color[stepCount * peakColors.Length];
-            int index = 0;
-            float step = 1f / stepCount;
-            for (int colorNumber = 1; colorNumber < peakColors.Length; colorNumber++)
-            {
-                float tempStep = step;
-                for (int i = 0; i < stepCount; i++)
-                {
-                    generatedColors[index] = Color.Lerp(peakColors[colorNumber - 1], peakColors[colorNumber], tempStep);
-                    generatedColors[index].a = 1;
-                    index++;
-                    tempStep += step;
-                }
-          }
+        generatedTopColors = GenerateColors(peakTopColors);
+        generatedBotColors = GenerateColors(peakBotColors);
     }
-    private void Update()
+
+    private Color[] GenerateColors(Color[] colors)
     {
-        if(darkTheme && !help_darkTheme){
-            Camera.main.backgroundColor = Color.black;
-            help_darkTheme = true;
+        Color[] result = new Color[stepCount * colors.Length];
+        int index = 0;
+        float step = 1f / stepCount;
+        for (int colorNumber = 1; colorNumber < colors.Length; colorNumber++)
+        {
+            float tempStep = step;
+            for (int i = 0; i < stepCount; i++)
+            {
+                result[index] = Color.Lerp(colors[colorNumber - 1], colors[colorNumber], tempStep);
+                result[index].a = 1;
+                index++;
+                tempStep += step;
+            }
         }
-        else if(!darkTheme && help_darkTheme){
-            Camera.main.backgroundColor = new Color(0.8490566f, 0.8490566f, 0.8490566f);
-            help_darkTheme = false;
-        }
+        return result;
     }
 
-    public void ChangeTheme(){
-        darkTheme = !darkTheme;
+    public void SetGradientColor(int level)
+    {
+        skyboxGradient.SetColor("_Color2", generatedTopColors[level]);
+        skyboxGradient.SetColor("_Color1", generatedBotColors[level]);
     }
-
 }

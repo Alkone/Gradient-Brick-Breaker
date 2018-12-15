@@ -14,12 +14,13 @@ public class GameManager : MonoBehaviour
     public GameStatus gameStatus; //Store a reference to our GameStatus which control level.
     private LevelManager levelManager; //Store a reference to our LevelManager which control level.
     private BoundManager boundManager;
+    private AdMobManager adMobManager;
     private ColorManager colorManager; //
     private LineRenderer lineRenderer; // Store a reference to our LineRenderer.
     private TrajectorySimulation trajectorySimulator; // Store a reference to our LevelManager which simulate gameObeject path.
 
     ////Inspector fields
-    public GameObject loseScreen, pauseScreen, ballPrefub1;
+    public GameObject loseScreen, revardedVideoButton, pauseScreen, ballPrefub1;
     public Vector2 startPosition; // Start ball pos
     [SerializeField] private float segmentCount = 2.2f; //Кол-во предсказанных скачков
     [SerializeField] private int startLevel = 1;  //Current level number
@@ -45,7 +46,7 @@ public class GameManager : MonoBehaviour
 
     //
     //ADS
-    private BannerView bannerView;
+
 
     //Awake is always called before any Start functions
     void Awake()
@@ -70,6 +71,7 @@ public class GameManager : MonoBehaviour
         levelManager = GetComponent<LevelManager>();
         boundManager = GetComponent<BoundManager>();
         lineRenderer = GetComponent<LineRenderer>();
+        adMobManager = GetComponent<AdMobManager>();
         colorManager = GetComponent<ColorManager>();
 
         //Init objects
@@ -82,15 +84,6 @@ public class GameManager : MonoBehaviour
     //
     void Start()
     {
-#if UNITY_ANDROID
-        string appId = "ca-app-pub-6267489793748314~3374953289";
-#else
-        string adUnitId = "unexpected_platform";
-#endif
-        // Initialize the Google Mobile Ads SDK.
-        MobileAds.Initialize(appId);
-        RequestBanner();
-
         ballPrefub1.transform.localScale = Vector2.one * levelManager.GetCellLocalSize() * 0.33f;
         InitGame();
     }
@@ -161,13 +154,15 @@ public class GameManager : MonoBehaviour
 
     public void StartGame(string type)
     {
+        adMobManager.RequestBanner();
+        adMobManager.RequestRewardBasedVideo();
         switch (type)
         {
             case "new":
                 levelManager.SetupScene(startLevel); //Очищает сцену 
                 DestroyAllBals(); //Уничтожает GameObject и чистит список
                 boundManager.botBound.GetComponent<BotBound>().doOnce = false;
-                startPosition = new Vector2(0, 0);
+                startPosition.x = 0;
                 gameLosed = false;
                 CreateBall(startPosition, ballPrefub1);
                 gameStatus = GameStatus.LAUNCHED;
@@ -183,7 +178,7 @@ public class GameManager : MonoBehaviour
                 }
                 levelManager.GenerateNextBlockLine();
                 gameLosed = false;
-                gameStatus = GameStatus.READY;
+                gameStatus = GameStatus.LAUNCHED;
 
 
                 break;
@@ -195,6 +190,16 @@ public class GameManager : MonoBehaviour
     public void LoseGame()
     {
         gameLosed = true;
+        if (adMobManager.GetRewardBasedVideoIsLoaded())
+        {
+            revardedVideoButton.GetComponent<Button>().interactable = true;
+            revardedVideoButton.GetComponent<Animation>().enabled = true;
+        }
+        else
+        {
+            revardedVideoButton.GetComponent<Button>().interactable = false;
+            revardedVideoButton.GetComponent<Animation>().enabled = false;
+        }
     }
 
     public void PauseGame()
@@ -411,26 +416,4 @@ public class GameManager : MonoBehaviour
         }
         return status;
     }
-
-    //ADS
-    private void RequestBanner()
-    {
-#if UNITY_ANDROID
-        // string adUnitId = "ca-app-pub-6267489793748314/9637109309"; // my
-         string adUnitId = "ca-app-pub-3940256099942544/6300978111"; //test
-
-#else
-        string adUnitId = "unexpected_platform";
-#endif
-        bannerView = new BannerView(adUnitId, AdSize.SmartBanner, AdPosition.Bottom);
-
-        AdRequest request = new AdRequest.Builder()
-        .AddTestDevice("518C032D113D8EF54BC0D4728F79920A")
-        .Build();
-
-        // Load the banner with the request.
-        bannerView.LoadAd(request);
-
-    }
-
 }

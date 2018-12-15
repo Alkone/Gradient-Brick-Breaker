@@ -22,9 +22,9 @@ GameObject:
   - component: {fileID: 114369899425536314}
   - component: {fileID: 114661515838076128}
   - component: {fileID: 114005096843525392}
-  - component: {fileID: 120413812691033494}
   - component: {fileID: 114448863305164002}
-  - component: {fileID: 114629486941892270}
+  - component: {fileID: 114616247154417596}
+  - component: {fileID: 120413812691033494}
   m_Layer: 0
   m_Name: GameController
   m_TagString: Untagged
@@ -56,10 +56,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: fecf39584a6fc7a4cbadf25ec4032f4a, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  m_BlocksInLine: 10
+  m_BlocksInLine: 8
   currentLevel: 1
   gameObjectsCount: 0
-  pixelMarginLRBounds: 40
+  pixelMarginLRBounds: 1
   pixelMarginTBBounds: 260
   m_BlockPrefub1: {fileID: 1340698301632706, guid: 5353684e2a36d41d5a6683bcc4a2f7c2,
     type: 2}
@@ -83,14 +83,9 @@ MonoBehaviour:
   pauseScreen: {fileID: 0}
   ballPrefub1: {fileID: 1110083101469618, guid: 26dc11318d9e0eb40a30ffc96b94e546,
     type: 2}
-  backGround: {fileID: 0}
-  ballTouchPower: 120
-  ballLaunchInterval: 0.07
   startPosition: {x: 0, y: -4}
-  segmentCount: 2.5
+  segmentCount: 2
   startLevel: 1
-  placementIdRewardedVideo: rewardedVideo
-  placementIdBanner: banner
 --- !u!114 &114448863305164002
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -103,20 +98,20 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   peakColors:
+  - {r: 0.9583754, g: 1, b: 0.8632076, a: 0}
   - {r: 0.78823537, g: 0.9333334, b: 0.5882353, a: 0}
-  - {r: 0.97647065, g: 0.90196085, b: 0.3019608, a: 0}
-  - {r: 0.9686275, g: 0.8980393, b: 0.41176474, a: 0}
+  - {r: 0.6665436, g: 0.9764706, b: 0.30196083, a: 0}
+  - {r: 0.9722803, g: 0.9811321, b: 0.31933072, a: 0}
   - {r: 0.89019614, g: 0.5764706, b: 0.2901961, a: 0}
-  - {r: 0.89019614, g: 0.5764706, b: 0.2901961, a: 0}
-  - {r: 0.8470589, g: 0.5882353, b: 0.34509805, a: 0}
+  - {r: 0.8867924, g: 0.47720772, b: 0.27189392, a: 0}
   - {r: 0.8867924, g: 0.2718939, b: 0.1966002, a: 0}
-  - {r: 0.8235295, g: 0.31764707, b: 0.2392157, a: 0}
+  - {r: 0.8862746, g: 0.27058825, b: 0.19607845, a: 0}
   - {r: 0.8018868, g: 0.06333686, b: 0, a: 0}
+  - {r: 0.8000001, g: 0.0627451, b: 0, a: 0}
   - {r: 0.62352943, g: 0.21568629, b: 0.027450982, a: 0}
   - {r: 0.42352945, g: 0.13333334, b: 0, a: 0}
-  - {r: 0.3490566, g: 0.109888196, b: 0, a: 0}
-  - {r: 0.254717, g: 0.08018869, b: 0, a: 0}
-  - {r: 0.103773594, g: 0.032669466, b: 0, a: 0}
+  - {r: 0.34901962, g: 0.10980393, b: 0, a: 0}
+  - {r: 0.25490198, g: 0.078431375, b: 0, a: 0}
   - {r: 0.103773594, g: 0.032669466, b: 0, a: 0}
   - {r: 0.103773594, g: 0.032669466, b: 0, a: 0}
   - {r: 0.103773594, g: 0.032669466, b: 0, a: 0}
@@ -154,9 +149,9 @@ MonoBehaviour:
   - {r: 0.103773594, g: 0.032669466, b: 0, a: 0}
   - {r: 0.103773594, g: 0.032669466, b: 0, a: 0}
   generatedColors: []
-  stepCount: 200
+  stepCount: 50
   darkTheme: 0
---- !u!114 &114629486941892270
+--- !u!114 &114616247154417596
 MonoBehaviour:
   m_ObjectHideFlags: 1
   m_CorrespondingSourceObject: {fileID: 0}
@@ -164,9 +159,10 @@ MonoBehaviour:
   m_GameObject: {fileID: 1643568200496766}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: ea689cd45c5520d4991720950d276b18, type: 3}
+  m_Script: {fileID: 11500000, guid: 3320be680a5a24cb4b5f70195e00e46b, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  testMode: 1
 --- !u!114 &114661515838076128
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -182,7 +178,7 @@ MonoBehaviour:
   rightBound: {fileID: 0}
   botBound: {fileID: 0}
   topBound: {fileID: 0}
-  boardWidth: 100
+  boardWidth: 50
   optimalCellPixelSize: 0
 --- !u!120 &120413812691033494
 LineRenderer:
