@@ -189,7 +189,6 @@ public class AdMobManager : MonoBehaviour
     public void HandleRewardBasedVideoClosed(object sender, EventArgs args)
     {
         MonoBehaviour.print("HandleRewardBasedVideoClosed event received");
-        GameManager.instance.StartGame("new");
     }
 
     public void HandleRewardBasedVideoRewarded(object sender, Reward args)

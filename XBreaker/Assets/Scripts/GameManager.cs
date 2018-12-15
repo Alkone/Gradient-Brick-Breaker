@@ -20,7 +20,7 @@ public class GameManager : MonoBehaviour
     private TrajectorySimulation trajectorySimulator; // Store a reference to our LevelManager which simulate gameObeject path.
 
     ////Inspector fields
-    public GameObject loseScreen, revardedVideoButton, pauseScreen, ballPrefub1;
+    public GameObject loseScreen, revardedVideoButton, returnAllBalsButton, pauseScreen, ballPrefub1;
     public Vector2 startPosition; // Start ball pos
     [SerializeField] private float segmentCount = 2.2f; //Кол-во предсказанных скачков
     [SerializeField] private int startLevel = 1;  //Current level number
@@ -45,7 +45,12 @@ public class GameManager : MonoBehaviour
     Coroutine coroutine;
 
     //
-    //ADS
+    //Time
+    private bool timeIsSetted;
+    private float levelStartTime;
+    public float timeBeforLevelStarting;
+
+    private bool nextLevelIsCreate;
 
 
     //Awake is always called before any Start functions
@@ -80,7 +85,8 @@ public class GameManager : MonoBehaviour
 
     }
     //
-    //
+    //Time
+
     //
     void Start()
     {
@@ -90,6 +96,8 @@ public class GameManager : MonoBehaviour
 
     void InitGame()
     {
+        timeIsSetted = false;
+        nextLevelIsCreate = false;
         StartCoroutine(GameStateObserver());
         StartGame("new");
 
@@ -133,11 +141,27 @@ public class GameManager : MonoBehaviour
             }
             else if (gameStatus == GameStatus.LAUNCHED)
             {
-
+                if (!timeIsSetted)
+                {
+                    levelStartTime = Time.realtimeSinceStartup;
+                    timeIsSetted = true;
+                    nextLevelIsCreate = false;
+                }
+                timeBeforLevelStarting = Time.realtimeSinceStartup - levelStartTime;
+                if (timeBeforLevelStarting > 7)
+                {
+                    returnAllBalsButton.SetActive(true);
+                }
             }
             else if (gameStatus == GameStatus.ENDED)
             {
-                levelManager.GenerateNextBlockLine();
+                if (!nextLevelIsCreate)
+                {
+                    levelManager.GenerateNextBlockLine();
+                    returnAllBalsButton.SetActive(false);
+                    timeIsSetted = false;
+                    nextLevelIsCreate = true;
+                }
                 gameStatus = GameStatus.PREPARING;
             }
             else if (gameStatus == GameStatus.PREPARING)
