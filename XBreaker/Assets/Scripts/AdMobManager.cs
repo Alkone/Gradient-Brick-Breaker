@@ -34,8 +34,8 @@ public class AdMobManager : MonoBehaviour
 #elif UNITY_ANDROID
 
         appID = "ca-app-pub-6267489793748314~3374953289";
-        bannerID = "ca-app-pub-3940256099942544/6300978111";
-        revardedVideoID = "ca-app-pub-3940256099942544/5224354917";
+        bannerID = "ca-app-pub-6267489793748314/9637109309";
+        revardedVideoID = "ca-app-pub-6267489793748314/2214695100";
         testDevice = "328A49BA78BFB651575852BEDF075723";
         testDevice2 = "518C032D113D8EF54BC0D4728F79920A";
 
@@ -193,7 +193,7 @@ public class AdMobManager : MonoBehaviour
 
     public void HandleRewardBasedVideoRewarded(object sender, Reward args)
     {
-        GameManager.instance.StartGame("continue");
+        GameManager.instance.StartGame(args.Type);
     }
 
     public void HandleRewardBasedVideoLeftApplication(object sender, EventArgs args)

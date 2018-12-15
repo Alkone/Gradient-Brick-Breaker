@@ -131,7 +131,6 @@ public class LevelManager : MonoBehaviour
                     }
                     break;
                 case 6:
-                    CreateGameObject(m_AddBallPoint1, tempSpawnPos, blockLife);
                     break;
                 case 7:
                     break;
@@ -161,7 +160,6 @@ public class LevelManager : MonoBehaviour
                     }
                     break;
                 case 18:
-                    CreateGameObject(m_BlockPrefub1, tempSpawnPos, blockLife);
                     break;
                 case 19:
                     CreateGameObject(m_BlockPrefub1, tempSpawnPos, blockLife);
