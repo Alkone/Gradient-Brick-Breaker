@@ -53,9 +53,6 @@ public class Ball : MonoBehaviour
         {
 
             nextPoint = rb2D.position + movingVector * Time.fixedDeltaTime * speed * gameObject.transform.localScale.y;
-            // Debug.Log(" Time.fixedDeltaTime " + Time.fixedDeltaTime);
-            // Debug.Log(" nextPoint " + nextPoint.magnitude);
-            // Debug.Log(" nextPoint - rb2D.position " + (nextPoint - rb2D.position).magnitude);
             if (stepCountBeforeCollision == 0)
             {
                 movePerFixedUpdate = (nextPoint - rb2D.position).magnitude;
@@ -93,10 +90,9 @@ public class Ball : MonoBehaviour
                 {
                     case NextCollision.BLOCK:
                         {
+                            nextPoint = hit.centroid;
                             if (hit.collider != null)
                             {
-                                //Debug.Log("ID: " + gameObject.GetInstanceID() + " BLOOOOCK!!!");
-                                nextPoint = hit.centroid;
                                 if (hit.collider.gameObject.GetComponent<Block>())
                                 {
                                     giveDamage = true;
