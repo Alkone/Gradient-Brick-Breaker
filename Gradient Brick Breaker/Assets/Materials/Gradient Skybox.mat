@@ -23,13 +23,13 @@ Material:
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
     m_Floats:
-    - _Exponent: 1
-    - _Intensity: 1.3
+    - _Exponent: 2
+    - _Intensity: 1
     - _Power: 5
-    - _UpVectorPitch: 0
-    - _UpVectorYaw: 0
+    - _UpVectorPitch: -120
+    - _UpVectorYaw: 200
     m_Colors:
     - _Color: {r: 1, g: 1, b: 1, a: 1}
-    - _Color1: {r: 0.10870587, g: 0.7267036, b: 0.8080681, a: 1}
-    - _Color2: {r: 0.8906363, g: 0.24500862, b: 0.1977388, a: 1}
-    - _UpVector: {r: 0, g: 1, b: 0, a: 0}
+    - _Color1: {r: 0.9532549, g: 0.4978824, b: 0.51105887, a: 1}
+    - _Color2: {r: 0.9887059, g: 0.8730981, b: 0.53803927, a: 1}
+    - _UpVector: {r: 0.29619813, g: -0.50000006, b: 0.81379765, a: 0}
