@@ -34,8 +34,8 @@ public class LevelManager : MonoBehaviour
     void Awake()
     {
         //get optimal block size
-        cellPixelSize = (Screen.width - pixelMarginLRBounds * 2) / m_BlocksInLine;
-        cellLocalSize = cellPixelSize / m_BlockPrefub1.GetComponent<SpriteRenderer>().sprite.bounds.size.x;
+        cellPixelSize = ((Screen.width - pixelMarginLRBounds * 2) + 4) / m_BlocksInLine;
+        cellLocalSize = (cellPixelSize-4) / m_BlockPrefub1.GetComponent<SpriteRenderer>().sprite.bounds.size.x;
         //setting start point of the blocks
 
         float delta = (Screen.height - (Screen.height / (1920 / pixelMarginTBBounds) * 2)) % cellPixelSize;
