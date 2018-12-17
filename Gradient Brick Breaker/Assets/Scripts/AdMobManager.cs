@@ -10,7 +10,8 @@ public class AdMobManager : MonoBehaviour
     private string revardedVideoID = "";
     private string testDevice = "";
     private string testDevice2 = "";
-    public bool testMode;
+    public bool testModeDevice;
+    public bool testModeAdds;
     public bool revarvedVideoIsLoaded;
 
     private BannerView bannerView;
@@ -28,10 +29,17 @@ public class AdMobManager : MonoBehaviour
 #elif UNITY_ANDROID
 
         appID = "ca-app-pub-6267489793748314~3374953289";
-        //bannerID = "ca-app-pub-6267489793748314/9637109309"; //no test
-        //revardedVideoID = "ca-app-pub-6267489793748314/2214695100"; //no test
-        bannerID = "ca-app-pub-3940256099942544/6300978111"; //test
-        revardedVideoID = "ca-app-pub-3940256099942544/5224354917"; //test
+
+        if (testModeAdds)
+        {
+            bannerID = "ca-app-pub-3940256099942544/6300978111"; //test
+            revardedVideoID = "ca-app-pub-3940256099942544/5224354917"; //test
+        }
+        else
+        {
+            bannerID = "ca-app-pub-6267489793748314/9637109309"; //no test
+            revardedVideoID = "ca-app-pub-6267489793748314/2214695100"; //no test
+        }
 
         testDevice = "328A49BA78BFB651575852BEDF075723";
         testDevice2 = "518C032D113D8EF54BC0D4728F79920A";
@@ -40,7 +48,8 @@ public class AdMobManager : MonoBehaviour
 
         MobileAds.Initialize(appID);
 
-        if (property.Equals("ads")){
+        if (property.Equals("ads"))
+        {
             bannerView = new BannerView(bannerID, AdSize.SmartBanner, AdPosition.Bottom);
             // Called when an ad request has successfully loaded.
             bannerView.OnAdLoaded += HandleOnAdLoaded;
@@ -52,6 +61,8 @@ public class AdMobManager : MonoBehaviour
             bannerView.OnAdClosed += HandleOnAdClosed;
             // Called when the ad click caused the user to leave the application.
             bannerView.OnAdLeavingApplication += HandleOnAdLeavingApplication;
+
+            RequestBanner();
         }
 
 
@@ -78,7 +89,7 @@ public class AdMobManager : MonoBehaviour
     public void RequestBanner()
     {
         AdRequest request;
-        if (testMode)
+        if (testModeDevice)
         {
             request = new AdRequest.Builder()
             .AddTestDevice(AdRequest.TestDeviceSimulator)
@@ -102,7 +113,7 @@ public class AdMobManager : MonoBehaviour
     public void RequestRewardBasedVideo()
     {
         AdRequest request;
-        if (testMode)
+        if (testModeDevice)
         {
             request = new AdRequest.Builder()
             .AddTestDevice(AdRequest.TestDeviceSimulator)

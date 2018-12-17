@@ -14,8 +14,9 @@ public class LevelManager : MonoBehaviour
     public float pixelMarginLRBounds;
     public float pixelMarginTBBounds;
 
-    public GameObject m_BlockPrefub1;
-    public GameObject m_AddBallPoint1;
+    public GameObject m_BlockPrefub;
+    public GameObject m_AddBallPointPrefub;
+    public GameObject m_CoinPrefub;
     public GameObject parentObject; //папка куда будем складывать все объекты
 
     //UI
@@ -36,7 +37,7 @@ public class LevelManager : MonoBehaviour
     {
         //get optimal block size
         cellPixelSize = ((Screen.width - pixelMarginLRBounds * 2) + 4) / m_BlocksInLine;
-        cellLocalSize = (cellPixelSize-4) / m_BlockPrefub1.GetComponent<SpriteRenderer>().sprite.bounds.size.x;
+        cellLocalSize = (cellPixelSize-4) / m_BlockPrefub.GetComponent<SpriteRenderer>().sprite.bounds.size.x;
         //setting start point of the blocks
 
         float delta = (Screen.height - (Screen.height / (1920 / pixelMarginTBBounds) * 2)) % cellPixelSize;
@@ -56,8 +57,9 @@ public class LevelManager : MonoBehaviour
         //Create Lists
         gameObjects = new List<GameObject>();
         checkPoint = currentLevel;
-        m_BlockPrefub1.transform.localScale = new Vector3(cellLocalSize, cellLocalSize, 0);
-        m_AddBallPoint1.transform.localScale = new Vector3(cellLocalSize/2, cellLocalSize/2, 0);
+        m_BlockPrefub.transform.localScale = new Vector3(cellLocalSize, cellLocalSize, 0);
+        m_AddBallPointPrefub.transform.localScale = new Vector3(cellLocalSize/2, cellLocalSize/2, 0);
+        m_CoinPrefub.transform.localScale = new Vector3(cellLocalSize / 2, cellLocalSize / 2, 0);
         permissionToGenBlockLine = false;
     }
 
@@ -122,35 +124,36 @@ public class LevelManager : MonoBehaviour
     private void CreateLevel(int blockLife)
     {
         bool addPointCreated = false;
+        bool coinCreated = false;
         Vector2 tempSpawnPos = spawnPos;
         for (int column = 0; column < m_BlocksInLine; column++)
         {
             switch ((int)Random.Range(1, 20))
             {
                 case 1:
-                    CreateGameObject(m_BlockPrefub1, tempSpawnPos, blockLife);
+                    CreateGameObject(m_BlockPrefub, tempSpawnPos, blockLife);
                     break;
                 case 2:
-                    CreateGameObject(m_BlockPrefub1, tempSpawnPos, blockLife);
+                    CreateGameObject(m_BlockPrefub, tempSpawnPos, blockLife);
                     break;
                 case 3:
                     if (!addPointCreated)
                     {
-                        CreateGameObject(m_AddBallPoint1, tempSpawnPos, blockLife);
+                        CreateGameObject(m_AddBallPointPrefub, tempSpawnPos, blockLife);
                         addPointCreated = true;
                     }
                     break;
                 case 4:
                     if (!addPointCreated)
                     {
-                        CreateGameObject(m_AddBallPoint1, tempSpawnPos, blockLife);
+                        CreateGameObject(m_AddBallPointPrefub, tempSpawnPos, blockLife);
                         addPointCreated = true;
                     }
                     break;
                 case 5:
                     if (!addPointCreated)
                     {
-                        CreateGameObject(m_AddBallPoint1, tempSpawnPos, blockLife);
+                        CreateGameObject(m_AddBallPointPrefub, tempSpawnPos, blockLife);
                         addPointCreated = true;
                     }
                     break;
@@ -161,32 +164,36 @@ public class LevelManager : MonoBehaviour
                 case 8:
                     if (addPointCreated)
                     {
-                        CreateGameObject(m_BlockPrefub1, tempSpawnPos, blockLife * 2);
+                        CreateGameObject(m_BlockPrefub, tempSpawnPos, blockLife * 2);
                     }
                     break;
                 case 13:
-                    CreateGameObject(m_BlockPrefub1, tempSpawnPos, blockLife);
+
                     break;
                 case 14:
 
                     break;
                 case 15:
-
+                    if (!coinCreated)
+                    {
+                        CreateGameObject(m_CoinPrefub, tempSpawnPos, blockLife);
+                        coinCreated = true;
+                    }
                     break;
                 case 16:
-                    CreateGameObject(m_BlockPrefub1, tempSpawnPos, blockLife);
+                    CreateGameObject(m_BlockPrefub, tempSpawnPos, blockLife);
                     break;
                 case 17:
                     if (!addPointCreated)
                     {
-                        CreateGameObject(m_AddBallPoint1, tempSpawnPos, blockLife);
+                        CreateGameObject(m_AddBallPointPrefub, tempSpawnPos, blockLife);
                         addPointCreated = true;
                     }
                     break;
                 case 18:
                     break;
                 case 19:
-                    CreateGameObject(m_BlockPrefub1, tempSpawnPos, blockLife);
+                    CreateGameObject(m_BlockPrefub, tempSpawnPos, blockLife);
                     break;
             }
             tempSpawnPos.x += cellPixelSize;

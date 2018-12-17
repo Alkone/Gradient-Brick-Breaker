@@ -13,6 +13,7 @@ public class GameManager : MonoBehaviour
     //
     public GameStatus gameStatus; //Store a reference to our GameStatus which control level.
     private LevelManager levelManager; //Store a reference to our LevelManager which control level.
+
     private BoundManager boundManager;
     private AdMobManager adMobManager;
     private ColorManager colorManager; //
@@ -20,7 +21,7 @@ public class GameManager : MonoBehaviour
     private TrajectorySimulation trajectorySimulator; // Store a reference to our LevelManager which simulate gameObeject path.
 
     ////Inspector fields
-    public GameObject loseScreen, revardedVideoButton, returnAllBalsButton, pauseScreen, ballPrefub1;
+    public GameObject loseScreen, revardedVideoButton, spendCoinsButton, ballCountLabel, coinCountTextLabel, returnAllBalsButton, pauseScreen, ballPrefub1;
     public Vector2 startPosition; // Start ball pos
     [SerializeField] private float segmentCount = 2.2f; //Кол-во предсказанных скачков
     [SerializeField] private int startLevel = 1;  //Current level number
@@ -44,6 +45,7 @@ public class GameManager : MonoBehaviour
     private bool gamePaused = false;
     private bool pauseFlag = false; // вспомогательная переменная
     private bool nextLevelIsCreate;
+    private bool doOnce;
 
     //Time
     private bool timeIsSetted;
@@ -52,6 +54,9 @@ public class GameManager : MonoBehaviour
 
     //
     Coroutine startBallsCoroutine;
+
+    //
+    private int coins;
 
     //Awake is always called before any Start functions
     void Awake()
@@ -98,6 +103,7 @@ public class GameManager : MonoBehaviour
 
     void InitGame()
     {
+        doOnce = false;
         checkPoint = startLevel;
         timeIsSetted = false;
         nextLevelIsCreate = false;
@@ -139,10 +145,20 @@ public class GameManager : MonoBehaviour
         {
             if (gameStatus == GameStatus.READY)
             {
+                if(!doOnce){
+                    ballCountLabel.transform.position = new Vector2(startPosition.x + 70, startPosition.y + 70);
+                    ballCountLabel.SetActive(true);
+                    doOnce = true;
+                }
                 WaitTouchToLunch();
             }
             else if (gameStatus == GameStatus.LAUNCHED)
             {
+                if (doOnce)
+                {
+                    ballCountLabel.SetActive(false);
+                    doOnce = false;
+                }
                 if (!timeIsSetted)
                 {
                     levelStartTime = Time.realtimeSinceStartup;
@@ -178,14 +194,19 @@ public class GameManager : MonoBehaviour
         }
     }
 
+    private void ResetCoins()
+    {
+        coins = 0;
+        coinCountTextLabel.GetComponent<Text>().text = coins.ToString();
+    }
+
 
     public void StartGame(string type)
     {
-        adMobManager.RequestBanner();
-        adMobManager.RequestRewardBasedVideo();
         switch (type)
         {
             case "new":
+                ResetCoins();
                 levelManager.SetupNewScene(startLevel); //Очищает сцену 
                 DestroyAllBals(); //Уничтожает GameObject и чистит список
                 boundManager.botBound.GetComponent<BotBound>().doOnce = false;
@@ -209,6 +230,7 @@ public class GameManager : MonoBehaviour
                 break;
             case "checkpoint":
                 gameStatus = GameStatus.PREPARING;
+                SpendCoin(10);
                 levelManager.SetupCheckPointScene(); //Очищает сцену 
                 boundManager.botBound.GetComponent<BotBound>().doOnce = false;
                 foreach (var go in ballObjectsList)
@@ -250,6 +272,8 @@ public class GameManager : MonoBehaviour
     public void RemoveAds()
     {
         adsProperty = "noads";
+        PlayerPrefs.SetString("AdsProperty", adsProperty);
+        PlayerPrefs.Save();
         adMobManager.DestroyBanner();
     }
 
@@ -270,11 +294,32 @@ public class GameManager : MonoBehaviour
     }
 
 
+    public void AddCoin()
+    {
+        coins++;
+        coinCountTextLabel.GetComponent<Text>().text = coins.ToString();
+        if(coins >= 10)
+        {
+            spendCoinsButton.GetComponent<Button>().interactable = true;
+        }
+    }
+
+    public void SpendCoin(int count)
+    {
+        coins -= count;
+        coinCountTextLabel.GetComponent<Text>().text = coins.ToString();
+        if (coins < 10)
+        {
+            spendCoinsButton.GetComponent<Button>().interactable = false;
+        }
+    }
+
     //Создает шарик в заданной позиции с гравитацией
     public bool CreateBall(Vector2 position, GameObject ballPrefub)
     {
         GameObject go = Instantiate(ballPrefub, position, Quaternion.identity);
         ballObjectsList.Add(go);
+        ballCountLabel.GetComponentInChildren<Text>().text = "x " + ballObjectsList.Count.ToString();
         return true;
     }
 
@@ -456,18 +501,6 @@ public class GameManager : MonoBehaviour
             }
         }
         return status;
-    }
-
-    private void OnDestroy()
-    {
-        SaveGame();
-    }
-
-
-    private void SaveGame()
-    {
-        PlayerPrefs.SetString("AdsProperty", adsProperty);
-        PlayerPrefs.Save();
     }
 
     private void LoadGame()
