@@ -8,11 +8,6 @@ public class AdMobManager : MonoBehaviour
     private string appID = "";
     private string bannerID = "";
     private string revardedVideoID = "";
-    private string testDevice = "";
-    private string testDevice2 = "";
-    public bool testModeDevice;
-    public bool testModeAdds;
-    public bool revarvedVideoIsLoaded;
 
     private BannerView bannerView;
     private RewardBasedVideoAd rewardBasedVideo;
@@ -29,20 +24,8 @@ public class AdMobManager : MonoBehaviour
 #elif UNITY_ANDROID
 
         appID = "ca-app-pub-6267489793748314~3374953289";
-
-        if (testModeAdds)
-        {
-            bannerID = "ca-app-pub-3940256099942544/6300978111"; //test
-            revardedVideoID = "ca-app-pub-3940256099942544/5224354917"; //test
-        }
-        else
-        {
-            bannerID = "ca-app-pub-6267489793748314/9637109309"; //no test
-            revardedVideoID = "ca-app-pub-6267489793748314/2214695100"; //no test
-        }
-
-        testDevice = "328A49BA78BFB651575852BEDF075723";
-        testDevice2 = "518C032D113D8EF54BC0D4728F79920A";
+        bannerID = "ca-app-pub-6267489793748314/9637109309"; //no test
+        revardedVideoID = "ca-app-pub-6267489793748314/2214695100"; //no test
 
 #endif
 
@@ -89,18 +72,7 @@ public class AdMobManager : MonoBehaviour
     public void RequestBanner()
     {
         AdRequest request;
-        if (testModeDevice)
-        {
-            request = new AdRequest.Builder()
-            .AddTestDevice(AdRequest.TestDeviceSimulator)
-            .AddTestDevice(testDevice2)
-            .Build();
-        }
-        else
-        {
-            request = new AdRequest.Builder()
-            .Build();
-        }
+            request = new AdRequest.Builder().Build();
         bannerView.LoadAd(request);
     }
 
@@ -113,18 +85,7 @@ public class AdMobManager : MonoBehaviour
     public void RequestRewardBasedVideo()
     {
         AdRequest request;
-        if (testModeDevice)
-        {
-            request = new AdRequest.Builder()
-            .AddTestDevice(AdRequest.TestDeviceSimulator)
-            .AddTestDevice(testDevice2)
-            .Build();
-        }
-        else
-        {
-            request = new AdRequest.Builder()
-            .Build();
-        }
+            request = new AdRequest.Builder().Build();
         rewardBasedVideo.LoadAd(request, revardedVideoID);
     }
 
@@ -202,7 +163,7 @@ public class AdMobManager : MonoBehaviour
 
     public void HandleRewardBasedVideoRewarded(object sender, Reward args)
     {
-        GameManager.instance.StartGame(args.Type);
+        GameManager.instance.StartGame("continue");
     }
 
     public void HandleRewardBasedVideoLeftApplication(object sender, EventArgs args)
