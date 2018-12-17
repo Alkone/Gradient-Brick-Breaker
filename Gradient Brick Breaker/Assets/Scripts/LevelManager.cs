@@ -7,8 +7,9 @@ using Random = UnityEngine.Random;
 public class LevelManager : MonoBehaviour
 {
     [SerializeField] private int m_BlocksInLine = 10;
-    [SerializeField] private int currentLevel;
-    [SerializeField] private int gameObjectsCount;
+    public int currentLevel;
+    public int gameObjectsCount;
+    private int checkPoint;
 
     public float pixelMarginLRBounds;
     public float pixelMarginTBBounds;
@@ -54,7 +55,7 @@ public class LevelManager : MonoBehaviour
 
         //Create Lists
         gameObjects = new List<GameObject>();
-
+        checkPoint = currentLevel;
         m_BlockPrefub1.transform.localScale = new Vector3(cellLocalSize, cellLocalSize, 0);
         m_AddBallPoint1.transform.localScale = new Vector3(cellLocalSize/2, cellLocalSize/2, 0);
         permissionToGenBlockLine = false;
@@ -71,15 +72,38 @@ public class LevelManager : MonoBehaviour
     }
 
     //Clean and start create new levels
-    public void SetupScene(int startLevel)
+    public void SetupNewScene(int startLevel)
     {
         CleanLevel();
         currentLevel = startLevel-1;
     }
 
+    public void SetupCheckPointScene()
+    {
+        CleanLevel();
+        currentLevel = checkPoint-1;
+    }
+
+    public void SetupContinueScene()
+    {
+        CleanLevel();
+        currentLevel--;
+    }
+
+
     private void OptimazeScene()
     {
+        parentObject.transform.position = Vector2.zero;
+    }
 
+    public void CheckPointCheck()
+    {
+        if (currentLevel>0 && gameObjects.Count == 0)
+        {
+            GameObject.Find("Text_CheckPoint").GetComponent<Animation>().Play();
+            OptimazeScene();
+            checkPoint = currentLevel;
+        }
     }
 
     //Start
@@ -192,7 +216,7 @@ public class LevelManager : MonoBehaviour
     }
 
     //Clean level
-    public void CleanLevel()
+    private void CleanLevel()
     {
         if (gameObjects != null)
         {
@@ -212,14 +236,13 @@ public class LevelManager : MonoBehaviour
 
     private void FixedUpdate()
     {
+        gameObjectsCount = gameObjects.Count;
         if (permissionToGenBlockLine)
         {
             currentLevel++;
             GameManager.instance.GetColorManager().SetGradientColor(currentLevel);
             textLevel.text = currentLevel.ToString();
             CreateLevel(currentLevel);
-            gameObjectsCount = gameObjects.Count;
-
             MoveLevelDownOnOneCell(parentObject);
             permissionToGenBlockLine = false;
         }

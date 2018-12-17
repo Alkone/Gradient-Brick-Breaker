@@ -152,7 +152,7 @@ PlayerSettings:
   androidSupportedAspectRatio: 1
   androidMaxAspectRatio: 2.1
   applicationIdentifier:
-    Android: ru.devalkone.xbreaker
+    Android: ru.devalkone.gbbreaker
     Standalone: com.Company.ProductName
   buildNumber: {}
   AndroidBundleVersionCode: 5
@@ -244,8 +244,8 @@ PlayerSettings:
   AndroidTargetArchitectures: 5
   AndroidSplashScreenScale: 0
   androidSplashScreen: {fileID: 0}
-  AndroidKeystoreName: /Users/alkone/Documents/Cloud Mail.Ru/GooglePlay/user.keystore
-  AndroidKeyaliasName: user
+  AndroidKeystoreName: D:/Cloud Mail.Ru/GooglePlay/gbbreaker.keystore
+  AndroidKeyaliasName: 
   AndroidBuildApkPerCpuArchitecture: 0
   AndroidTVCompatibility: 1
   AndroidIsGame: 1

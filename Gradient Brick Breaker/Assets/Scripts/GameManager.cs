@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Collections;
 using System.Collections.Generic;
-using GoogleMobileAds.Api;
+using System.Runtime.Serialization.Formatters;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -24,6 +24,10 @@ public class GameManager : MonoBehaviour
     public Vector2 startPosition; // Start ball pos
     [SerializeField] private float segmentCount = 2.2f; //Кол-во предсказанных скачков
     [SerializeField] private int startLevel = 1;  //Current level number
+    [SerializeField] private int checkPoint;
+
+    //Saved//Ads
+    private string adsProperty;
 
 
     //для  WaitTouchToLunch()
@@ -37,21 +41,17 @@ public class GameManager : MonoBehaviour
     //Переменные состояния игры
     private bool gameLosed = false;
     private bool loseFlag = false; // вспомогательная переменная
-
     private bool gamePaused = false;
     private bool pauseFlag = false; // вспомогательная переменная
+    private bool nextLevelIsCreate;
 
-
-    Coroutine coroutine;
-
-    //
     //Time
     private bool timeIsSetted;
     private float levelStartTime;
     public float timeBeforLevelStarting;
 
-    private bool nextLevelIsCreate;
-
+    //
+    Coroutine startBallsCoroutine;
 
     //Awake is always called before any Start functions
     void Awake()
@@ -90,17 +90,19 @@ public class GameManager : MonoBehaviour
     //
     void Start()
     {
+        LoadGame();
         ballPrefub1.transform.localScale = Vector2.one * levelManager.GetCellLocalSize() * 0.33f;
+        adMobManager.InitAdmob(adsProperty);
         InitGame();
     }
 
     void InitGame()
     {
+        checkPoint = startLevel;
         timeIsSetted = false;
         nextLevelIsCreate = false;
         StartCoroutine(GameStateObserver());
         StartGame("new");
-
     }
 
     void Update()
@@ -157,6 +159,7 @@ public class GameManager : MonoBehaviour
             {
                 if (!nextLevelIsCreate)
                 {
+                    levelManager.CheckPointCheck();
                     levelManager.GenerateNextBlockLine();
                     returnAllBalsButton.SetActive(false);
                     timeIsSetted = false;
@@ -183,7 +186,7 @@ public class GameManager : MonoBehaviour
         switch (type)
         {
             case "new":
-                levelManager.SetupScene(startLevel); //Очищает сцену 
+                levelManager.SetupNewScene(startLevel); //Очищает сцену 
                 DestroyAllBals(); //Уничтожает GameObject и чистит список
                 boundManager.botBound.GetComponent<BotBound>().doOnce = false;
                 startPosition.x = 0;
@@ -194,7 +197,7 @@ public class GameManager : MonoBehaviour
 
             case "continue":
                 gameStatus = GameStatus.PREPARING;
-                levelManager.CleanLevel(); //Очищает сцену 
+                levelManager.SetupContinueScene(); //Очищает сцену 
                 boundManager.botBound.GetComponent<BotBound>().doOnce = false;
                 foreach (var go in ballObjectsList)
                 {
@@ -203,10 +206,18 @@ public class GameManager : MonoBehaviour
                 levelManager.GenerateNextBlockLine();
                 gameLosed = false;
                 gameStatus = GameStatus.LAUNCHED;
-
-
                 break;
-            default:
+            case "checkpoint":
+                gameStatus = GameStatus.PREPARING;
+                levelManager.SetupCheckPointScene(); //Очищает сцену 
+                boundManager.botBound.GetComponent<BotBound>().doOnce = false;
+                foreach (var go in ballObjectsList)
+                {
+                    go.GetComponent<Ball>().MoveToPosition(startPosition);
+                }
+                levelManager.GenerateNextBlockLine();
+                gameLosed = false;
+                gameStatus = GameStatus.LAUNCHED;
                 break;
         }
     }
@@ -234,6 +245,12 @@ public class GameManager : MonoBehaviour
     public void ResumeGame()
     {
         gamePaused = false;
+    }
+
+    public void RemoveAds()
+    {
+        adsProperty = "noads";
+        adMobManager.DestroyBanner();
     }
 
     //Getters private field link
@@ -294,7 +311,7 @@ public class GameManager : MonoBehaviour
                     firstBallIsStoped = false;
                     mouseDownIsDetected = false;
                     gameStatus = GameStatus.LAUNCHED;
-                    coroutine = StartCoroutine(StartBall(ballObjectsList, GetVectorByPoints(startPosition, startVector)));
+                    startBallsCoroutine = StartCoroutine(StartBall(ballObjectsList, GetVectorByPoints(startPosition, startVector)));
                 }
             }
         }
@@ -318,9 +335,9 @@ public class GameManager : MonoBehaviour
     //Уничтожает все шарики и очищает лист
     public void ReturnAllBalsToStartPos()
     {
-        if (coroutine != null)
+        if (startBallsCoroutine != null)
         {
-            StopCoroutine(coroutine);
+            StopCoroutine(startBallsCoroutine);
         }
         foreach (var ball in ballObjectsList)
         {
@@ -439,5 +456,31 @@ public class GameManager : MonoBehaviour
             }
         }
         return status;
+    }
+
+    private void OnDestroy()
+    {
+        SaveGame();
+    }
+
+
+    private void SaveGame()
+    {
+        PlayerPrefs.SetString("AdsProperty", adsProperty);
+        PlayerPrefs.Save();
+    }
+
+    private void LoadGame()
+    {
+        string key = "AdsProperty";
+        bool haskey = PlayerPrefs.HasKey(key);
+        if (haskey)
+        {
+            adsProperty = PlayerPrefs.GetString(key);
+        }
+        else
+        {
+            adsProperty = "ads";
+        }
     }
 }
