@@ -62,14 +62,14 @@ public class BoundManager : MonoBehaviour {
 
         //настраиваем line renders
         LineRenderer topLine = topBound.GetComponent<LineRenderer>();
-        topLine.widthMultiplier = width * 0.01f;
-        topLine.SetPosition(0, new Vector2(-width * 0.7f, topBound.transform.position.y - topScale.y/2));
-        topLine.SetPosition(1, new Vector2(width * 0.7f, topBound.transform.position.y - topScale.y/2));
+        topLine.widthMultiplier = width * 0.003f;
+        topLine.SetPosition(0, new Vector2(-width * 0.7f, topBound.transform.position.y - topScale.y/2 +1));
+        topLine.SetPosition(1, new Vector2(width * 0.7f, topBound.transform.position.y - topScale.y/2 +1));
 
         LineRenderer botLine = botBound.GetComponent<LineRenderer>();
-        botLine.widthMultiplier = width * 0.01f;
-        botLine.SetPosition(0, new Vector2(-width * 0.7f, botBound.transform.position.y + topScale.y/2));
-        botLine.SetPosition(1, new Vector2(width * 0.7f, botBound.transform.position.y + topScale.y/2));
+        botLine.widthMultiplier = width * 0.003f;
+        botLine.SetPosition(0, new Vector2(-width * 0.7f, botBound.transform.position.y + topScale.y/2 -1));
+        botLine.SetPosition(1, new Vector2(width * 0.7f, botBound.transform.position.y + topScale.y/2 -1));
 
     }
 

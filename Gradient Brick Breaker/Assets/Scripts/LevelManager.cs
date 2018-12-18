@@ -36,8 +36,8 @@ public class LevelManager : MonoBehaviour
     void Awake()
     {
         //get optimal block size
-        cellPixelSize = ((Screen.width - pixelMarginLRBounds * 2) + 4) / m_BlocksInLine;
-        cellLocalSize = (cellPixelSize-4) / m_BlockPrefub.GetComponent<SpriteRenderer>().sprite.bounds.size.x;
+        cellPixelSize = ((Screen.width - pixelMarginLRBounds * 2) + 1) / m_BlocksInLine;
+        cellLocalSize = (cellPixelSize-1) / m_BlockPrefub.GetComponent<SpriteRenderer>().sprite.bounds.size.x;
         //setting start point of the blocks
 
         float delta = (Screen.height - (Screen.height / (1920 / pixelMarginTBBounds) * 2)) % cellPixelSize;
@@ -158,8 +158,14 @@ public class LevelManager : MonoBehaviour
                     }
                     break;
                 case 6:
+                    CreateGameObject(m_BlockPrefub, tempSpawnPos, blockLife);
                     break;
                 case 7:
+                    if (!addPointCreated)
+                    {
+                        CreateGameObject(m_AddBallPointPrefub, tempSpawnPos, blockLife);
+                        addPointCreated = true;
+                    }
                     break;
                 case 8:
                     if (addPointCreated)
@@ -171,7 +177,7 @@ public class LevelManager : MonoBehaviour
 
                     break;
                 case 14:
-
+                    CreateGameObject(m_BlockPrefub, tempSpawnPos, blockLife);
                     break;
                 case 15:
                     if (!coinCreated)
