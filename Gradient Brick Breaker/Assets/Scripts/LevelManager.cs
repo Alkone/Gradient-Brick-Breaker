@@ -145,12 +145,26 @@ public class LevelManager : MonoBehaviour
                         CreateGameObject(m_AddBallPointPrefub, tempSpawnPos, blockLife);
                         addPointCreated = true;
                     }
+                    else
+                    {
+                        if (currentLevel > 150)
+                        {
+                            CreateGameObject(m_BlockPrefub, tempSpawnPos, blockLife);
+                        }
+                    }
                     break;
                 case 4:
                     if (!addPointCreated)
                     {
                         CreateGameObject(m_AddBallPointPrefub, tempSpawnPos, blockLife);
                         addPointCreated = true;
+                    }
+                    else
+                    {
+                        if (currentLevel > 50)
+                        {
+                            CreateGameObject(m_BlockPrefub, tempSpawnPos, blockLife);
+                        }
                     }
                     break;
                 case 5:
@@ -177,13 +191,13 @@ public class LevelManager : MonoBehaviour
                     }
                     break;
                 case 13:
-                    if (currentLevel > 150)
+                    if (currentLevel > 100)
                     {
                         CreateGameObject(m_BlockPrefub, tempSpawnPos, blockLife);
                     }
                     break;
                 case 14:
-                    if (currentLevel > 100)
+                    if (currentLevel > 200)
                     {
                         CreateGameObject(m_BlockPrefub, tempSpawnPos, blockLife);
                     }
@@ -204,8 +218,19 @@ public class LevelManager : MonoBehaviour
                         CreateGameObject(m_AddBallPointPrefub, tempSpawnPos, blockLife);
                         addPointCreated = true;
                     }
+                    else
+                    {
+                        if (currentLevel > 400)
+                        {
+                            CreateGameObject(m_BlockPrefub, tempSpawnPos, blockLife);
+                        }
+                    }
                     break;
                 case 18:
+                    if (currentLevel > 300)
+                    {
+                        CreateGameObject(m_BlockPrefub, tempSpawnPos, blockLife);
+                    }
                     break;
                 case 19:
                     CreateGameObject(m_BlockPrefub, tempSpawnPos, blockLife);
