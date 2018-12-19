@@ -15,4 +15,5 @@ required for displaying ads.
             android:name="com.google.android.gms.ads.APPLICATION_ID"
             android:value="ca-app-pub-6267489793748314~3374953289"/>
   </application>
+  <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
 </manifest>
