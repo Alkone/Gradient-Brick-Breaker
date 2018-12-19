@@ -10,6 +10,7 @@ public class LevelManager : MonoBehaviour
     public int currentLevel;
     public int gameObjectsCount;
     private int checkPoint;
+    public int checkPointBallsCount;
 
     public float pixelMarginLRBounds;
     public float pixelMarginTBBounds;
@@ -36,8 +37,8 @@ public class LevelManager : MonoBehaviour
     void Awake()
     {
         //get optimal block size
-        cellPixelSize = ((Screen.width - pixelMarginLRBounds * 2) + 1) / m_BlocksInLine;
-        cellLocalSize = (cellPixelSize-1) / m_BlockPrefub.GetComponent<SpriteRenderer>().sprite.bounds.size.x;
+        cellPixelSize = ((Screen.width - pixelMarginLRBounds * 2) +2 ) / m_BlocksInLine;
+        cellLocalSize = (cellPixelSize - 2) / m_BlockPrefub.GetComponent<SpriteRenderer>().sprite.bounds.size.x;
         //setting start point of the blocks
 
         float delta = (Screen.height - (Screen.height / (1920 / pixelMarginTBBounds) * 2)) % cellPixelSize;
@@ -56,6 +57,7 @@ public class LevelManager : MonoBehaviour
 
         //Create Lists
         gameObjects = new List<GameObject>();
+        checkPointBallsCount = 1;
         checkPoint = currentLevel;
         m_BlockPrefub.transform.localScale = new Vector3(cellLocalSize, cellLocalSize, 0);
         m_AddBallPointPrefub.transform.localScale = new Vector3(cellLocalSize/2, cellLocalSize/2, 0);
@@ -105,6 +107,7 @@ public class LevelManager : MonoBehaviour
             GameObject.Find("Text_CheckPoint").GetComponent<Animation>().Play();
             OptimazeScene();
             checkPoint = currentLevel;
+            checkPointBallsCount = GameManager.instance.ballObjectsList.Count;
         }
     }
 
@@ -174,10 +177,16 @@ public class LevelManager : MonoBehaviour
                     }
                     break;
                 case 13:
-
+                    if (currentLevel > 150)
+                    {
+                        CreateGameObject(m_BlockPrefub, tempSpawnPos, blockLife);
+                    }
                     break;
                 case 14:
-                    CreateGameObject(m_BlockPrefub, tempSpawnPos, blockLife);
+                    if (currentLevel > 100)
+                    {
+                        CreateGameObject(m_BlockPrefub, tempSpawnPos, blockLife);
+                    }
                     break;
                 case 15:
                     if (!coinCreated)

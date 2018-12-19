@@ -37,7 +37,7 @@ public class GameManager : MonoBehaviour
     private float angle;
 
     //Lists
-    private List<GameObject> ballObjectsList;
+    public List<GameObject> ballObjectsList;
 
     //Переменные состояния игры
     private bool gameLosed = false;
@@ -95,7 +95,8 @@ public class GameManager : MonoBehaviour
     //
     void Start()
     {
-        LoadGame();
+        //LoadGame(); //
+        adsProperty = "noads"; //отключаем баннер
         ballPrefub1.transform.localScale = Vector2.one * levelManager.GetCellLocalSize() * 0.33f;
         adMobManager.InitAdmob(adsProperty);
         InitGame();
@@ -141,57 +142,58 @@ public class GameManager : MonoBehaviour
 
     void FixedUpdate()
     {
-        if (!gameLosed)
-        {
-            if (gameStatus == GameStatus.READY)
+            if (!gameLosed)
             {
-                if(!doOnce){
-                    ballCountLabel.transform.position = new Vector2(startPosition.x + 70, startPosition.y + 70);
-                    ballCountLabel.SetActive(true);
-                    doOnce = true;
+                if (gameStatus == GameStatus.READY)
+                {
+                    if (!doOnce)
+                    {
+                        ballCountLabel.transform.position = new Vector2(startPosition.x + 70, startPosition.y + 70);
+                        ballCountLabel.SetActive(true);
+                        doOnce = true;
+                    }
+                    WaitTouchToLunch();
                 }
-                WaitTouchToLunch();
+                else if (gameStatus == GameStatus.LAUNCHED)
+                {
+                    if (doOnce)
+                    {
+                        ballCountLabel.SetActive(false);
+                        doOnce = false;
+                    }
+                    if (!timeIsSetted)
+                    {
+                        levelStartTime = Time.realtimeSinceStartup;
+                        timeIsSetted = true;
+                        nextLevelIsCreate = false;
+                    }
+                    timeBeforLevelStarting = Time.realtimeSinceStartup - levelStartTime;
+                    if (timeBeforLevelStarting > 7)
+                    {
+                        returnAllBalsButton.SetActive(true);
+                    }
+                }
+                else if (gameStatus == GameStatus.ENDED)
+                {
+                    if (!nextLevelIsCreate)
+                    {
+                        levelManager.CheckPointCheck();
+                        levelManager.GenerateNextBlockLine();
+                        returnAllBalsButton.SetActive(false);
+                        timeIsSetted = false;
+                        nextLevelIsCreate = true;
+                    }
+                    gameStatus = GameStatus.PREPARING;
+                }
+                else if (gameStatus == GameStatus.PREPARING)
+                {
+                    //Перебераем лист шариков и двигаем их в начальную позицию
+                    foreach (var go in ballObjectsList)
+                    {
+                        go.GetComponent<Ball>().MoveToPosition(startPosition);
+                    }
+                }
             }
-            else if (gameStatus == GameStatus.LAUNCHED)
-            {
-                if (doOnce)
-                {
-                    ballCountLabel.SetActive(false);
-                    doOnce = false;
-                }
-                if (!timeIsSetted)
-                {
-                    levelStartTime = Time.realtimeSinceStartup;
-                    timeIsSetted = true;
-                    nextLevelIsCreate = false;
-                }
-                timeBeforLevelStarting = Time.realtimeSinceStartup - levelStartTime;
-                if (timeBeforLevelStarting > 7)
-                {
-                    returnAllBalsButton.SetActive(true);
-                }
-            }
-            else if (gameStatus == GameStatus.ENDED)
-            {
-                if (!nextLevelIsCreate)
-                {
-                    levelManager.CheckPointCheck();
-                    levelManager.GenerateNextBlockLine();
-                    returnAllBalsButton.SetActive(false);
-                    timeIsSetted = false;
-                    nextLevelIsCreate = true;
-                }
-                gameStatus = GameStatus.PREPARING;
-            }
-            else if (gameStatus == GameStatus.PREPARING)
-            {
-                //Перебераем лист шариков и двигаем их в начальную позицию
-                foreach (var go in ballObjectsList)
-                {
-                    go.GetComponent<Ball>().MoveToPosition(startPosition);
-                }
-            }
-        }
     }
 
     private void ResetCoins()
@@ -231,12 +233,13 @@ public class GameManager : MonoBehaviour
             case "checkpoint":
                 gameStatus = GameStatus.PREPARING;
                 SpendCoin(10);
+                DestroyAllBals(); //Уничтожает GameObject-ы и чистит список
                 levelManager.SetupCheckPointScene(); //Очищает сцену 
-                boundManager.botBound.GetComponent<BotBound>().doOnce = false;
-                foreach (var go in ballObjectsList)
+                for(int i = 0; i < levelManager.checkPointBallsCount; i++)
                 {
-                    go.GetComponent<Ball>().MoveToPosition(startPosition);
+                    CreateBall(startPosition, ballPrefub1);
                 }
+                boundManager.botBound.GetComponent<BotBound>().doOnce = false;
                 levelManager.GenerateNextBlockLine();
                 gameLosed = false;
                 gameStatus = GameStatus.LAUNCHED;
