@@ -29,17 +29,17 @@ public class Block : MonoBehaviour, Destroyable {
         spriteRenderer.material.color = colors[lifeCount]; // Задает цвет в соответствии с hp
     }
 
-    public int TakeDamage(int damdge)
+    public int TakeDamage(int damage)
     {
 
         GetComponent<Animation>().Play();
-        if (lifeCount < 2)
+        if (damage >= lifeCount)
         {
             SelfDestroy();
         }
         else
         {
-            lifeCount-=damdge;
+            lifeCount-=damage;
             UpdateBlock();
         }
         return lifeCount;

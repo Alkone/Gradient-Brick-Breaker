@@ -37,7 +37,7 @@ public class LevelManager : MonoBehaviour
     void Awake()
     {
         //get optimal block size
-        cellPixelSize = ((Screen.width - pixelMarginLRBounds * 2) +2 ) / m_BlocksInLine;
+        cellPixelSize = ((Screen.width - pixelMarginLRBounds * 2) + 2) / m_BlocksInLine;
         cellLocalSize = (cellPixelSize - 2) / m_BlockPrefub.GetComponent<SpriteRenderer>().sprite.bounds.size.x;
         //setting start point of the blocks
 
@@ -55,12 +55,13 @@ public class LevelManager : MonoBehaviour
     public void Start()
     {
 
+
         //Create Lists
         gameObjects = new List<GameObject>();
         checkPointBallsCount = 1;
         checkPoint = currentLevel;
         m_BlockPrefub.transform.localScale = new Vector3(cellLocalSize, cellLocalSize, 0);
-        m_AddBallPointPrefub.transform.localScale = new Vector3(cellLocalSize/2, cellLocalSize/2, 0);
+        m_AddBallPointPrefub.transform.localScale = new Vector3(cellLocalSize / 2, cellLocalSize / 2, 0);
         m_CoinPrefub.transform.localScale = new Vector3(cellLocalSize / 2, cellLocalSize / 2, 0);
         permissionToGenBlockLine = false;
     }
@@ -79,13 +80,13 @@ public class LevelManager : MonoBehaviour
     public void SetupNewScene(int startLevel)
     {
         CleanLevel();
-        currentLevel = startLevel-1;
+        currentLevel = startLevel - 1;
     }
 
     public void SetupCheckPointScene()
     {
         CleanLevel();
-        currentLevel = checkPoint-1;
+        currentLevel = checkPoint - 1;
     }
 
     public void SetupContinueScene()
@@ -94,7 +95,6 @@ public class LevelManager : MonoBehaviour
         currentLevel--;
     }
 
-
     private void OptimazeScene()
     {
         parentObject.transform.position = Vector2.zero;
@@ -102,7 +102,7 @@ public class LevelManager : MonoBehaviour
 
     public void CheckPointCheck()
     {
-        if (currentLevel>0 && gameObjects.Count == 0)
+        if (currentLevel > 0 && gameObjects.Count == 0)
         {
             GameObject.Find("Text_CheckPoint").GetComponent<Animation>().Play();
             OptimazeScene();
@@ -124,174 +124,160 @@ public class LevelManager : MonoBehaviour
     }
 
 
-    private void CreateLevel(int blockLife)
+    private void CreateLevel()
     {
-        bool addPointCreated = false;
-        bool coinCreated = false;
-        Vector2 tempSpawnPos = spawnPos;
-        for (int column = 0; column < m_BlocksInLine; column++)
+        float randValue = 0;
+        float defaultDoubleBlockSpawnChance = 0;
+        float defaultBlockSpawnChance = 0;
+        float defaultAddBallSpawnChance = 0;
+        float defaultCoinSpawnChance = 0;
+
+        if (currentLevel < 50)
         {
-            switch ((int)Random.Range(1, 20))
+            defaultDoubleBlockSpawnChance = .07f;
+            defaultBlockSpawnChance = defaultDoubleBlockSpawnChance + .20f;
+        }
+        else if (currentLevel < 100)
+        {
+            defaultDoubleBlockSpawnChance = .03f;
+            defaultBlockSpawnChance = defaultDoubleBlockSpawnChance + .30f;
+        }
+        else if (currentLevel < 200)
+        {
+            defaultDoubleBlockSpawnChance = .04f;
+            defaultBlockSpawnChance = defaultDoubleBlockSpawnChance + .40f;
+        }
+        else if (currentLevel < 300)
+        {
+            defaultDoubleBlockSpawnChance = .05f;
+            defaultBlockSpawnChance = defaultDoubleBlockSpawnChance + .40f;
+        }
+        else if (currentLevel < 400)
+        {
+            defaultDoubleBlockSpawnChance = .06f;
+            defaultBlockSpawnChance = defaultDoubleBlockSpawnChance + .50f;
+        }
+        else if (currentLevel < 500)
+        {
+            defaultDoubleBlockSpawnChance = .07f;
+            defaultBlockSpawnChance = defaultDoubleBlockSpawnChance + .50f;
+        }
+        else if (currentLevel < 600)
+        {
+            defaultDoubleBlockSpawnChance = .08f;
+            defaultBlockSpawnChance = defaultDoubleBlockSpawnChance + .60f;
+        }
+        else if (currentLevel < 700)
+        {
+            defaultDoubleBlockSpawnChance = .09f;
+            defaultBlockSpawnChance = defaultDoubleBlockSpawnChance + .60f;
+        }
+        else if (currentLevel < 800)
+        {
+            defaultDoubleBlockSpawnChance = .1f;
+            defaultBlockSpawnChance = defaultDoubleBlockSpawnChance + .70f;
+        }
+        else if (currentLevel < 900)
+        {
+            defaultDoubleBlockSpawnChance = .1f;
+            defaultBlockSpawnChance = defaultDoubleBlockSpawnChance + .75f;
+        }
+        else if (currentLevel < 1000)
+        {
+            defaultDoubleBlockSpawnChance = .15f;
+            defaultBlockSpawnChance = defaultDoubleBlockSpawnChance + .70f;
+        }
+        else
+        {
+            defaultDoubleBlockSpawnChance = .20f;
+            defaultBlockSpawnChance = defaultDoubleBlockSpawnChance + .30f;
+        }
+
+            defaultAddBallSpawnChance = defaultBlockSpawnChance + .1f;
+            defaultCoinSpawnChance = defaultAddBallSpawnChance + .05f;
+
+            Vector2 tempSpawnPos = spawnPos;
+
+            for (int column = 0; column < m_BlocksInLine; column++)
             {
-                case 1:
-                    CreateGameObject(m_BlockPrefub, tempSpawnPos, blockLife);
-                    break;
-                case 2:
-                    CreateGameObject(m_BlockPrefub, tempSpawnPos, blockLife);
-                    break;
-                case 3:
-                    if (!addPointCreated)
-                    {
-                        CreateGameObject(m_AddBallPointPrefub, tempSpawnPos, blockLife);
-                        addPointCreated = true;
-                    }
-                    else
-                    {
-                        if (currentLevel > 150)
-                        {
-                            CreateGameObject(m_BlockPrefub, tempSpawnPos, blockLife);
-                        }
-                    }
-                    break;
-                case 4:
-                    if (!addPointCreated)
-                    {
-                        CreateGameObject(m_AddBallPointPrefub, tempSpawnPos, blockLife);
-                        addPointCreated = true;
-                    }
-                    else
-                    {
-                        if (currentLevel > 50)
-                        {
-                            CreateGameObject(m_BlockPrefub, tempSpawnPos, blockLife);
-                        }
-                    }
-                    break;
-                case 5:
-                    if (!addPointCreated)
-                    {
-                        CreateGameObject(m_AddBallPointPrefub, tempSpawnPos, blockLife);
-                        addPointCreated = true;
-                    }
-                    break;
-                case 6:
-                    CreateGameObject(m_BlockPrefub, tempSpawnPos, blockLife);
-                    break;
-                case 7:
-                    if (!addPointCreated)
-                    {
-                        CreateGameObject(m_AddBallPointPrefub, tempSpawnPos, blockLife);
-                        addPointCreated = true;
-                    }
-                    break;
-                case 8:
-                    if (addPointCreated)
-                    {
-                        CreateGameObject(m_BlockPrefub, tempSpawnPos, blockLife * 2);
-                    }
-                    break;
-                case 13:
-                    if (currentLevel > 100)
-                    {
-                        CreateGameObject(m_BlockPrefub, tempSpawnPos, blockLife);
-                    }
-                    break;
-                case 14:
-                    if (currentLevel > 200)
-                    {
-                        CreateGameObject(m_BlockPrefub, tempSpawnPos, blockLife);
-                    }
-                    break;
-                case 15:
-                    if (!coinCreated)
-                    {
-                        CreateGameObject(m_CoinPrefub, tempSpawnPos, blockLife);
-                        coinCreated = true;
-                    }
-                    break;
-                case 16:
-                    CreateGameObject(m_BlockPrefub, tempSpawnPos, blockLife);
-                    break;
-                case 17:
-                    if (!addPointCreated)
-                    {
-                        CreateGameObject(m_AddBallPointPrefub, tempSpawnPos, blockLife);
-                        addPointCreated = true;
-                    }
-                    else
-                    {
-                        if (currentLevel > 400)
-                        {
-                            CreateGameObject(m_BlockPrefub, tempSpawnPos, blockLife);
-                        }
-                    }
-                    break;
-                case 18:
-                    if (currentLevel > 300)
-                    {
-                        CreateGameObject(m_BlockPrefub, tempSpawnPos, blockLife);
-                    }
-                    break;
-                case 19:
-                    CreateGameObject(m_BlockPrefub, tempSpawnPos, blockLife);
-                    break;
+                randValue = Random.value;
+                if (randValue < defaultDoubleBlockSpawnChance)
+                {
+                    CreateGameObject(m_BlockPrefub, tempSpawnPos, currentLevel * 2);
+                }
+                else if (randValue < defaultBlockSpawnChance) // 45% of the time
+                {
+                    CreateGameObject(m_BlockPrefub, tempSpawnPos, currentLevel);
+                }
+                else if (randValue < defaultAddBallSpawnChance) // 45% of the time
+                {
+                    CreateGameObject(m_AddBallPointPrefub, tempSpawnPos, currentLevel);
+                }
+                else if (randValue < defaultCoinSpawnChance) // 45% of the time
+                {
+                    CreateGameObject(m_CoinPrefub, tempSpawnPos, currentLevel);
+                }
+                else // 10% of the time
+                {
+
+                }
+                tempSpawnPos.x += cellPixelSize;
             }
-            tempSpawnPos.x += cellPixelSize;
         }
-    }
 
 
-    //Создает объекты и добавляет в списки
-    private void CreateGameObject(GameObject prefub, Vector2 pos, int blockLife)
-    {
-        if (blockLife == 0) blockLife = 1;
-        GameObject go;
-        go = Instantiate(prefub, pos, Quaternion.identity, parentObject.transform);
-
-        //if Block
-        if (prefub.GetComponent<Block>())
+        
+        //Создает объекты и добавляет в списки
+        private void CreateGameObject(GameObject prefub, Vector2 pos, int blockLife)
         {
-            go.GetComponent<Block>().lifeCount = blockLife;
-        }
+            if (blockLife == 0) blockLife = 1;
+            GameObject go;
+            go = Instantiate(prefub, pos, Quaternion.identity, parentObject.transform);
+
+            //if Block
+            if (prefub.GetComponent<Block>())
+            {
+                go.GetComponent<Block>().lifeCount = blockLife;
+            }
             gameObjects.Add(go);
-    }
+        }
 
-    //Delete all level GameObjects
-    public void RemoveGameObject(GameObject go)
-    {
-            gameObjects.Remove(go);
-    }
-
-    //Clean level
-    private void CleanLevel()
-    {
-        if (gameObjects != null)
+        //Delete all level GameObjects
+        public void RemoveGameObject(GameObject go)
         {
-            foreach (var go in gameObjects)
+            gameObjects.Remove(go);
+        }
+
+        //Clean level
+        private void CleanLevel()
+        {
+            if (gameObjects != null)
             {
+                foreach (var go in gameObjects)
+                {
                     go.GetComponent<Destroyable>().SelfDestroy();
+                }
+            }
+        }
+
+
+        //Move level down on one cell size.
+        private void MoveLevelDownOnOneCell(GameObject parent)
+        {
+            parent.transform.position = new Vector2(parent.transform.position.x, parent.transform.position.y - cellPixelSize);
+        }
+
+        private void FixedUpdate()
+        {
+            gameObjectsCount = gameObjects.Count;
+            if (permissionToGenBlockLine)
+            {
+                currentLevel++;
+                GameManager.instance.GetColorManager().SetGradientColor(currentLevel);
+                textLevel.text = currentLevel.ToString();
+                CreateLevel();
+                MoveLevelDownOnOneCell(parentObject);
+                permissionToGenBlockLine = false;
             }
         }
     }
-
-
-    //Move level down on one cell size.
-    private void MoveLevelDownOnOneCell(GameObject parent)
-    {
-        parent.transform.position = new Vector2(parent.transform.position.x, parent.transform.position.y - cellPixelSize);
-    }
-
-    private void FixedUpdate()
-    {
-        gameObjectsCount = gameObjects.Count;
-        if (permissionToGenBlockLine)
-        {
-            currentLevel++;
-            GameManager.instance.GetColorManager().SetGradientColor(currentLevel);
-            textLevel.text = currentLevel.ToString();
-            CreateLevel(currentLevel);
-            MoveLevelDownOnOneCell(parentObject);
-            permissionToGenBlockLine = false;
-        }
-    }
-}
