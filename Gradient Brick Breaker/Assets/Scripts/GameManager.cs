@@ -13,16 +13,16 @@ public class GameManager : MonoBehaviour
     //
     public GameStatus gameStatus; //Store a reference to our GameStatus which control level.
     private LevelManager levelManager; //Store a reference to our LevelManager which control level.
-
     private BoundManager boundManager;
     private AdMobManager adMobManager;
     private ColorManager colorManager; //
+    private UIManager uIManager;
     private LineRenderer lineRenderer; // Store a reference to our LineRenderer.
     private TrajectorySimulation trajectorySimulator; // Store a reference to our LevelManager which simulate gameObeject path.
     private IAPManager iAPManager;
 
     ////Inspector fields
-    public GameObject loseScreen, revardedVideoButton, spendCoinsButton, ballCountLabel, coinCountTextLabel, returnAllBalsButton, pauseScreen, currentPrefab, removeAdsButton, continueWithoutAdsButton, soundButton, noSoundButton;
+    public GameObject currentPrefab;
 
     public Vector2 startPosition; // Start ball pos
     [SerializeField] private float segmentCount = 2.2f; //Кол-во предсказанных скачков
@@ -90,6 +90,7 @@ public class GameManager : MonoBehaviour
         lineRenderer = GetComponent<LineRenderer>();
         adMobManager = GetComponent<AdMobManager>();
         colorManager = GetComponent<ColorManager>();
+        uIManager = GetComponent<UIManager>();
         iAPManager = new IAPManager();
 
         //Init objects
@@ -128,49 +129,49 @@ public class GameManager : MonoBehaviour
         {
             if (adsProperty == "noads") // реклама включена
             {
-                revardedVideoButton.SetActive(false);
-                removeAdsButton.SetActive(false);
-                continueWithoutAdsButton.SetActive(true);
+                uIManager.lose_button_watchads.SetActive(false);
+                uIManager.RemoveAdsButton.SetActive(false);
+                uIManager.lose_button_continue.SetActive(true);
             }
             else
             {
-                continueWithoutAdsButton.SetActive(false);
-                removeAdsButton.SetActive(true);
-                revardedVideoButton.SetActive(true);
+                uIManager.lose_button_continue.SetActive(false);
+                uIManager.RemoveAdsButton.SetActive(true);
+                uIManager.lose_button_watchads.SetActive(true);
 
                 if (adMobManager.GetRewardBasedVideoIsLoaded())
                 {
-                    revardedVideoButton.GetComponent<Button>().interactable = true;
-                    revardedVideoButton.GetComponent<Animation>().enabled = true;
+                    uIManager.lose_button_watchads.GetComponent<Button>().interactable = true;
+                    uIManager.lose_button_watchads.GetComponent<Animation>().enabled = true;
                 }
                 else
                 {
-                    revardedVideoButton.GetComponent<Button>().interactable = false;
-                    revardedVideoButton.GetComponent<Animation>().enabled = false;
+                    uIManager.lose_button_watchads.GetComponent<Button>().interactable = false;
+                    uIManager.lose_button_watchads.GetComponent<Animation>().enabled = false;
                 }
             }
 
-            loseScreen.SetActive(true);
+            uIManager.Lose.SetActive(true);
             loseFlag = true;
         }
         else if (!gameLosed && loseFlag)
         {
 
-            loseScreen.SetActive(false);
-            removeAdsButton.SetActive(false);
+            uIManager.Lose.SetActive(false);
+            uIManager.RemoveAdsButton.SetActive(false);
             loseFlag = false;
         }
 
         if (gamePaused && !pauseFlag)
         {
             Time.timeScale = 0;
-            pauseScreen.SetActive(true);
+            uIManager.Pause.SetActive(true);
             pauseFlag = true;
         }
         else if (!gamePaused && pauseFlag)
         {
             Time.timeScale = 1;
-            pauseScreen.SetActive(false);
+            uIManager.Pause.SetActive(false);
             pauseFlag = false;
         }
     }
@@ -183,8 +184,8 @@ public class GameManager : MonoBehaviour
             {
                 if (!doOnce)
                 {
-                    ballCountLabel.transform.position = new Vector2(startPosition.x + 70, startPosition.y + 70);
-                    ballCountLabel.SetActive(true);
+                    uIManager.game_text_ballcount.transform.position = new Vector2(startPosition.x + 70, startPosition.y + 70);
+                    uIManager.game_text_ballcount.SetActive(true);
                     doOnce = true;
                 }
                 WaitTouchToLunch();
@@ -193,7 +194,7 @@ public class GameManager : MonoBehaviour
             {
                 if (doOnce)
                 {
-                    ballCountLabel.SetActive(false);
+                    uIManager.game_text_ballcount.SetActive(false);
                     doOnce = false;
                 }
                 if (!timeIsSetted)
@@ -205,7 +206,7 @@ public class GameManager : MonoBehaviour
                 timeBeforLevelStarting = Time.realtimeSinceStartup - levelStartTime;
                 if (timeBeforLevelStarting > 7)
                 {
-                    returnAllBalsButton.SetActive(true);
+                    uIManager.game_button_return.SetActive(true);
                 }
             }
             else if (gameStatus == GameStatus.ENDED)
@@ -214,7 +215,7 @@ public class GameManager : MonoBehaviour
                 {
                     levelManager.CheckPointCheck();
                     levelManager.GenerateNextBlockLine();
-                    returnAllBalsButton.SetActive(false);
+                    uIManager.game_button_return.SetActive(false);
                     timeIsSetted = false;
                     nextLevelIsCreate = true;
                 }
@@ -237,7 +238,7 @@ public class GameManager : MonoBehaviour
         switch (type)
         {
             case "new":
-                coinCountTextLabel.GetComponent<Text>().text = coins.ToString();
+                uIManager.game_coin_text_coinscount.GetComponent<Text>().text = coins.ToString();
                 levelManager.SetupNewScene(startLevel); //Очищает сцену 
                 DestroyAllBals(); //Уничтожает GameObject и чистит список
                 boundManager.botBound.GetComponent<BotBound>().doOnce = false;
@@ -303,6 +304,11 @@ public class GameManager : MonoBehaviour
     }
 
     //Getters private field link
+    public UIManager GetUIManager()
+    {
+        return uIManager;
+    }
+
     public ColorManager GetColorManager()
     {
         return colorManager;
@@ -322,20 +328,20 @@ public class GameManager : MonoBehaviour
     public void AddCoin()
     {
         coins++;
-        coinCountTextLabel.GetComponent<Text>().text = coins.ToString();
+        uIManager.game_coin_text_coinscount.GetComponent<Text>().text = coins.ToString();
         if (coins >= 10)
         {
-            spendCoinsButton.GetComponent<Button>().interactable = true;
+            uIManager.lose_button_checkpoint.GetComponent<Button>().interactable = true;
         }
     }
 
     public void SpendCoin(int count)
     {
         coins -= count;
-        coinCountTextLabel.GetComponent<Text>().text = coins.ToString();
+        uIManager.game_coin_text_coinscount.GetComponent<Text>().text = coins.ToString();
         if (coins < 10)
         {
-            spendCoinsButton.GetComponent<Button>().interactable = false;
+            uIManager.lose_button_checkpoint.GetComponent<Button>().interactable = false;
         }
     }
 
@@ -345,7 +351,7 @@ public class GameManager : MonoBehaviour
     {
         GameObject go = Instantiate(ballPrefub, position, Quaternion.identity);
         ballObjectsList.Add(go);
-        ballCountLabel.GetComponentInChildren<Text>().text = "x " + ballObjectsList.Count.ToString();
+        uIManager.game_text_ballcount.GetComponentInChildren<Text>().text = "x " + ballObjectsList.Count.ToString();
         return true;
     }
 
@@ -533,13 +539,13 @@ public class GameManager : MonoBehaviour
     {
         if (state == true)
         {
-            noSoundButton.SetActive(false);
-            soundButton.SetActive(true);
+            uIManager.pause_button_nosound.SetActive(false);
+            uIManager.pause_button_sound.SetActive(true);
         }
         else
         {
-            soundButton.SetActive(false);
-            noSoundButton.SetActive(true);
+            uIManager.pause_button_sound.SetActive(false);
+            uIManager.pause_button_nosound.SetActive(true);
         }
         sound = state;
     }

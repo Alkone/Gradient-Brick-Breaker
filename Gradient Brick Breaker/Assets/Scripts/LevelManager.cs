@@ -104,7 +104,7 @@ public class LevelManager : MonoBehaviour
     {
         if (currentLevel > 0 && gameObjects.Count == 0)
         {
-            GameObject.Find("Text_CheckPoint").GetComponent<Animation>().Play();
+            GameManager.instance.GetUIManager().game_text_checkpoint.GetComponent<Animation>().Play();
             OptimazeScene();
             checkPoint = currentLevel;
             checkPointBallsCount = GameManager.instance.ballObjectsList.Count;
