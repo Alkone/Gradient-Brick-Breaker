@@ -5,6 +5,7 @@ using UnityEngine;
 public class AddBall : MonoBehaviour, Destroyable {
 
     [SerializeField] private GameObject addablePrefab;
+    private AudioSource audioSource;
 
     //Ссылка на контролер
     private LevelManager levelManager;
@@ -14,6 +15,7 @@ public class AddBall : MonoBehaviour, Destroyable {
     private void Start()
     {
         levelManager = GameManager.instance.GetLevelManager();
+        audioSource = GetComponent<AudioSource>();
     }
 
     private void OnTriggerEnter2D(Collider2D collision)
@@ -32,6 +34,7 @@ public class AddBall : MonoBehaviour, Destroyable {
 
     public void AddBallAndDestroyThis()
     {
+        PlaySound();
         Add();
         SelfDestroy();
     }
@@ -41,9 +44,17 @@ public class AddBall : MonoBehaviour, Destroyable {
         StartCoroutine("DestroyThisObject");
     }
 
+    private void PlaySound()
+    {
+        if (GameManager.instance.sound == true)
+        {
+            audioSource.Play();
+        }
+    }
+
     private IEnumerator DestroyThisObject()
     {
-        yield return new WaitForSeconds((float)0.02);
+        yield return new WaitForSeconds((float)0.06);
         levelManager.RemoveGameObject(gameObject);
         Destroy(gameObject);
     }

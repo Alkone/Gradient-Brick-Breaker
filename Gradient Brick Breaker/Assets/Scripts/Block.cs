@@ -8,6 +8,8 @@ public class Block : MonoBehaviour, Destroyable {
     public int lifeCount;
 
     private BoxCollider2D boxCollider2D;
+    private AudioSource audioSource;
+    private Animation animation;
     private TextMesh hpTextMesh; // Ссылка на Text компонент дочернего объекта
     private SpriteRenderer spriteRenderer; //Ссылка на спрайтрендер
     private Color[] colors; //Массив возможных цветов
@@ -16,6 +18,8 @@ public class Block : MonoBehaviour, Destroyable {
     // Use this for initialization
     void Start () {
         boxCollider2D = GetComponent<BoxCollider2D>();
+        audioSource = GetComponent<AudioSource>();
+        animation = GetComponent<Animation>();
         hpTextMesh = GetComponentInChildren<TextMesh>();
         spriteRenderer = GetComponent<SpriteRenderer>();
         levelManager = GameManager.instance.GetLevelManager();
@@ -31,8 +35,8 @@ public class Block : MonoBehaviour, Destroyable {
 
     public int TakeDamage(int damage)
     {
-
-        GetComponent<Animation>().Play();
+        animation.Play();
+        PlaySound();
         if (damage >= lifeCount)
         {
             SelfDestroy();
@@ -45,6 +49,14 @@ public class Block : MonoBehaviour, Destroyable {
         return lifeCount;
     }
 
+    private void PlaySound()
+    {
+        if(GameManager.instance.sound == true)
+        {
+            audioSource.Play(0);
+        }
+    }
+
     public void SelfDestroy()
     {
         boxCollider2D.enabled = false;
@@ -53,7 +65,7 @@ public class Block : MonoBehaviour, Destroyable {
 
     private IEnumerator DestroyThisObject()
     {
-        yield return new WaitForSeconds((float)0.02);
+        yield return new WaitForSeconds((float)0.04);
         levelManager.RemoveGameObject(gameObject);   // ЗАМЕНИТЬ НА ЭВЕНТ
         Destroy(gameObject);
     }

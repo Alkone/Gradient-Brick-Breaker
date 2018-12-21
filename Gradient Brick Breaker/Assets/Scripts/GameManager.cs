@@ -19,10 +19,10 @@ public class GameManager : MonoBehaviour
     private ColorManager colorManager; //
     private LineRenderer lineRenderer; // Store a reference to our LineRenderer.
     private TrajectorySimulation trajectorySimulator; // Store a reference to our LevelManager which simulate gameObeject path.
-    private GameObject currentPrefab;
+    private IAPManager iAPManager;
 
     ////Inspector fields
-    public GameObject loseScreen, revardedVideoButton, spendCoinsButton, ballCountLabel, coinCountTextLabel, returnAllBalsButton, pauseScreen, ballPrefubBlank, ballPrefubFire, ballPrefubIce, ballPrefubEnergy, ballPrefubDark;
+    public GameObject loseScreen, revardedVideoButton, spendCoinsButton, ballCountLabel, coinCountTextLabel, returnAllBalsButton, pauseScreen, currentPrefab, removeAdsButton, continueWithoutAdsButton, soundButton, noSoundButton;
 
     public Vector2 startPosition; // Start ball pos
     [SerializeField] private float segmentCount = 2.2f; //Кол-во предсказанных скачков
@@ -60,8 +60,10 @@ public class GameManager : MonoBehaviour
     //saveded
     private int coins;
     private string prefabsAllow;
-    public enum BallPrefub {BLANK, FIRE, ICE, ENERGY, DARK}
-    public BallPrefub ballPrefub;
+
+
+    //Sound
+    public bool sound;
 
     //Awake is always called before any Start functions
     void Awake()
@@ -88,6 +90,7 @@ public class GameManager : MonoBehaviour
         lineRenderer = GetComponent<LineRenderer>();
         adMobManager = GetComponent<AdMobManager>();
         colorManager = GetComponent<ColorManager>();
+        iAPManager = new IAPManager();
 
         //Init objects
         trajectorySimulator = new TrajectorySimulation(lineRenderer);
@@ -101,13 +104,15 @@ public class GameManager : MonoBehaviour
     //
     void Start()
     {
-        LoadGame();
+        // LoadGame();
+        adsProperty = "ads";
         adMobManager.InitAdmob(adsProperty);
         InitGame();
     }
 
     void InitGame()
     {
+        sound = true;
         doOnce = false;
         checkPoint = startLevel;
         timeIsSetted = false;
@@ -121,12 +126,38 @@ public class GameManager : MonoBehaviour
 
         if (gameLosed && !loseFlag)
         {
+            if (adsProperty == "noads") // реклама включена
+            {
+                revardedVideoButton.SetActive(false);
+                removeAdsButton.SetActive(false);
+                continueWithoutAdsButton.SetActive(true);
+            }
+            else
+            {
+                continueWithoutAdsButton.SetActive(false);
+                removeAdsButton.SetActive(true);
+                revardedVideoButton.SetActive(true);
+
+                if (adMobManager.GetRewardBasedVideoIsLoaded())
+                {
+                    revardedVideoButton.GetComponent<Button>().interactable = true;
+                    revardedVideoButton.GetComponent<Animation>().enabled = true;
+                }
+                else
+                {
+                    revardedVideoButton.GetComponent<Button>().interactable = false;
+                    revardedVideoButton.GetComponent<Animation>().enabled = false;
+                }
+            }
+
             loseScreen.SetActive(true);
             loseFlag = true;
         }
         else if (!gameLosed && loseFlag)
         {
+
             loseScreen.SetActive(false);
+            removeAdsButton.SetActive(false);
             loseFlag = false;
         }
 
@@ -202,9 +233,9 @@ public class GameManager : MonoBehaviour
 
     public void StartGame(string type)
     {
-        SelectBallPrefub();
+        currentPrefab.transform.localScale = Vector2.one * levelManager.GetCellLocalSize() * 0.33f;
         switch (type)
-        { 
+        {
             case "new":
                 coinCountTextLabel.GetComponent<Text>().text = coins.ToString();
                 levelManager.SetupNewScene(startLevel); //Очищает сцену 
@@ -248,16 +279,6 @@ public class GameManager : MonoBehaviour
     public void LoseGame()
     {
         gameLosed = true;
-        if (adMobManager.GetRewardBasedVideoIsLoaded())
-        {
-            revardedVideoButton.GetComponent<Button>().interactable = true;
-            revardedVideoButton.GetComponent<Animation>().enabled = true;
-        }
-        else
-        {
-            revardedVideoButton.GetComponent<Button>().interactable = false;
-            revardedVideoButton.GetComponent<Animation>().enabled = false;
-        }
     }
 
     public void PauseGame()
@@ -275,7 +296,10 @@ public class GameManager : MonoBehaviour
         adsProperty = "noads";
         PlayerPrefs.SetString("AdsProperty", adsProperty);
         PlayerPrefs.Save();
-        adMobManager.DestroyBanner();
+        if (gameLosed)
+        {
+            loseFlag = false ;
+        }
     }
 
     //Getters private field link
@@ -315,16 +339,6 @@ public class GameManager : MonoBehaviour
         }
     }
 
-    private void SelectBallPrefub()
-    {
-        if(ballPrefub == BallPrefub.BLANK) currentPrefab = ballPrefubBlank;
-        else if (ballPrefub == BallPrefub.ICE) currentPrefab = ballPrefubIce;
-        else if (ballPrefub == BallPrefub.FIRE) currentPrefab = ballPrefubFire;
-        else if (ballPrefub == BallPrefub.ENERGY) currentPrefab = ballPrefubEnergy;
-        else if (ballPrefub == BallPrefub.DARK) currentPrefab = ballPrefubDark;
-
-        currentPrefab.transform.localScale = Vector2.one * levelManager.GetCellLocalSize() * 0.33f;
-    }
 
     //Создает шарик в заданной позиции с гравитацией
     public bool CreateBall(Vector2 position, GameObject ballPrefub)
@@ -515,6 +529,21 @@ public class GameManager : MonoBehaviour
         return status;
     }
 
+    public void SetSound(bool state)
+    {
+        if (state == true)
+        {
+            noSoundButton.SetActive(false);
+            soundButton.SetActive(true);
+        }
+        else
+        {
+            soundButton.SetActive(false);
+            noSoundButton.SetActive(true);
+        }
+        sound = state;
+    }
+    
     private void LoadGame()
     {
         string[] keys = { "AdsProperty", "coins", "prefabsAllow" };
@@ -528,32 +557,12 @@ public class GameManager : MonoBehaviour
             adsProperty = "ads";
         }
 
-        if (PlayerPrefs.HasKey("coins"))
-        {
-            coins = PlayerPrefs.GetInt("coins");
-        }
-        else
-        {
-            coins = 0;
-        }
-
-        if (PlayerPrefs.HasKey("prefabsAllow"))
-        {
-            prefabsAllow = PlayerPrefs.GetString("prefabsAllow");
-        }
-        else
-        {
-            prefabsAllow = "0";
-        }
-
 
     }
 
     private void SaveGame()
     {
         PlayerPrefs.SetString("AdsProperty", "noads");
-        PlayerPrefs.SetInt("coins", coins);
-        PlayerPrefs.SetString("prefabsAllow", prefabsAllow);
         PlayerPrefs.Save();
     }
 }

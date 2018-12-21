@@ -16,39 +16,14 @@ public class AdMobManager : MonoBehaviour
     public void InitAdmob(string property)
     {
 
-#if UNITY_IOS
-                 appID="";
-                 bannerID="";
-                 videoID="";
-
-#elif UNITY_ANDROID
 
         appID = "ca-app-pub-6267489793748314~3374953289";
-        bannerID = "ca-app-pub-6267489793748314/9637109309"; //no test
         revardedVideoID = "ca-app-pub-6267489793748314/2214695100"; //no test
-
-#endif
 
         MobileAds.Initialize(appID);
 
-        if (property.Equals("ads"))
+        if (!property.Equals("noads"))
         {
-            bannerView = new BannerView(bannerID, AdSize.SmartBanner, AdPosition.Bottom);
-            // Called when an ad request has successfully loaded.
-            bannerView.OnAdLoaded += HandleOnAdLoaded;
-            // Called when an ad request failed to load.
-            bannerView.OnAdFailedToLoad += HandleOnAdFailedToLoad;
-            // Called when an ad is clicked.
-            bannerView.OnAdOpening += HandleOnAdOpened;
-            // Called when the user returned from the app after an ad click.
-            bannerView.OnAdClosed += HandleOnAdClosed;
-            // Called when the ad click caused the user to leave the application.
-            bannerView.OnAdLeavingApplication += HandleOnAdLeavingApplication;
-
-            RequestBanner();
-        }
-
-
         rewardBasedVideo = RewardBasedVideoAd.Instance;
         // Called when an ad request has successfully loaded.
         rewardBasedVideo.OnAdLoaded += HandleRewardBasedVideoLoaded;
@@ -66,6 +41,7 @@ public class AdMobManager : MonoBehaviour
         rewardBasedVideo.OnAdLeavingApplication += HandleRewardBasedVideoLeftApplication;
 
         RequestRewardBasedVideo();
+        }
 
     }
 
@@ -74,11 +50,6 @@ public class AdMobManager : MonoBehaviour
         AdRequest request;
             request = new AdRequest.Builder().Build();
         bannerView.LoadAd(request);
-    }
-
-    public void DestroyBanner()
-    {
-        bannerView.Destroy();
     }
 
 
@@ -101,35 +72,6 @@ public class AdMobManager : MonoBehaviour
     {
         return rewardBasedVideo.IsLoaded();
     }
-
-    //Banner
-
-    public void HandleOnAdLoaded(object sender, EventArgs args)
-    {
-        MonoBehaviour.print("HandleAdLoaded event received");
-    }
-
-    public void HandleOnAdFailedToLoad(object sender, AdFailedToLoadEventArgs args)
-    {
-        MonoBehaviour.print("HandleFailedToReceiveAd event received with message: "
-                            + args.Message);
-    }
-
-    public void HandleOnAdOpened(object sender, EventArgs args)
-    {
-        MonoBehaviour.print("HandleAdOpened event received");
-    }
-
-    public void HandleOnAdClosed(object sender, EventArgs args)
-    {
-        MonoBehaviour.print("HandleAdClosed event received");
-    }
-
-    public void HandleOnAdLeavingApplication(object sender, EventArgs args)
-    {
-        MonoBehaviour.print("HandleAdLeavingApplication event received");
-    }
-
 
     //Revarded video
 
