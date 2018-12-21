@@ -38,7 +38,7 @@ RenderSettings:
   m_ReflectionIntensity: 1
   m_CustomReflection: {fileID: 0}
   m_Sun: {fileID: 0}
-  m_IndirectSpecularColor: {r: 0.9428385, g: 0.6225357, b: 0.25267786, a: 1}
+  m_IndirectSpecularColor: {r: 0.94643945, g: 0.58674306, b: 0.28666562, a: 1}
   m_UseRadianceAmbientProbe: 0
 --- !u!157 &3
 LightmapSettings:
@@ -3106,7 +3106,7 @@ MonoBehaviour:
   game_text_checkpoint: {fileID: 733753734}
   game_text_ballcount: {fileID: 1645592811}
   game_button_pause: {fileID: 647716359}
-  game_button_resume: {fileID: 213280608}
+  game_button_return: {fileID: 213280608}
   game_coin: {fileID: 219076608}
   game_coin_text_coinscount: {fileID: 414965388}
   Pause: {fileID: 129031257}
