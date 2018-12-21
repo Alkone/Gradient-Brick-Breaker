@@ -118,7 +118,7 @@ PlayerSettings:
     16:10: 1
     16:9: 1
     Others: 1
-  bundleVersion: 1.06
+  bundleVersion: 1.08
   preloadedAssets: []
   metroInputSource: 0
   wsaTransparentSwapchain: 0
@@ -155,7 +155,7 @@ PlayerSettings:
     Android: ru.devalkone.gbbreaker
     Standalone: com.Company.ProductName
   buildNumber: {}
-  AndroidBundleVersionCode: 7
+  AndroidBundleVersionCode: 9
   AndroidMinSdkVersion: 19
   AndroidTargetSdkVersion: 0
   AndroidPreferredInstallLocation: 1
@@ -244,7 +244,7 @@ PlayerSettings:
   AndroidTargetArchitectures: 5
   AndroidSplashScreenScale: 0
   androidSplashScreen: {fileID: 0}
-  AndroidKeystoreName: D:/Cloud Mail.Ru/GooglePlay/gbbreaker.keystore
+  AndroidKeystoreName: /Users/alkone/Documents/Cloud Mail.Ru/GooglePlay/gbbreaker.keystore
   AndroidKeyaliasName: gbbreaker
   AndroidBuildApkPerCpuArchitecture: 0
   AndroidTVCompatibility: 1

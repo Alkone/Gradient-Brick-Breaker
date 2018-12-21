@@ -6,10 +6,12 @@ public class Coin : MonoBehaviour, Destroyable {
 
     private bool coinPicked;
     private LevelManager levelManager;
+    private AudioSource audioSource;
 
     void Start()
     {
         levelManager = GameManager.instance.GetLevelManager();
+        audioSource = GetComponent<AudioSource>();
         coinPicked = false;
     }
 
@@ -35,7 +37,16 @@ public class Coin : MonoBehaviour, Destroyable {
     public void AddCoinAndDestroyThis()
     {
         Add();
+        PlaySound();
         SelfDestroy();
+    }
+
+    private void PlaySound()
+    {
+        if (GameManager.instance.sound == true)
+        {
+            audioSource.Play();
+        }
     }
 
     private IEnumerator DestroyThisObject()

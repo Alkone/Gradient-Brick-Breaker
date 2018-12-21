@@ -35,8 +35,8 @@ public class Block : MonoBehaviour, Destroyable {
 
     public int TakeDamage(int damage)
     {
-        animation.Play();
-        PlaySound();
+       
+
         if (damage >= lifeCount)
         {
             SelfDestroy();
@@ -46,12 +46,14 @@ public class Block : MonoBehaviour, Destroyable {
             lifeCount-=damage;
             UpdateBlock();
         }
+        animation.Play();
+        PlaySound();
         return lifeCount;
     }
 
     private void PlaySound()
     {
-        if(GameManager.instance.sound == true)
+        if (GameManager.instance.sound == true)
         {
             audioSource.Play(0);
         }
@@ -65,7 +67,7 @@ public class Block : MonoBehaviour, Destroyable {
 
     private IEnumerator DestroyThisObject()
     {
-        yield return new WaitForSeconds((float)0.04);
+        yield return new WaitForSeconds((float)0.03);
         levelManager.RemoveGameObject(gameObject);   // ЗАМЕНИТЬ НА ЭВЕНТ
         Destroy(gameObject);
     }

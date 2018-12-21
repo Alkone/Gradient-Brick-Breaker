@@ -10,7 +10,7 @@ public class UIManager : MonoBehaviour {
 
     public GameObject Pause, pause_background, pause_text_paused, pause_button_sound, pause_button_nosound, pause_button_resume;
 
-    public GameObject Lose, lose_background, lose_text_continue, lose_text_or, lose_button_continue, lose_button_checkpoint, lose_button_watchads, lose_button_startnewgame;
+    public GameObject Lose, lose_background, lose_text_continue, lose_text_or, lose_button_continue, lose_button_checkpoint ,lose_button_checkpoint_free, lose_button_watchads, lose_button_startnewgame;
 
     public GameObject Feedback, feedback_background, feedback_question, feedback_nolike_inputfield; 
 

@@ -19,7 +19,7 @@ public class GameManager : MonoBehaviour
     private UIManager uIManager;
     private LineRenderer lineRenderer; // Store a reference to our LineRenderer.
     private TrajectorySimulation trajectorySimulator; // Store a reference to our LevelManager which simulate gameObeject path.
-    private IAPManager iAPManager;
+    //private IAPManager iAPManager;
 
     ////Inspector fields
     public GameObject currentPrefab;
@@ -96,7 +96,7 @@ public class GameManager : MonoBehaviour
         adMobManager = GetComponent<AdMobManager>();
         colorManager = GetComponent<ColorManager>();
         uIManager = GetComponent<UIManager>();
-        iAPManager = new IAPManager();
+        //iAPManager = new IAPManager();
 
         //Init objects
         trajectorySimulator = new TrajectorySimulation(lineRenderer);
@@ -133,17 +133,28 @@ public class GameManager : MonoBehaviour
 
         if (gameLosed && !loseFlag)
         {
+            if (coins < 10)
+            {
+                uIManager.lose_button_checkpoint.GetComponent<Button>().interactable = false;
+                uIManager.lose_button_continue.GetComponent<Button>().interactable = false;
+            }
+
+
             if (adsProperty == "noads") // реклама включена
             {
                 uIManager.lose_button_watchads.SetActive(false);
+                uIManager.lose_button_checkpoint.SetActive(false);
                 uIManager.RemoveAdsButton.SetActive(false);
                 uIManager.lose_button_continue.SetActive(true);
+                uIManager.lose_button_checkpoint_free.SetActive(true);
             }
             else
             {
                 uIManager.lose_button_continue.SetActive(false);
+                uIManager.lose_button_checkpoint_free.SetActive(false);
                 uIManager.RemoveAdsButton.SetActive(true);
                 uIManager.lose_button_watchads.SetActive(true);
+                uIManager.lose_button_checkpoint.SetActive(true);
 
                 if (adMobManager.GetRewardBasedVideoIsLoaded())
                 {
@@ -194,7 +205,7 @@ public class GameManager : MonoBehaviour
                     uIManager.game_text_ballcount.SetActive(true);
                     doOnce = true;
                 }
-                if (!feedbackrevard && Time.realtimeSinceStartup > 10)
+                if (!feedbackrevard && Time.realtimeSinceStartup > 300)
                 {
                     CallFeedback();
                 }
@@ -275,7 +286,6 @@ public class GameManager : MonoBehaviour
                 break;
             case "checkpoint":
                 gameStatus = GameStatus.PREPARING;
-                SpendCoin(10);
                 DestroyAllBals(); //Уничтожает GameObject-ы и чистит список
                 levelManager.SetupCheckPointScene(); //Очищает сцену 
                 for (int i = 0; i < levelManager.checkPointBallsCount; i++)
@@ -289,6 +299,8 @@ public class GameManager : MonoBehaviour
                 break;
         }
     }
+
+
 
     public void LoseGame()
     {
@@ -357,11 +369,10 @@ public class GameManager : MonoBehaviour
 
     public void SpendCoin(int count)
     {
-        coins -= count;
-        uIManager.game_coin_text_coinscount.GetComponent<Text>().text = coins.ToString();
-        if (coins < 10)
+        if (count <= coins)
         {
-            uIManager.lose_button_checkpoint.GetComponent<Button>().interactable = false;
+            coins -= count;
+            uIManager.game_coin_text_coinscount.GetComponent<Text>().text = coins.ToString();
         }
     }
 
