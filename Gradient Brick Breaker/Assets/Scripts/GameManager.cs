@@ -48,6 +48,8 @@ public class GameManager : MonoBehaviour
     private bool pauseFlag = false; // вспомогательная переменная
     private bool nextLevelIsCreate;
     private bool doOnce;
+    private bool feedbackrevard;
+    private bool feedbackingNow;
 
     //Time
     private bool timeIsSetted;
@@ -64,6 +66,9 @@ public class GameManager : MonoBehaviour
 
     //Sound
     public bool sound;
+
+    //Feedback
+
 
     //Awake is always called before any Start functions
     void Awake()
@@ -105,7 +110,7 @@ public class GameManager : MonoBehaviour
     //
     void Start()
     {
-        // LoadGame();
+        LoadGame();
         adsProperty = "ads";
         adMobManager.InitAdmob(adsProperty);
         InitGame();
@@ -113,6 +118,7 @@ public class GameManager : MonoBehaviour
 
     void InitGame()
     {
+        feedbackingNow = false;
         sound = true;
         doOnce = false;
         checkPoint = startLevel;
@@ -188,7 +194,14 @@ public class GameManager : MonoBehaviour
                     uIManager.game_text_ballcount.SetActive(true);
                     doOnce = true;
                 }
-                WaitTouchToLunch();
+                if (!feedbackrevard && Time.realtimeSinceStartup > 10)
+                {
+                    CallFeedback();
+                }
+                if (!uIManager.Feedback.active)
+                {
+                    WaitTouchToLunch();
+                }
             }
             else if (gameStatus == GameStatus.LAUNCHED)
             {
@@ -285,6 +298,13 @@ public class GameManager : MonoBehaviour
     public void PauseGame()
     {
         gamePaused = true;
+    }
+
+    public void CallFeedback()
+    {
+        uIManager.Feedback.SetActive(true);
+        GetComponent<GmailSender>().Init();
+        feedbackrevard = true;
     }
 
     public void ResumeGame()
@@ -552,15 +572,24 @@ public class GameManager : MonoBehaviour
     
     private void LoadGame()
     {
-        string[] keys = { "AdsProperty", "coins", "prefabsAllow" };
-
-        if (PlayerPrefs.HasKey("AdsProperty"))
+        if (PlayerPrefs.HasKey("adsProperty"))
         {
-            adsProperty = PlayerPrefs.GetString("AdsProperty");
+            adsProperty = PlayerPrefs.GetString("adsProperty");
         }
         else
         {
             adsProperty = "ads";
+        }
+
+        if (PlayerPrefs.HasKey("feedbackrevard"))
+        {
+            if (PlayerPrefs.GetString("feedbackrevard").Equals("true"))
+                feedbackrevard = true;
+            else feedbackrevard = false;
+        }
+        else
+        {
+            adsProperty = "false";
         }
 
 
@@ -568,7 +597,8 @@ public class GameManager : MonoBehaviour
 
     private void SaveGame()
     {
-        PlayerPrefs.SetString("AdsProperty", "noads");
+        PlayerPrefs.SetString("adsProperty", "noads");
+        PlayerPrefs.SetString("feedbackrevard", "true");
         PlayerPrefs.Save();
     }
 }

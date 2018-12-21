@@ -6,7 +6,6 @@ using System;
 public class AdMobManager : MonoBehaviour
 {
     private string appID = "";
-    private string bannerID = "";
     private string revardedVideoID = "";
 
     private BannerView bannerView;
