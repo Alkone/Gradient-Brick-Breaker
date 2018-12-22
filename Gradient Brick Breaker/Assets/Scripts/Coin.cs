@@ -7,11 +7,15 @@ public class Coin : MonoBehaviour, Destroyable {
     private bool coinPicked;
     private LevelManager levelManager;
     private AudioSource audioSource;
+    private SpriteRenderer spriteRenderer;
+    private CircleCollider2D cc2D;
 
     void Start()
     {
         levelManager = GameManager.instance.GetLevelManager();
         audioSource = GetComponent<AudioSource>();
+        spriteRenderer = GetComponent<SpriteRenderer>();
+        cc2D = GetComponent<CircleCollider2D>();
         coinPicked = false;
     }
 
@@ -36,6 +40,8 @@ public class Coin : MonoBehaviour, Destroyable {
 
     public void AddCoinAndDestroyThis()
     {
+        spriteRenderer.enabled = false;
+        cc2D.enabled = false;
         Add();
         PlaySound();
         SelfDestroy();
@@ -51,7 +57,7 @@ public class Coin : MonoBehaviour, Destroyable {
 
     private IEnumerator DestroyThisObject()
     {
-        yield return new WaitForSeconds((float)0.02);
+        yield return new WaitForSeconds((float)0.1);
         levelManager.RemoveGameObject(gameObject);
         Destroy(gameObject);
     }

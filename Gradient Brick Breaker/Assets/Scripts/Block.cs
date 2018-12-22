@@ -10,6 +10,7 @@ public class Block : MonoBehaviour, Destroyable {
     private BoxCollider2D boxCollider2D;
     private AudioSource audioSource;
     private Animation animation;
+    public GameObject textObject;
     private TextMesh hpTextMesh; // Ссылка на Text компонент дочернего объекта
     private SpriteRenderer spriteRenderer; //Ссылка на спрайтрендер
     private Color[] colors; //Массив возможных цветов
@@ -46,16 +47,24 @@ public class Block : MonoBehaviour, Destroyable {
             lifeCount-=damage;
             UpdateBlock();
         }
-        animation.Play();
+        PlayAnimation();
         PlaySound();
         return lifeCount;
     }
 
     private void PlaySound()
     {
-        if (GameManager.instance.sound == true)
+        if (!audioSource.isPlaying && GameManager.instance.sound == true)
         {
-            audioSource.Play(0);
+            audioSource.Play();
+        }
+    }
+
+    private void PlayAnimation()
+    {
+        if (!animation.isPlaying)
+        {
+            animation.Play();
         }
     }
 
@@ -67,7 +76,7 @@ public class Block : MonoBehaviour, Destroyable {
 
     private IEnumerator DestroyThisObject()
     {
-        yield return new WaitForSeconds((float)0.03);
+        yield return new WaitForSeconds((float)0.02);
         levelManager.RemoveGameObject(gameObject);   // ЗАМЕНИТЬ НА ЭВЕНТ
         Destroy(gameObject);
     }
